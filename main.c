@@ -1,5 +1,38 @@
 #include "ft_miniRT.h"
 
+int	ft_parse(char *line)
+{
+	char	**chunks;
+	char	**axis;
+	int		chunks_idx;
+	int		sub_idx;
+	
+	if ((chunks = ft_split(line, &ft_isspace)) == 0)
+		return (-1);
+	chunks_idx = 0;
+	printf("----- start -----\n");
+	while (chunks[chunks_idx])
+	{
+		//printf("chunks[%d] = %s\n", chunks_idx, chunks[chunks_idx]);
+		/*
+		if (ft_strrchr(chunks[chunks_idx], ',') &&
+				(axis = ft_split(chunks[chunks_idx], &ft_iscomma)))
+		{
+			sub_idx = 0;
+			while (axis[sub_idx])
+			{
+				printf("\t\tsub_axis[%d] = %s\n",sub_idx, axis[sub_idx]);
+				sub_idx++;
+			}
+			free(axis);
+		}
+		*/
+		chunks_idx++;
+	}
+	printf("----- end -----\n");
+	return (0);
+}
+
 int main(int argc, char **argv)
 {
 	char	*option;
@@ -15,8 +48,8 @@ int main(int argc, char **argv)
 	else if ((fd = open(argv[1], O_RDONLY)) <= 0)
 		return (-1);
 	while (get_next_line(fd, &line) > 0)
-	//get_next_line(fd, &line);
-		printf("%s\n", line);
+		ft_parse(line);
+		//printf("%s\n", line);
 	/*
 	(void)argv;
 	void *mlx;

@@ -45,3 +45,31 @@ size_t ft_strlen(const char *s)
 		st++;
 	return (st);
 }
+
+char	*ft_substr(const char *s, unsigned int start, size_t len)
+{
+	char	*ret;
+	size_t	ed;
+	size_t	st;
+
+	if (!s)
+		return (0);
+	if (!(ret = (char *)malloc(sizeof(char) * (len + 1))))
+		return (0);
+	st = 0;
+	if (ft_strlen(s) >= (size_t)start)
+	{
+		ed = start + len;
+		while (start < ed)
+			ret[st++] = s[start++];
+	}
+	ret[st] = '\0';
+	return (ret);
+}
+
+int		ft_isspace(char c)
+{
+	if (c == 0x20 || (c >= 0x09 && c <= 0x0D))
+		return (1);
+	return (0);
+}
