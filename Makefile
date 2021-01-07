@@ -1,14 +1,14 @@
-SRC=ft_miniRT.c
-OBJ=${SRC:.c=.o}
+SRC=ft_miniRT.c main.c
+#OBJ=${SRC:.c=.o}
 CC=gcc
-CFLAGS=-Wall -Wextra -Werror
+CFLAGS=-Wall -Wextra #-Werror
 NAME=miniRT
 
-$(NAME) : $(OBJ)
-	$(CC) $(CFLAGS) $(SRC) main.c -o $@
+#.c.o : $(SRC)
+#	$(CC) $(CFLAGS) -Lmlx_opengl -lmlx -c $< -o $@
 
-.c.o : $(SRC)
-	$(CC) $(CFLAGS) -Ilmx -c $< -o $@
+$(NAME) : $(SRC)
+	$(CC) $(CFLAGS) -Lmlx -lmlx -framework OpenGL -framework AppKit $(SRC) -o $@
 
 all : $(NAME)
 
