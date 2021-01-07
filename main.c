@@ -4,19 +4,22 @@ int	ft_parse(char *line)
 {
 	char	**chunks;
 	char	**axis;
-	int		chunks_idx;
+	int		idx;
 	int		sub_idx;
 	
 	if ((chunks = ft_split(line, &ft_isspace)) == 0)
 		return (-1);
-	chunks_idx = 0;
+	idx = 0;
 	printf("----- start -----\n");
-	while (chunks[chunks_idx])
+	while (chunks[idx])
 	{
-		//printf("chunks[%d] = %s\n", chunks_idx, chunks[chunks_idx]);
+		if (idx == 0)
+
+		//printf("len = %d\n", (int)ft_strlen(chunks[idx]));
+		//printf("chunks[%d] = %s\n", idx, chunks[idx]);
 		/*
-		if (ft_strrchr(chunks[chunks_idx], ',') &&
-				(axis = ft_split(chunks[chunks_idx], &ft_iscomma)))
+		if (ft_strrchr(chunks[idx], ',') &&
+				(axis = ft_split(chunks[idx], &ft_iscomma)))
 		{
 			sub_idx = 0;
 			while (axis[sub_idx])
@@ -27,9 +30,10 @@ int	ft_parse(char *line)
 			free(axis);
 		}
 		*/
-		chunks_idx++;
+		idx++;
 	}
-	printf("----- end -----\n");
+	ft_free(chunks, 0);
+	//printf("----- end -----\n");
 	return (0);
 }
 

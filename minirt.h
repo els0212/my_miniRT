@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:13:18 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/07 23:31:32 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/07 23:37:31 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,70 +17,13 @@
 # include <stdlib.h>
 # include <math.h>
 # include "mlx/mlx.h"
+
+/*
+** Header for mandatory part structs (R, A, c, l, pl, sp, sq, cy, tr)
+*/
+# include "ft_struct.h"
 # define BUFFER_SIZE 1024
 #include <stdio.h>
-
-typedef struct{
-	double			x;
-	double			y;
-	double			z;
-}					t_axis;
-
-typedef struct{
-	unsigned int	red;
-	unsigned int	green;
-	unsigned int	blue;
-}					t_color;
-
-typedef struct{
-	int				x;
-	int				y;
-}					t_resolution;
-
-typedef struct{
-	double			ratio;
-	t_color			color;
-}					t_ambient;
-
-typedef struct{
-	t_axis			axis;
-	t_axis			norm;
-	int				degree;
-}	t_camera;
-
-typedef struct{
-	t_axis			axis;
-	double			ratio;
-	t_color			color;
-}	t_light;
-
-typedef struct{
-	t_axis			axis;
-	double			dia;
-	t_color			color;
-}	t_sphere;
-
-typedef struct{
-	t_axis			axis;
-	t_axis			norm;
-	double			size;
-	t_color			color;
-}	t_plane;
-
-typedef struct{
-	t_axis			axis;
-	t_axis			norm;
-	double			dia;
-	double			height;
-	t_color			color;
-}	t_cylinder;
-
-typedef struct{
-	t_axis			first;
-	t_axis			second;
-	t_axis			third;
-	t_color			color;
-}	t_triangle;
 
 /*
 ** ft_split.c
