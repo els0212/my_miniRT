@@ -6,23 +6,11 @@
 /*   By: hyi <hyi@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/03 00:28:24 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/05 21:42:06 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/07 20:56:51 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
-
-int	ft_get_len(char *str)
-{
-	int	st;
-
-	if (!str || !*str)
-		return (0);
-	st = 0;
-	while (str[st])
-		st++;
-	return (st);
-}
+#include "ft_miniRT.h"
 
 int	ft_while_loop(char **line, char *buf, char **buf_ref)
 {
@@ -35,7 +23,7 @@ int	ft_while_loop(char **line, char *buf, char **buf_ref)
 	else
 	{
 		ft_resize_and_copy(line, buf, 0, idx);
-		*buf_ref = (idx + 1 < ft_get_len(buf) && *(buf + idx + 1))
+		*buf_ref = (idx + 1 < (int)ft_strlen(buf) && *(buf + idx + 1))
 			? ft_strdup(&buf[idx + 1]) : 0;
 		return (1);
 	}
@@ -56,13 +44,13 @@ int	ft_proc_buf_ref(char **line, char **buf_ref)
 	if (idx >= 0)
 	{
 		ft_resize_and_copy(line, *buf_ref, 0, idx);
-		*buf_ref = (idx + 1 < ft_get_len(*buf_ref) && *(*buf_ref + idx + 1))
+		*buf_ref = (idx + 1 < (int)ft_strlen(*buf_ref) && *(*buf_ref + idx + 1))
 			? ft_strdup(*buf_ref + idx + 1) : 0;
 		ret = 1;
 	}
 	else
 	{
-		ft_resize_and_copy(line, *buf_ref, 0, ft_get_len(*buf_ref));
+		ft_resize_and_copy(line, *buf_ref, 0, ft_strlen(*buf_ref));
 		*buf_ref = 0;
 		ret = 0;
 	}

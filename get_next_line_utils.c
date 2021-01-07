@@ -6,11 +6,11 @@
 /*   By: hyi <hyi@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 00:28:14 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/03 15:28:29 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/07 20:31:18 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "ft_miniRT.h"
 
 int		ft_memset(char **line, size_t size)
 {
@@ -59,7 +59,7 @@ void	ft_resize_and_copy(char **line, char *buf, int st, int ed)
 	int		mem_size;
 	int		line_len;
 
-	line_len = ft_get_len(*line);
+	line_len = (int)ft_strlen(*line);
 	mem_size = line_len + ed - st + 1;
 	ft_memset(&temp, mem_size);
 	if (*line)
@@ -77,7 +77,7 @@ char	*ft_strdup(char *str)
 	char	*ret;
 	int		st;
 
-	if (!(ret = (char *)malloc(sizeof(char) * (ft_get_len(str) + 1))))
+	if (!(ret = (char *)malloc(sizeof(char) * ((int)ft_strlen(str) + 1))))
 		return (0);
 	st = 0;
 	while (str[st])

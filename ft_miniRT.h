@@ -2,9 +2,17 @@
 # define FT_MINIRT_H
 # include <fcntl.h>
 # include <unistd.h>
+# include <stdlib.h>
 # include <math.h>
 # include "mlx/mlx.h"
+# define BUFFER_SIZE 1024
 #include <stdio.h>
+/*
+** ft_libft.c
+*/
+int		ft_strncmp(const char *s1, const char *s2, int len);
+char	*ft_strrchr(const char *s, int c);
+size_t	ft_strlen(const char *s);
 
 /*
 ** get_next_line_utils.c
