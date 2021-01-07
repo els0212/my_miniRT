@@ -1,4 +1,4 @@
-#include "ft_miniRT.h"
+#include "minirt.h"
 
 int	ft_parse(char *line)
 {

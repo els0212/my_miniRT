@@ -6,11 +6,11 @@
 /*   By: hyi <hyi@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/03 00:28:24 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/07 20:56:51 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/07 23:32:02 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_miniRT.h"
+#include "minirt.h"
 
 int	ft_while_loop(char **line, char *buf, char **buf_ref)
 {

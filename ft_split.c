@@ -6,11 +6,11 @@
 /*   By: hyi <hyi@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/21 10:59:43 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/07 22:27:53 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/07 23:31:47 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_miniRT.h"
+#include "minirt.h"
 
 int		ft_iscomma(char c)
 {
