@@ -1,39 +1,123 @@
 #include "minirt.h"
 
-int	ft_parse(char *line)
+int		ft_ins_resolution(char **chunks, t_compo *compo, int size)
+{
+	t_res	*resolution;
+	int		x;
+	int		y;
+
+	if (size != 3)
+		return (-1);
+	x = ft_atoi(chunks[1]);
+	y = ft_atoi(chunks[2]);
+	if (x <= 0 || y <= 0)
+		return (-1);
+	if (!(resolution = (t_res *)malloc(sizeof(t_res))))
+		return (-1);
+	resolution->x = x;
+	resolution->y = y;
+	compo->resolution = resolution;
+	printf("## processing resolution\n\
+			x = %d\ny = %d\n", x, y);
+	return (0);
+}
+
+int		ft_ins_ambient(char **chunks, t_compo *compo, int size)
+{
+	t_amb	*ambient;
+	t_color	*color;
+
+	if (size != 3)
+		return (-1);
+	if (!(color = ft_make_color(chunks[2])))
+		return (-1);
+	if (!color || !(ambient = (t_amb *)malloc(sizeof(t_amb))))
+		return (-1);
+	ambient->ratio = ft_atod(chunks[1]);
+	ambient->color = color;
+	compo->ambient = ambient;
+	printf("## processing Ambient\n  \
+	ratio = %lf\nr = %d, g = %d, b = %d\n",\
+	ambient->ratio, color->red, color->green, color->blue);
+	return (0);
+}
+
+int		ft_ins_camera(char **chunks, t_compo *compo, int size)
+{
+	t_cam		*camera;
+	t_vector	*vec;
+	t_vector	*dir;
+
+	if (size != 4)
+		return (-1);
+	else if (!(vec = ft_make_vector(chunks[1])) ||
+			!(dir = ft_make_vector(chunks[2])))
+		return (-1);
+	else if (dir->x > 1 || dir->x < -1 || dir->y > 1 || dir->y < -1 ||
+			dir->z > 1 || dir->z < -1)
+		return (-1);
+	if (atoi(chunks[3]) < 0 || atoi(chunks[3]) > 180)
+		return (-1);
+	if (!(camera = (t_cam *)malloc(sizeof(t_cam))))
+		return (-1);
+	camera->vec = vec;
+	camera->dir = dir;
+	camera->fov = ft_atod(chunks[3]);
+	compo->camera = camera;
+	printf("## processing camera\n\
+	x = %lf, y = %lf, z = %lf\n\
+	dir.x = %lf, dir.y = %lf, dir.z = %lf\n\
+	fov = %lf\n",\
+	vec->x, vec->y, vec->z,\
+	dir->x, dir->y, dir->z,\
+	camera->fov);
+	return (0);
+}
+
+int		ft_branch(char **chunks, t_compo *compo, int size)
+{
+	int		ret;
+
+	ret = 0;
+	if (!ft_strncmp(chunks[0], "R", (int)ft_strlen(chunks[0])))
+		ret = ft_ins_resolution(chunks, compo, size);
+	else if (!ft_strncmp(chunks[0], "A", (int)ft_strlen(chunks[0])))
+		ret = ft_ins_ambient(chunks, compo, size);
+	else if (!ft_strncmp(chunks[0], "c", (int)ft_strlen(chunks[0])))
+		ret = ft_ins_camera(chunks, compo, size);
+	else if (!ft_strncmp(chunks[0], "l", (int)ft_strlen(chunks[0])))
+		;
+	else if (!ft_strncmp(chunks[0], "sp", (int)ft_strlen(chunks[0])))
+		;
+	else if (!ft_strncmp(chunks[0], "pl", (int)ft_strlen(chunks[0])))
+		;
+	else if (!ft_strncmp(chunks[0], "cy", (int)ft_strlen(chunks[0])))
+		;
+	else if (!ft_strncmp(chunks[0], "tr", (int)ft_strlen(chunks[0])))
+		;
+	else
+		return (-1);
+	return (ret);
+}
+
+int		ft_parse(char *line, t_compo *compo)
 {
 	char	**chunks;
 	char	**axis;
 	int		idx;
 	int		sub_idx;
-	
+	int		size;
+
 	if ((chunks = ft_split(line, &ft_isspace)) == 0)
 		return (-1);
 	idx = 0;
-	printf("----- start -----\n");
-	while (chunks[idx])
+	if ((size = ft_get_size(chunks)))
 	{
-		if (idx == 0)
-
-		//printf("len = %d\n", (int)ft_strlen(chunks[idx]));
-		//printf("chunks[%d] = %s\n", idx, chunks[idx]);
-		/*
-		if (ft_strrchr(chunks[idx], ',') &&
-				(axis = ft_split(chunks[idx], &ft_iscomma)))
-		{
-			sub_idx = 0;
-			while (axis[sub_idx])
-			{
-				printf("\t\tsub_axis[%d] = %s\n",sub_idx, axis[sub_idx]);
-				sub_idx++;
-			}
-			free(axis);
-		}
-		*/
-		idx++;
+		printf("----- start -----\n");
+		ft_branch(chunks, compo, size);
+		printf("----- end -----\n");
 	}
 	ft_free(chunks, 0);
-	//printf("----- end -----\n");
 	return (0);
 }
 
@@ -42,6 +126,9 @@ int main(int argc, char **argv)
 	char	*option;
 	int		fd;
 	char	*line;
+	t_compo	*compo;
+
+	compo = ft_compo_init();
 
 	if (argc < 2 || argc > 3)
 		return (-1);
@@ -52,7 +139,7 @@ int main(int argc, char **argv)
 	else if ((fd = open(argv[1], O_RDONLY)) <= 0)
 		return (-1);
 	while (get_next_line(fd, &line) > 0)
-		ft_parse(line);
+		ft_parse(line, compo);
 		//printf("%s\n", line);
 	/*
 	(void)argv;

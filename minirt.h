@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:13:18 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/07 23:37:31 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/09 18:47:23 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,11 @@ int					ft_get_len(char *str);
 int					ft_while_loop(char **line, char *buf, char **buf_ref);
 int					ft_proc_buf_ref(char **line, char **buf_ref);
 int					get_next_line(int fd, char **line);
+/*
+** ft_utils.c 
+*/
+int					ft_get_size(char **chunks);
+int					ft_get_sign(const char *nptr, int *sign);
+int					ft_atoi(const char *nptr);
+double				ft_atod(const char *nptr);
 #endif
