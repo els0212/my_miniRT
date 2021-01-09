@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:13:18 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/10 00:11:44 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/10 01:31:18 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 */
 # include "ft_struct.h"
 # include "ft_list_utils.h"
+# include "ft_mlx_utils.h"
 # define BUFFER_SIZE 1024
 #include <stdio.h>
 

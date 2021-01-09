@@ -31,14 +31,10 @@ int		ft_branch(char **chunks, t_compo *compo, int size)
 int		ft_parse(char *line, t_compo *compo)
 {
 	char	**chunks;
-	char	**axis;
-	int		idx;
-	int		sub_idx;
 	int		size;
 
 	if ((chunks = ft_split(line, &ft_isspace)) == 0)
 		return (-1);
-	idx = 0;
 	if ((size = ft_get_size(chunks)))
 	{
 		printf("----- start -----\n");
@@ -48,13 +44,28 @@ int		ft_parse(char *line, t_compo *compo)
 	ft_free(chunks, 0);
 	return (0);
 }
+void my_mlx_pixel_put(t_img *data, int x, int y, int color)
+{
+	char	*dst;
+	dst = data->addr + (y * data->line_len + x * (data->bpp / 8));
+	*(unsigned int *)dst = color;
+}
+
+int	ft_close(int keycode, t_mlx *mlx)
+{
+	if (keycode == 53)
+		mlx_destroy_window(mlx->mlx, mlx->win);
+	return (0);
+}
 
 int main(int argc, char **argv)
 {
-	char	*option;
+	int		option;
 	int		fd;
 	char	*line;
 	t_compo	*compo;
+	t_mlx	mlx;
+	t_img	img;
 
 	compo = ft_compo_init();
 
@@ -68,17 +79,15 @@ int main(int argc, char **argv)
 		return (-1);
 	while (get_next_line(fd, &line) > 0)
 		ft_parse(line, compo);
-		//printf("%s\n", line);
-	/*
-	(void)argv;
-	void *mlx;
-	void *mlx_win;
-	t_data img;
-	mlx = mlx_init();
-	img.img = mlx_new_image(mlx, 640, 480);
-	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
-	mlx_win = mlx_new_window(mlx, 640, 480, "hello world!");
-	mlx_loop(mlx);
-	*/
+	option = argc == 3 ? 1 : 0;
+	mlx.mlx = mlx_init();
+	mlx.win = mlx_new_window(mlx.mlx, 640, 480, "hello world!");
+	img.img = mlx_new_image(mlx.mlx, 640, 480);
+	img.addr = mlx_get_data_addr(img.img, &img.bpp, &img.line_len, &img.endian);
+	//printf("addr = %s, bpp = %d, len = %d, endian = %d\n",img.addr, img.bpp, img.line_len, img.endian);
+	my_mlx_pixel_put(&img, 5, 5, 0x00FF0000);
+	mlx_put_image_to_window(mlx.mlx, mlx.win, img.img, 0, 0);
+	mlx_key_hook(mlx.win, ft_close, &mlx);
+	mlx_loop(mlx.mlx);
 	return (0);
 }
