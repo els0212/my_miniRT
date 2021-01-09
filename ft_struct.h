@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:35:12 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/09 17:41:08 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/09 22:22:40 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,49 +17,52 @@
 # define CAMERA 3
 # define LIGHT 4
 # define SPHERE 5
-# define PLALE 6
+# define PLANE 6
 # define SQUARE 7
 # define CYLINDER 8
 # define TRIANGLE 9
 
-typedef struct		s_vector{
-	double			x;
-	double			y;
-	double			z;
-}					t_vector;
+typedef struct			s_vector{
+	double				x;
+	double				y;
+	double				z;
+}						t_vector;
 
-typedef struct		s_color
+typedef struct			s_color
 {
-	unsigned int	red;
-	unsigned int	green;
-	unsigned int	blue;
-}					t_color;
+	unsigned int		red;
+	unsigned int		green;
+	unsigned int		blue;
+}						t_color;
 
-typedef struct		s_resolution
+typedef struct			s_resolution
 {
-	int				x;
-	int				y;
-}					t_res;
+	int					x;
+	int					y;
+}						t_res;
 
-typedef struct		s_ambient
+typedef struct			s_ambient
 {
-	double			ratio;
-	t_color			*color;
-}					t_amb;
+	double				ratio;
+	t_color				*color;
+}						t_amb;
 
-typedef struct		s_camera
+typedef struct			s_camera
 {
-	t_vector		*vec;
-	t_vector		*dir;
-	double			fov;
-}					t_cam;
+	t_vector			*vec;
+	t_vector			*dir;
+	double				fov;
+}						t_cam;
 
-typedef struct		s_light
+typedef struct s_light	t_lht;
+struct					s_light
 {
-	t_vector		*vec;
-	double			ratio;
-	t_color			*color;
-}					t_lht;
+	t_vector			*vec;
+	double				ratio;
+	t_color				*color;
+	t_lht				*next;
+
+};
 
 /*
 ** id, vector, color		: Common attributes
@@ -71,38 +74,38 @@ typedef struct		s_light
 **							: in range [-1, 1]
 ** size						: Square
 */
-typedef struct s_object t_object;
-struct		s_object
+typedef struct s_object	t_object;
+struct					s_object
 {
-	int				id;
-	t_vector		*vec;
-	t_color			*color;
+	int					id;
+	t_vector			*vec;
+	t_color				*color;
 
-	t_vector		*vec_second;
-	t_vector		*vec_third;
+	t_vector			*vec_second;
+	t_vector			*vec_third;
 
-	double			dia;
+	double				dia;
 
-	double			height;
+	double				height;
 
-	t_vector		*direction;
+	t_vector			*dir;
 
-	double			size;
-	t_object		*next;
+	double				size;
+	t_object			*next;
 };
 
-typedef struct		s_component
+typedef struct			s_component
 {
-	t_res			*resolution;
-	t_amb			*ambient;
-	t_cam			*camera;
-	t_lht			*light;
-	t_object		*objects;
-}					t_compo;
+	t_res				*resolution;
+	t_amb				*ambient;
+	t_cam				*camera;
+	t_lht				*light;
+	t_object			*objects;
+}						t_compo;
 
-t_compo				*ft_compo_init();
-t_object			*ft_object_init(int id);
-t_vector			*ft_make_vector(char *str);
-t_color				*ft_make_color(char *str);
-char				**ft_parse_args(char *str);
+t_compo					*ft_compo_init();
+t_object				*ft_object_init(int id);
+t_vector				*ft_make_vector(char *str);
+t_color					*ft_make_color(char *str);
+char					**ft_parse_args(char *str);
 #endif

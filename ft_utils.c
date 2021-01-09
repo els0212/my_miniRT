@@ -64,7 +64,7 @@ double	ft_atod(const char *nptr)
 	ret = 0;
 	mul = 1;
 	pt_st = st;
-	while (nptr[--st] && nptr[st] >= '0' && nptr[st] <= '9')
+	while (st >= 0 && nptr[--st] && nptr[st] >= '0' && nptr[st] <= '9')
 	{
 		ret += (nptr[st] - '0') * mul;
 		mul *= 10;

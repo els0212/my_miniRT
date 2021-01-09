@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:13:18 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/09 18:47:23 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/10 00:11:44 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 ** Header for mandatory part structs (R, A, c, l, pl, sp, sq, cy, tr)
 */
 # include "ft_struct.h"
+# include "ft_list_utils.h"
 # define BUFFER_SIZE 1024
 #include <stdio.h>
 
@@ -65,4 +66,19 @@ int					ft_get_size(char **chunks);
 int					ft_get_sign(const char *nptr, int *sign);
 int					ft_atoi(const char *nptr);
 double				ft_atod(const char *nptr);
+/*
+** ft_parse_rt_1.c 
+*/
+int					ft_ins_resolution(char **chunks, t_compo *compo, int size);
+int					ft_ins_ambient(char **chunks, t_compo *compo, int size);
+int					ft_ins_camera(char **chunks, t_compo *compo, int size);
+int					ft_ins_light(char **chunks, t_compo *compo, int size);
+int					ft_ins_sphere(char **chunks, t_compo *compo, int size);
+/*
+** ft_parse_rt_2.c 
+*/
+int					ft_ins_plane(char **chunks, t_compo *compo, int size);
+int					ft_ins_square(char **chunks, t_compo *compo, int size);
+int					ft_ins_cylinder(char **chunks, t_compo *compo, int size);
+int					ft_ins_triangle(char **chunks, t_compo *compo, int size);
 #endif

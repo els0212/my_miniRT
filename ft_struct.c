@@ -27,7 +27,7 @@ t_object		*ft_object_init(int id)
 	ret->vec_third = 0;
 	ret->dia = 0;
 	ret->height = 0;
-	ret->direction = 0;
+	ret->dir = 0;
 	ret->size = 0;
 	ret->next = 0;
 	return (ret);
@@ -53,10 +53,16 @@ t_vector		*ft_make_vector(char *str)
 {
 	t_vector	*ret;
 	char		**vector;
+	int			len;
 	
 	if (!(vector = ft_parse_args(str)) ||
 			!(ret = (t_vector *)malloc(sizeof(t_vector))))
 		return (0);
+	if ((len = ft_get_size(vector)) != 3)
+	{
+		free(ret);
+		return (0);
+	}
 	ret->x = ft_atod(vector[0]);
 	ret->y = ft_atod(vector[1]);
 	ret->z = ft_atod(vector[2]);
@@ -67,11 +73,17 @@ t_color		*ft_make_color(char *str)
 {
 	t_color	*ret;
 	char	**color;
+	int		len;
 	
 	if (!(color = ft_parse_args(str)) ||
 			!(ret = (t_color *)malloc(sizeof(t_color))))
 	{
 		free (color);
+		return (0);
+	}
+	if ((len = ft_get_size(color)) != 3)
+	{
+		free(ret);
 		return (0);
 	}
 	ret->red = atoi(color[0]);
