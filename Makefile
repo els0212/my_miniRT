@@ -1,4 +1,4 @@
-SRC=minirt.c ft_libft.c get_next_line.c get_next_line_utils.c ft_split.c ft_struct.c ft_utils.c ft_list_utils.c ft_parse_rt_1.c ft_parse_rt_2.c main.c
+SRC=minirt.c ft_libft.c get_next_line.c get_next_line_utils.c ft_split.c ft_struct.c ft_utils.c ft_list_utils.c ft_parse_rt_1.c ft_parse_rt_2.c ft_math_utils.c main.c
 #OBJ=${SRC:.c=.o}
 CC=gcc
 CFLAGS=-Wall -Wextra #-Werror

@@ -51,10 +51,16 @@ void my_mlx_pixel_put(t_img *data, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-int	ft_close(int keycode, t_mlx *mlx)
+int	ft_close()
 {
-	if (keycode == 53)
-		mlx_destroy_window(mlx->mlx, mlx->win);
+	exit(0);
+	return (0);
+}
+
+int	ft_key_press(int keycode)
+{
+	if (keycode == ESCAPE)
+		exit(0);
 	return (0);
 }
 
@@ -81,13 +87,26 @@ int main(int argc, char **argv)
 		ft_parse(line, compo);
 	option = argc == 3 ? 1 : 0;
 	mlx.mlx = mlx_init();
-	mlx.win = mlx_new_window(mlx.mlx, 640, 480, "hello world!");
+	mlx.win = mlx_new_window(mlx.mlx, compo->resolution->x, compo->resolution->y, "hello world!");
+	mlx_hook(mlx.win, KEYPRESS, KEYPRESSMASK, ft_key_press, &mlx);
+	mlx_hook(mlx.win, DESTROYNOTIFY, STRUCTURENOTIFYMASK, ft_close, &mlx);
 	img.img = mlx_new_image(mlx.mlx, 640, 480);
-	img.addr = mlx_get_data_addr(img.img, &img.bpp, &img.line_len, &img.endian);
+	img.addr = (char *)mlx_get_data_addr(img.img, &img.bpp, &img.line_len, &img.endian);
 	//printf("addr = %s, bpp = %d, len = %d, endian = %d\n",img.addr, img.bpp, img.line_len, img.endian);
-	my_mlx_pixel_put(&img, 5, 5, 0x00FF0000);
+	/*
+	for(int i = 0 ; i < 640; i++)
+		for(int j = 0 ; j < 1920; j++)
+			my_mlx_pixel_put(&img, i, j, 0x00FFFFFF);
 	mlx_put_image_to_window(mlx.mlx, mlx.win, img.img, 0, 0);
-	mlx_key_hook(mlx.win, ft_close, &mlx);
+	mlx_destroy_image(mlx.mlx, img.img);
+	img.img = mlx_new_image(mlx.mlx, 640, 720);
+	img.addr = (char *)mlx_get_data_addr(img.img, &img.bpp, &img.line_len, &img.endian);
+	*/
+	for(int i = 0 ; i < 640; i++)
+		for(int j = 0 ; j < 480; j++)
+			my_mlx_pixel_put(&img, i, j, 0x00FF0000);
+	mlx_put_image_to_window(mlx.mlx, mlx.win, img.img, 0, 0);
+	//mlx_destroy_window(&mlx.mlx, &mlx.win);
 	mlx_loop(mlx.mlx);
 	return (0);
 }

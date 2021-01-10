@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:35:12 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/09 22:22:40 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/10 11:28:54 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,14 @@ typedef struct			s_ambient
 	t_color				*color;
 }						t_amb;
 
-typedef struct			s_camera
+typedef struct s_camera	t_cam;
+struct					s_camera
 {
 	t_vector			*vec;
 	t_vector			*dir;
 	double				fov;
-}						t_cam;
+	t_cam				*next;
+};
 
 typedef struct s_light	t_lht;
 struct					s_light

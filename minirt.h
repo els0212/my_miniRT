@@ -6,12 +6,19 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:13:18 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/10 01:31:18 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/10 12:22:53 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINIRT_H
 # define MINIRT_H
+# define BUFFER_SIZE 1024
+# define PI 3.1415926535
+# define ESCAPE 53
+# define KEYPRESS 2
+# define KEYPRESSMASK (1L<<0)
+# define DESTROYNOTIFY 17
+# define STRUCTURENOTIFYMASK (1L<<17)
 # include <fcntl.h>
 # include <unistd.h>
 # include <stdlib.h>
@@ -24,7 +31,6 @@
 # include "ft_struct.h"
 # include "ft_list_utils.h"
 # include "ft_mlx_utils.h"
-# define BUFFER_SIZE 1024
 #include <stdio.h>
 
 /*
@@ -82,4 +88,8 @@ int					ft_ins_plane(char **chunks, t_compo *compo, int size);
 int					ft_ins_square(char **chunks, t_compo *compo, int size);
 int					ft_ins_cylinder(char **chunks, t_compo *compo, int size);
 int					ft_ins_triangle(char **chunks, t_compo *compo, int size);
+/*
+** ft_math_utils.c 
+*/
+double				ft_degree_to_radian(double degree);
 #endif

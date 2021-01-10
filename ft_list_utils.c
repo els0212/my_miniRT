@@ -29,3 +29,18 @@ void	ft_add_light_last(t_lht **list, t_lht *obj)
 		curr->next = obj;
 	}
 }
+
+void	ft_add_camera_last(t_cam **list, t_cam *obj)
+{
+	t_cam	 *curr;
+
+	if (!*list)
+		*list = obj;
+	else
+	{
+		curr = *list;
+		while (curr->next)
+			curr = curr->next;
+		curr->next = obj;
+	}
+}
