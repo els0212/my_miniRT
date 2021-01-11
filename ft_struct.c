@@ -66,6 +66,9 @@ t_vector		*ft_make_vector(char *str)
 	ret->x = ft_atod(vector[0]);
 	ret->y = ft_atod(vector[1]);
 	ret->z = ft_atod(vector[2]);
+	while (--len >= 0)
+		free(vector[len]);
+	free(vector);
 	return (ret);
 }
 

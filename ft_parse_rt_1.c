@@ -62,12 +62,16 @@ int		ft_ins_camera(char **chunks, t_compo *compo, int size)
 	}
 	camera->vec = vec;
 	camera->dir = dir;
-	camera->fov = ft_degree_to_radian(ft_atod(chunks[3]));
+	camera->fov = ft_atod(chunks[3]) * (M_PI / 180.0);
+	camera->focal_len = camera->fov / ((compo->resolution->x) * 2);
+	//camera->left_up = tan(atan2(camera->focal_len, (compo->resolution->x / 2)));
 	ft_add_camera_last(&(compo->camera), camera);
 	printf("## processing camera\n\
+	focal = %lf\n\
 	x = %lf, y = %lf, z = %lf\n\
 	dir.x = %lf, dir.y = %lf, dir.z = %lf\n\
 	fov = %lf\n",\
+	camera->focal_len,
 	vec->x, vec->y, vec->z,\
 	dir->x, dir->y, dir->z,\
 	camera->fov);
