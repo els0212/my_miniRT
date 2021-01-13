@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:13:18 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/10 12:22:53 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/13 17:04:29 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,4 +92,22 @@ int					ft_ins_triangle(char **chunks, t_compo *compo, int size);
 ** ft_math_utils.c 
 */
 double				ft_degree_to_radian(double degree);
+t_vector			*ft_cross_product(t_vector a, t_vector b);
+double				ft_dot_product(t_vector a, t_vector b);
+/*
+** ft_vec_operations.c 
+*/
+void				ft_vec_cpy(t_vector *vec1, t_vector vec2);
+t_vector			*ft_vec_dup(t_vector src);
+t_vector			ft_vec_add(t_vector vec1, t_vector vec2);
+t_vector			ft_vec_sub(t_vector vec1, t_vector vec2);
+t_vector			ft_vec_product_const(t_vector vec, double d);
+t_vector			ft_vec_div_const(t_vector vec, double d);
+/*
+** ft_ray_utils.c 
+*/
+t_ray				*ft_ray_init(t_vector *origin, t_vector dir);
+t_vector			ft_ray_at(t_ray *ray, double d);
+int					ft_ray_hit_sphere(t_object *sphere, t_ray *ray);
+t_color				*ft_ray_color(t_ray *ray, t_object *obj);
 #endif

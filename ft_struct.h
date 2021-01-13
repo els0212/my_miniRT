@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:35:12 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/10 13:55:38 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/13 15:32:13 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,11 @@ typedef struct			s_vector{
 	double				z;
 }						t_vector;
 
+typedef struct			s_ray{
+	t_vector			*origin;
+	t_vector			*dir;
+}						t_ray;
+
 typedef struct			s_color
 {
 	unsigned int		red;
@@ -39,6 +44,7 @@ typedef struct			s_resolution
 {
 	int					x;
 	int					y;
+	double				ratio;
 }						t_res;
 
 typedef struct			s_ambient
@@ -52,12 +58,15 @@ struct					s_camera
 {
 	t_vector			*vec;
 	t_vector			*dir;
+//	t_vector			*u;
+//	t_vector			*v;
 	double				fov;
 	double				focal_len;
-	t_vector			left_up;
-	t_vector			left_down;
-	t_vector			right_up;
-	t_vector			right_down;
+	t_vector			ndc_left_bottom;
+	double			ndc_width;
+	double			ndc_height;
+	t_vector		ndc_horizon;
+	t_vector		ndc_vertical;
 	t_cam				*next;
 };
 
@@ -112,7 +121,11 @@ typedef struct			s_component
 
 t_compo					*ft_compo_init();
 t_object				*ft_object_init(int id);
+void					ft_vector_init(t_vector *vec, double x, double y, double z);
+void			ft_color_init(t_color *color, int r, int g, int b);
+void					ft_color_cpy(t_color *c1, t_color *c2);
 t_vector				*ft_make_vector(char *str);
 t_color					*ft_make_color(char *str);
 char					**ft_parse_args(char *str);
+t_vector				*ft_normalize(t_vector *vec);
 #endif

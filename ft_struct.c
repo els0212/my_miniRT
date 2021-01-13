@@ -49,6 +49,26 @@ char			**ft_parse_args(char *str)
 	return (chunks);
 }
 
+void			ft_vector_init(t_vector *vec, double x, double y, double z)
+{
+	vec->x = x;
+	vec->y = y;
+	vec->z = z;
+}
+void			ft_color_init(t_color *color, int r, int g, int b)
+{
+	color->red = r;
+	color->green = g;
+	color->blue = b;
+}
+
+void					ft_color_cpy(t_color *c1, t_color *c2)
+{
+	c1->red = c2->red;
+	c1->green = c2->green;
+	c1->blue = c2->blue;
+}
+
 t_vector		*ft_make_vector(char *str)
 {
 	t_vector	*ret;
@@ -99,4 +119,17 @@ t_color		*ft_make_color(char *str)
 	}
 	free (color);
 	return (ret);
+}
+
+t_vector	*ft_normalize(t_vector *vec)
+{
+	double	size;
+	t_vector	*target;
+
+	target = vec;
+	size = sqrt(pow(target->x, 2) + pow(target->y, 2) + pow(target->z, 2));
+	target->x /= size;
+	target->y /= size;
+	target->z /= size;
+	return (target);
 }
