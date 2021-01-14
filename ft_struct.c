@@ -55,6 +55,7 @@ void			ft_vector_init(t_vector *vec, double x, double y, double z)
 	vec->y = y;
 	vec->z = z;
 }
+
 void			ft_color_init(t_color *color, int r, int g, int b)
 {
 	color->red = r;

@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:13:18 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/14 15:51:36 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/14 17:52:29 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ int					ft_ins_triangle(char **chunks, t_compo *compo, int size);
 double				ft_degree_to_radian(double degree);
 t_vector			*ft_cross_product(t_vector a, t_vector b);
 double				ft_dot_product(t_vector a, t_vector b);
+double				ft_get_dist(t_vector a, t_vector b);
 /*
 ** ft_vec_operations.c 
 */

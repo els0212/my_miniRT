@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:35:12 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/13 15:32:13 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/14 17:40:39 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef struct			s_vector{
 typedef struct			s_ray{
 	t_vector			*origin;
 	t_vector			*dir;
+	t_vector			*hit_point;
 }						t_ray;
 
 typedef struct			s_color
