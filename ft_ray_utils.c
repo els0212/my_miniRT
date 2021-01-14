@@ -79,6 +79,10 @@ t_color		*ft_ray_color(t_ray *ray, t_object *obj)
 	ray_st = 0;
 	if (!(ret = (t_color *)malloc(sizeof(t_color))))
 		return (0);
+	// ray_st doesn't need to run loop
+	// sphere needs ray_st loop
+	// plane can return ray_st => need to check 0 <= ray_st <= raymax
+	// square uses aabb intersection algorithm
 	while (ray_st < RAYMAX)
 	{
 		//printf("ray_st = %d\n", ray_st);
