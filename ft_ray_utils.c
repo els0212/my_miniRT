@@ -55,11 +55,13 @@ int			ft_ray_hit_plane(t_object *plane, t_ray *ray, int t)
 	double		discriminant;
 	
 	denom = ft_dot_product(*plane->dir,*ray->dir);
-	if (denom > 0)
+	//printf("denom = %f\n",denom);
+	if (denom > 0.00001f)
 	{
-		oc = ft_vec_sub(*plane->vec, *ray->origin);
+		ft_vec_cpy(&oc, ft_vec_sub(*plane->vec, *ray->origin));
+		//printf("oc.x = %f y = %f, z = %f\n", oc.x,oc.y,oc.z);
 		discriminant = ft_dot_product(oc, *plane->dir);
-		if (discriminant == 0)
+		if (discriminant == t)
 			return (1);
 	}
 	return (0);
@@ -71,6 +73,8 @@ t_color		*ft_ray_color(t_ray *ray, t_object *obj)
 	int			ray_st;
 	double		discriminant;
 	t_vector	now;
+	int			id;
+	t_object	*now_obj;
 
 	ray_st = 0;
 	if (!(ret = (t_color *)malloc(sizeof(t_color))))
@@ -80,30 +84,38 @@ t_color		*ft_ray_color(t_ray *ray, t_object *obj)
 		//printf("ray_st = %d\n", ray_st);
 		//printf("ori x = %f, y = %f, z = %f\n",ray->origin->x, ray->origin->y, ray->origin->z);
 		//printf("now x = %f, y = %f, z = %f\n",now.x, now.y, now.z);
+		now = ft_vec_add(*ray->origin, ft_vec_product_const(*ray->dir, ray_st));
 		if (ft_get_dist(*ray->origin, *ray->hit_point) <= ft_get_dist(*ray->origin, now))
 			break ;
 		else
 		{
-			now = ft_vec_add(*ray->origin, ft_vec_product_const(*ray->dir, ray_st));
-			if ((discriminant = ft_ray_hit_sphere(obj, ray, ray_st)) > 0)
+			now_obj = obj;
+			while (now_obj)
 			{
-				if (ft_get_dist(*ray->origin, *ray->hit_point) > ft_get_dist(*ray->origin, now))
+				id = now_obj->id;
+				//printf("id = %d\n", id);
+				if (id == SPHERE && (discriminant = ft_ray_hit_sphere(now_obj, ray, ray_st)) > 0)
 				{
-					free(ray->hit_point);
-					ray->hit_point = ft_vec_dup(now);
-					ft_color_cpy(ret, obj->color);
-					return (ret);
+					if (ft_get_dist(*ray->origin, *ray->hit_point) > ft_get_dist(*ray->origin, now))
+					{
+						free(ray->hit_point);
+						ray->hit_point = ft_vec_dup(now);
+						ft_color_cpy(ret, now_obj->color);
+						return (ret);
+					}
 				}
-			}
-			if ((discriminant = ft_ray_hit_plane(obj, ray, ray_st)) > 0)
-			{
-				if (ft_get_dist(*ray->origin, *ray->hit_point) > ft_get_dist(*ray->origin, now))
+				if (id == PLANE && (discriminant = ft_ray_hit_plane(now_obj, ray, ray_st)) > 0)
 				{
-					free(ray->hit_point);
-					ray->hit_point = ft_vec_dup(now);
-					ft_color_cpy(ret, obj->color);
-					return (ret);
+					//printf("plane?!\n");
+					if (ft_get_dist(*ray->origin, *ray->hit_point) > ft_get_dist(*ray->origin, now))
+					{
+						free(ray->hit_point);
+						ray->hit_point = ft_vec_dup(now);
+						ft_color_cpy(ret, now_obj->color);
+						return (ret);
+					}
 				}
+				now_obj = now_obj->next;
 			}
 		}
 		ray_st++;

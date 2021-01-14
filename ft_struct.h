@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:35:12 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/14 17:40:39 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/14 20:22:19 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ struct					s_light
 ** id, vector, color		: Common attributes
 ** color					: in range [0, 255]
 ** vec_second, vec_third	: Triangle
-** dia						: Sphere, Square, Cylinde
+** dia						: Sphere, Square, Cylinder
 ** height					: Cylinder
 ** direction				: Plane, Square, Cylinder
 **							: in range [-1, 1]
