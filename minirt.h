@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:13:18 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/13 17:04:29 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/14 15:51:36 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # define KEYPRESSMASK (1L<<0)
 # define DESTROYNOTIFY 17
 # define STRUCTURENOTIFYMASK (1L<<17)
+# define RAYMAX 1000
 # include <fcntl.h>
 # include <unistd.h>
 # include <stdlib.h>
@@ -108,6 +109,6 @@ t_vector			ft_vec_div_const(t_vector vec, double d);
 */
 t_ray				*ft_ray_init(t_vector *origin, t_vector dir);
 t_vector			ft_ray_at(t_ray *ray, double d);
-int					ft_ray_hit_sphere(t_object *sphere, t_ray *ray);
+int					ft_ray_hit_sphere(t_object *sphere, t_ray *ray, int t);
 t_color				*ft_ray_color(t_ray *ray, t_object *obj);
 #endif

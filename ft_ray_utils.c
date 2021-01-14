@@ -16,7 +16,14 @@ t_vector	ft_ray_at(t_ray *ray, double d)
 				ft_vec_product_const(*ray->dir, d)));
 }
 
-int			ft_ray_hit_sphere(t_object *sphere, t_ray *ray)
+/*
+** oc = (A - C) vector
+** a = t^2 * b dot b
+** b = 2 * t * b dot oc
+** c = oc dot oc - r^2
+*/
+
+int			ft_ray_hit_sphere(t_object *sphere, t_ray *ray, int t)
 {
 	t_vector	oc;
 	double		a;
@@ -25,8 +32,8 @@ int			ft_ray_hit_sphere(t_object *sphere, t_ray *ray)
 	double		discriminant;
 
 	oc = ft_vec_sub(*ray->origin, *sphere->vec);
-	a = ft_dot_product(*ray->dir, *ray->dir);
-	b = 2.0 * ft_dot_product(oc, *ray->dir);
+	a = t * t * ft_dot_product(*ray->dir, *ray->dir);
+	b = 2.0 * t * ft_dot_product(oc, *ray->dir);
 	c = ft_dot_product(oc, oc) - sphere->dia * sphere->dia;
 	discriminant = (b * b - 4 * a * c);
 	//printf("det = %f, ret = %d\n", discriminant, discriminant > 0 ? 1 : 0);
@@ -36,16 +43,22 @@ int			ft_ray_hit_sphere(t_object *sphere, t_ray *ray)
 t_color		*ft_ray_color(t_ray *ray, t_object *obj)
 {
 	t_color	*ret;
+	int		ray_st;
 
+	ray_st = 0;
 	if (!(ret = (t_color *)malloc(sizeof(t_color))))
 		return (0);
-	if (ft_ray_hit_sphere(obj, ray))
-		ft_color_cpy(ret, obj->color);
-	else
+	while (ray_st < RAYMAX)
 	{
-		ret->red = 10;
-		ret->green = 10;
-		ret->blue = 10;
+		if (ft_ray_hit_sphere(obj, ray, ray_st))
+		{
+			ft_color_cpy(ret, obj->color);
+			return (ret);
+		}
+		ray_st++;
 	}
+	ret->red = 10;
+	ret->green = 10;
+	ret->blue = 10;
 	return (ret);
 }
