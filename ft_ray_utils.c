@@ -84,40 +84,43 @@ int			ft_ray_hit_plane(t_object *plane, t_ray *ray, int t)
 	return (0);
 }
 
-void		ft_sqaure_t_range(double *min, double *max, double origin, double dir)
+void		ft_swap(double *a, double *b)
 {
 	double	temp;
 
-	*min = (*min - origin) / dir;
-	*max = (*max - origin) / dir;
-	if (dir < 0)
-	{
-		temp = *min;
-		*min = *max;
-		*max = temp;
-	}
+	temp = *a;
+	*a = *b;
+	*b = temp;
 }
 
-int			ft_ray_hit_square(t_object *square, t_ray *ray, int t)
+int			ft_ray_hit_square(t_object *square, t_ray *ray)
 {
 	double	tmin[3];
 	double	tmax[3];
 
-	ft_square_t_range(&(tmin[0] = square->vec->x - square->size / 2),
-			&(tmax[0] = square->vec->x + square->size / 2), ray->origin->x, ray->dir->x);
-	ft_square_t_range(&(tmin[1] = square->vec->y - square->size / 2),
-			&(tmax[1] = square->vec->y + square->size / 2), ray->origin->y, ray->dir->y);
-	ft_square_t_range(&(tmin[2] = square->vec->z - square->size / 2),
-			&(tmax[2] = square->vec->z + square->size / 2), ray->origin->z, ray->dir->z);
-	if ((tmin[0] > tmax[1]) || (tmin[0] > tmax[2]) || (tmin[1] > tmax[0]) ||
-			(tmin[1] > tmax[2]) || (tmin[2] > tmax[0]) || (tmin[2] > tmax[1]))
+	tmin[0] = ((square->vec->x - square->size / 2) - ray->origin->x) / ray->dir->x;
+	tmax[0] = ((square->vec->x + square->size / 2) - ray->origin->x) / ray->dir->x;
+	if (tmin[0] > tmax[0])
+		ft_swap(&tmin[0], &tmax[0]);
+	tmin[1] = ((square->vec->y - square->size / 2) - ray->origin->y) / ray->dir->y;
+	tmax[1] = ((square->vec->y + square->size / 2) - ray->origin->y) / ray->dir->y;
+	if (tmin[1] > tmax[1])
+		ft_swap(&tmin[1], &tmax[1]);
+	if ((tmin[0] > tmax[1]) || (tmin[1] > tmax[0]))
 		return (0);
-	if (tmin[1] > tmin[0])
-		tmin[0] = tmin[1];
-	if (
-	if (tymax < txmax)
-		txmax = tymax;
+	tmin[0] = (tmin[1] > tmin[0]) ? tmin[1] : tmin[0];
+	tmax[0] = (tmax[1] < tmax[0]) ? tmax[1] : tmax[0];
+	tmin[2] = square->vec->z - square->size / 2,
+	tmax[2] = square->vec->z + square->size / 2;
+	if (tmin[2] > tmax[2])
+		ft_swap(&tmin[2], &tmax[2]);
+	if ((tmin[0] > tmax[2]) || (tmin[2] > tmax[0]))
 		return (0);
+	tmin[0] = (tmin[2] > tmin[0]) ? tmin[2] : tmin[0];
+	tmax[0] = (tmax[2] < tmax[0]) ? tmax[2] : tmax[0];
+	if (tmax[0] < 0 || tmin[0] > RAYMAX)
+		return (0);
+	return (1);
 }
 
 t_color		*ft_ray_color(t_ray *ray, t_object *obj)
@@ -174,7 +177,7 @@ t_color		*ft_ray_color(t_ray *ray, t_object *obj)
 					return (ret);
 				}
 				*/
-			if (id == SQUARE && ft_ray_hit_square(now_obj, ray, 0) > 0)
+			if (id == SQUARE && ft_ray_hit_square(now_obj, ray) > 0)
 				ft_color_cpy(ret, now_obj->color);
 			now_obj = now_obj->next;
 		}
