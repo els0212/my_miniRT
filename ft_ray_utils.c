@@ -86,7 +86,21 @@ int			ft_ray_hit_plane(t_object *plane, t_ray *ray, int t)
 
 int			ft_ray_hit_square(t_object *square, t_ray *ray, int t)
 {
-	return (0);
+	double	xmin;
+	double	xmax;
+	double	ymin;
+	double	ymax;
+	double	zmin;
+	double	zmax;
+
+	xmin = square->vec->x - square->size / 2;
+	xmax = square->vec->x + square->size / 2;
+	ymin = square->vec->y - square->size / 2;
+	ymax = square->vec->y + square->size / 2;
+	zmin = square->vec->z - square->size / 2;
+	zmax = square->vec->z + square->size / 2;
+
+		return (0);
 }
 
 t_color		*ft_ray_color(t_ray *ray, t_object *obj)
