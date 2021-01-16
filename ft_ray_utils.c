@@ -84,22 +84,39 @@ int			ft_ray_hit_plane(t_object *plane, t_ray *ray, int t)
 	return (0);
 }
 
+void		ft_sqaure_t_range(double *min, double *max, double origin, double dir)
+{
+	double	temp;
+
+	*min = (*min - origin) / dir;
+	*max = (*max - origin) / dir;
+	if (dir < 0)
+	{
+		temp = *min;
+		*min = *max;
+		*max = temp;
+	}
+}
+
 int			ft_ray_hit_square(t_object *square, t_ray *ray, int t)
 {
-	double	xmin;
-	double	xmax;
-	double	ymin;
-	double	ymax;
-	double	zmin;
-	double	zmax;
+	double	tmin[3];
+	double	tmax[3];
 
-	xmin = square->vec->x - square->size / 2;
-	xmax = square->vec->x + square->size / 2;
-	ymin = square->vec->y - square->size / 2;
-	ymax = square->vec->y + square->size / 2;
-	zmin = square->vec->z - square->size / 2;
-	zmax = square->vec->z + square->size / 2;
-
+	ft_square_t_range(&(tmin[0] = square->vec->x - square->size / 2),
+			&(tmax[0] = square->vec->x + square->size / 2), ray->origin->x, ray->dir->x);
+	ft_square_t_range(&(tmin[1] = square->vec->y - square->size / 2),
+			&(tmax[1] = square->vec->y + square->size / 2), ray->origin->y, ray->dir->y);
+	ft_square_t_range(&(tmin[2] = square->vec->z - square->size / 2),
+			&(tmax[2] = square->vec->z + square->size / 2), ray->origin->z, ray->dir->z);
+	if ((tmin[0] > tmax[1]) || (tmin[0] > tmax[2]) || (tmin[1] > tmax[0]) ||
+			(tmin[1] > tmax[2]) || (tmin[2] > tmax[0]) || (tmin[2] > tmax[1]))
+		return (0);
+	if (tmin[1] > tmin[0])
+		tmin[0] = tmin[1];
+	if (
+	if (tymax < txmax)
+		txmax = tymax;
 		return (0);
 }
 
