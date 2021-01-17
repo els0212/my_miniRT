@@ -110,7 +110,7 @@ int			ft_ray_hit_square(t_object *square, t_ray *ray)
 	tmax[1] = ((square->vec->y + square->size / 2) - ray->origin->y) / ray->dir->y;
 	if (tmin[1] > tmax[1])
 		ft_swap(&tmin[1], &tmax[1]);
-	printf("tmin[0] = %.6lf, tmax[0]=%.6lf, tmin[1] = %.6lf, tmax[1] = %.6lf\n", tmin[0], tmax[0], tmin[1], tmax[1]);
+//	printf("tmin[0] = %.6lf, tmax[0]=%.6lf, tmin[1] = %.6lf, tmax[1] = %.6lf\n", tmin[0], tmax[0], tmin[1], tmax[1]);
 	// default
 	if ((tmin[0] > tmax[1]) || (tmin[1] > tmax[0]))
 		return (0);
@@ -155,14 +155,13 @@ t_color		*ft_ray_color(t_ray *ray, t_object *obj)
 		id = now_obj->id;
 		//printf("id = %d\n", id);
 		if (id == PLANE && ft_ray_hit_plane(now_obj, ray, 0) > 0)
-			;//ft_color_cpy(ret, now_obj->color);
+			ft_color_cpy(ret, now_obj->color);
 		if (id == SPHERE && ft_ray_hit_sphere(now_obj, ray, 0) > 0)
-			;//ft_color_cpy(ret, now_obj->color);
+			ft_color_cpy(ret, now_obj->color);
 		if (id == SQUARE && ft_ray_hit_square(now_obj, ray) > 0)
-		{
-			//printf("id = %d\n", id);
 				ft_color_cpy(ret, now_obj->color);
-		}
+		if (id == TRIANGLE)
+			;
 		now_obj = now_obj->next;
 	}
 	return (ret);
