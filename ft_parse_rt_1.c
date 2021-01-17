@@ -67,7 +67,8 @@ int		ft_ins_camera(char **chunks, t_compo *compo, int size)
 	camera->dir = dir;
 	camera->fov = ft_atod(chunks[3]) * (M_PI / 180.0);
 	ft_vector_init(&vup, 0, 1, 0);
-	camera->focal_len = camera->fov / ((compo->resolution->x) * 2);
+	//how to calc focal len ?
+	camera->focal_len = camera->fov;// ((compo->resolution->x) * 2);
 	camera->ndc_width = camera->focal_len * 2;
 	camera->ndc_height = camera->ndc_width / compo->resolution->ratio;
 	//printf("ht = %f\n", camera->ndc_height);

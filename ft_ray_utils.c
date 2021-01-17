@@ -11,6 +11,7 @@ t_ray	*ft_ray_init(t_vector *origin, t_vector dir)
 	ret->dir = ft_vec_dup(dir);
 	ft_vector_init(hit_point, RAYMAX, RAYMAX, RAYMAX);
 	ret->hit_point = hit_point;
+	ret->ray_hit = 0;
 	return (ret);
 }
 
@@ -28,6 +29,7 @@ int			ft_ray_change_hit(t_ray *ray, int t)
 	{
 		free(ray->hit_point);
 		ray->hit_point = ft_vec_dup(now);
+		ray->ray_hit = 1;
 		return (1);
 	}
 	return (0);
@@ -53,7 +55,7 @@ int			ft_ray_hit_sphere(t_object *sphere, t_ray *ray, int t)
 		a = t * t * ft_dot_product(*ray->dir, *ray->dir);
 		b = 2.0 * t * ft_dot_product(oc, *ray->dir);
 		c = ft_dot_product(oc, oc) - (sphere->dia / 2) * (sphere->dia / 2);
-		if ((b * b - 4 * a * c) > 0.0 && ft_ray_change_hit(ray, t))
+		if ((b * b - 4 * a * c) > EPSILON && ft_ray_change_hit(ray, t))
 			return (1);
 		//printf("det = %f, ret = %d\n", discriminant, discriminant > 0 ? 1 : 0);
 		//return (discriminant > 0 ? 1 : 0);
@@ -69,7 +71,7 @@ int			ft_ray_hit_plane(t_object *plane, t_ray *ray, int t)
 	
 	denom = ft_dot_product(*plane->dir, *ray->dir);
 	//printf("denom = %f\n",denom);
-	if (denom > 0.0f)// && ft_ray_change_hit(ray, t))
+	if (denom > EPSILON)// && ft_ray_change_hit(ray, t))
 	{
 		ft_vec_cpy(&oc, ft_vec_sub(*plane->vec, *ray->origin));
 		t = ft_dot_product(oc, *plane->dir) / denom;
@@ -100,25 +102,32 @@ int			ft_ray_hit_square(t_object *square, t_ray *ray)
 
 	tmin[0] = ((square->vec->x - square->size / 2) - ray->origin->x) / ray->dir->x;
 	tmax[0] = ((square->vec->x + square->size / 2) - ray->origin->x) / ray->dir->x;
+	//printf("square.x.min = %.6lf, tmin[0] = %.6lf\n", square->vec->x - square->size / 2, tmin[0]);
+	//printf("ray.ori.x = %.6lf, ray.dir.x = %.6lf\n", ray->origin->x, ray->dir->x);
 	if (tmin[0] > tmax[0])
 		ft_swap(&tmin[0], &tmax[0]);
 	tmin[1] = ((square->vec->y - square->size / 2) - ray->origin->y) / ray->dir->y;
 	tmax[1] = ((square->vec->y + square->size / 2) - ray->origin->y) / ray->dir->y;
 	if (tmin[1] > tmax[1])
 		ft_swap(&tmin[1], &tmax[1]);
+	printf("tmin[0] = %.6lf, tmax[0]=%.6lf, tmin[1] = %.6lf, tmax[1] = %.6lf\n", tmin[0], tmax[0], tmin[1], tmax[1]);
+	// default
 	if ((tmin[0] > tmax[1]) || (tmin[1] > tmax[0]))
 		return (0);
 	tmin[0] = (tmin[1] > tmin[0]) ? tmin[1] : tmin[0];
 	tmax[0] = (tmax[1] < tmax[0]) ? tmax[1] : tmax[0];
-	tmin[2] = square->vec->z - square->size / 2,
-	tmax[2] = square->vec->z + square->size / 2;
+	tmin[2] = ((square->vec->z - square->size / 2) - ray->origin->z) / ray->dir->z;
+	tmax[2] = ((square->vec->z + square->size / 2) - ray->origin->z) / ray->dir->z;
+	// default
 	if (tmin[2] > tmax[2])
 		ft_swap(&tmin[2], &tmax[2]);
 	if ((tmin[0] > tmax[2]) || (tmin[2] > tmax[0]))
 		return (0);
+	//printf("tmin[0] = %.6lf, tmax[0] = %.6lf, tmin[2] = %.6lf, tmax[2] = %.6lf\n", tmin[0], tmax[0], tmin[2], tmax[2]);
 	tmin[0] = (tmin[2] > tmin[0]) ? tmin[2] : tmin[0];
 	tmax[0] = (tmax[2] < tmax[0]) ? tmax[2] : tmax[0];
-	if (tmax[0] < 0 || tmin[0] > RAYMAX)
+	//printf("tmin = %.6lf, tmax = %.6lf\n", tmin[0], tmax[0]);
+	if (tmin[0] < -RAYMAX || tmax[0] > RAYMAX)
 		return (0);
 	return (1);
 }
@@ -127,63 +136,34 @@ t_color		*ft_ray_color(t_ray *ray, t_object *obj)
 {
 	t_color		*ret;
 	int			ray_st;
-	double		discriminant;
-	t_vector	now;
 	int			id;
 	t_object	*now_obj;
+	//t_vector	now;
+	//double		discriminant;
 
 	if (!(ret = (t_color *)malloc(sizeof(t_color))))
 		return (0);
-	// ray_st doesn't need to run loop
-	// sphere needs ray_st loop
-	// plane can return ray_st => need to check 0 <= ray_st <= raymax
-	// square uses aabb intersection algorithm
-		//printf("ray_st = %d\n", ray_st);
-		//printf("ori x = %f, y = %f, z = %f\n",ray->origin->x, ray->origin->y, ray->origin->z);
-		//printf("now x = %f, y = %f, z = %f\n",now.x, now.y, now.z);
-	//ray_st = 0;
-	//now = ft_vec_add(*ray->origin, ft_vec_product_const(*ray->dir, ray_st));
-	//if (ft_get_dist(*ray->origin, *ray->hit_point) <= ft_get_dist(*ray->origin, now))
-	//	break ;
-	//else
-	//{
-		now_obj = obj;
-		while (now_obj)
+	ret->red = 255;
+	ret->green = 255;
+	ret->blue = 255;
+	//printf("ray_st = %d\n", ray_st);
+	//printf("ori x = %f, y = %f, z = %f\n",ray->origin->x, ray->origin->y, ray->origin->z);
+	//printf("now x = %f, y = %f, z = %f\n",now.x, now.y, now.z);
+	now_obj = obj;
+	while (now_obj)
+	{
+		id = now_obj->id;
+		//printf("id = %d\n", id);
+		if (id == PLANE && ft_ray_hit_plane(now_obj, ray, 0) > 0)
+			;//ft_color_cpy(ret, now_obj->color);
+		if (id == SPHERE && ft_ray_hit_sphere(now_obj, ray, 0) > 0)
+			;//ft_color_cpy(ret, now_obj->color);
+		if (id == SQUARE && ft_ray_hit_square(now_obj, ray) > 0)
 		{
-			id = now_obj->id;
 			//printf("id = %d\n", id);
-			//sphere need to add the loop ray_at <= RAYMAX
-			if (id == SPHERE && ft_ray_hit_sphere(now_obj, ray, 0) > 0)
 				ft_color_cpy(ret, now_obj->color);
-				//ft_ray_hit_sphere(now_obj, ray, 0);
-				/*
-				if (ft_get_dist(*ray->origin, *ray->hit_point) > ft_get_dist(*ray->origin, now))
-				{
-					free(ray->hit_point);
-					ray->hit_point = ft_vec_dup(now);
-					ft_color_cpy(ret, now_obj->color);
-					return (ret);
-				}
-				*/
-			if (id == PLANE && ft_ray_hit_plane(now_obj, ray, 0) > 0)
-				ft_color_cpy(ret, now_obj->color);
-				/*
-				printf("plane?!\n");
-				if (ft_get_dist(*ray->origin, *ray->hit_point) > ft_get_dist(*ray->origin, now))
-				{
-					free(ray->hit_point);
-					ray->hit_point = ft_vec_dup(now);
-					ft_color_cpy(ret, now_obj->color);
-					return (ret);
-				}
-				*/
-			if (id == SQUARE && ft_ray_hit_square(now_obj, ray) > 0)
-				ft_color_cpy(ret, now_obj->color);
-			now_obj = now_obj->next;
 		}
-		//}
-	ret->red = 10;
-	ret->green = 10;
-	ret->blue = 10;
+		now_obj = now_obj->next;
+	}
 	return (ret);
 }

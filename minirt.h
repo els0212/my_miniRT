@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:13:18 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/16 16:10:36 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/17 14:58:45 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # define DESTROYNOTIFY 17
 # define STRUCTURENOTIFYMASK (1L<<17)
 # define RAYMAX 1000
+# define EPSILON 0.000001
 # include <fcntl.h>
 # include <unistd.h>
 # include <stdlib.h>
