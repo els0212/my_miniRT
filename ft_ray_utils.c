@@ -132,6 +132,11 @@ int			ft_ray_hit_square(t_object *square, t_ray *ray)
 	return (1);
 }
 
+int			ft_ray_hit_triangle(t_object *triangle, t_ray *ray)
+{
+	return (0);
+}
+
 t_color		*ft_ray_color(t_ray *ray, t_object *obj)
 {
 	t_color		*ret;
@@ -160,8 +165,8 @@ t_color		*ft_ray_color(t_ray *ray, t_object *obj)
 			ft_color_cpy(ret, now_obj->color);
 		if (id == SQUARE && ft_ray_hit_square(now_obj, ray) > 0)
 				ft_color_cpy(ret, now_obj->color);
-		if (id == TRIANGLE)
-			;
+		if (id == TRIANGLE && ft_ray_hit_triangle(now_obj, ray) > 0)
+				ft_color_cpy(ret, now_obj->color);
 		now_obj = now_obj->next;
 	}
 	return (ret);
