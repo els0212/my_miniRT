@@ -99,16 +99,44 @@ int			ft_ray_hit_square(t_object *square, t_ray *ray)
 {
 	double	tmin[3];
 	double	tmax[3];
-	t_vector	vup;
-	t_vector	u;
-	t_vector	v;
+	t_vector	default_n;
+	double	r[3][3];
+	double	axis[3];
+	double	new_axis[3];
+	//t_vector	vup;
+	//t_vector	u;
+	//t_vector	v;
 
-	ft_vector_init(&vup, 0, 1.0, 0);
-	u = ft_vec_cross_product(n, vup);
-	v = ft_vec_cross_product(u, n);
-	printf("u.x = %.6lf, u.y = %.6lf, u.z = %.6lf, v.x = %.6lf, v.y = %.6lf, v.z = %.6lf\n",\
-			u.x, u.y, u.z, v.x, v.y, v.z);
-	tmin[0] = ((square->vec->x - square->size / 2) - ray->origin->x) / ray->dir->x;
+	ft_vector_init(&default_n, 0, 0, 1.0);
+	//u = ft_cross_product(vup, *square->dir);
+	double angle = acos((ft_dot_product(default_n, *square->dir) / (1 * sqrt(pow(square->dir->x, 2) + pow(square->dir->y, 2) + pow(square->dir->z, 2)))));
+	printf("cos(angle) = %.6lf\n", cos(angle));
+	//v = ft_cross_product(u, *square->dir);
+	//printf("u.x = %.6lf, u.y = %.6lf, u.z = %.6lf, v.x = %.6lf, v.y = %.6lf, v.z = %.6lf\n",\
+	//		u.x, u.y, u.z, v.x, v.y, v.z);
+
+	// init Rotation matrix
+	r[0][0] = cos(angle) + square->dir->x * square->dir->x * (1 - cos(angle));
+	r[0][1] = square->dir->x * square->dir->y * (1 - cos(angle)) - square->dir->z * sin(angle);
+	r[0][2] = square->dir->x * square->dir->z * (1 - cos(angle)) + square->dir->y * sin(angle);
+	r[1][0] = square->dir->y * square->dir->z * (1 - cos(angle)) + square->dir->z * sin(angle);
+	r[1][1] = cos(angle) + square->dir->y * square->dir->y * (1 - cos(angle));
+	r[1][2] = square->dir->y * square->dir->z * (1 - cos(angle)) + square->dir->x * sin(angle);
+	r[2][0] = square->dir->z * square->dir->x * (1 - cos(angle)) + square->dir->y * sin(angle);
+	r[2][1] = square->dir->z * square->dir->y * (1 - cos(angle)) + square->dir->x * sin(angle);
+	r[2][2] = cos(angle) + square->dir->z * square->dir->z * (1 - cos(angle));
+	// end
+
+	//rotate x, y, z
+		axis[0] = square->vec->x - square->size / 2;
+		axis[1] = square->vec->y - square->size / 2;
+		axis[2] = square->vec->z - square->size / 2;
+		new_axis[0] = r[0][0] * axis[0] + r[0][1] * axis[1] + r[0][2] * axis[2];
+		new_axis[1] = r[1][0] * axis[0] + r[1][1] * axis[1] + r[1][2] * axis[2];
+		new_axis[2] = r[2][0] * axis[0] + r[2][1] * axis[1] + r[2][2] * axis[2];
+	//end
+
+	tmin[0] = ((square->vec->x - (square->size / 2)) - ray->origin->x) / ray->dir->x;
 	tmax[0] = ((square->vec->x + square->size / 2) - ray->origin->x) / ray->dir->x;
 	//printf("square.x.min = %.6lf, tmin[0] = %.6lf\n", square->vec->x - square->size / 2, tmin[0]);
 	//printf("ray.ori.x = %.6lf, ray.dir.x = %.6lf\n", ray->origin->x, ray->dir->x);
@@ -164,7 +192,7 @@ int			ft_ray_hit_triangle(t_object *triangle, t_ray *ray, int t)
 	b = ft_vec_sub(*triangle->vec_second, *triangle->vec);
 	n = ft_cross_product(a, b);
 	discriminant = ft_dot_product(n, *ray->dir);
-	printf("discriminant = %.6lf\n", discriminant);
+	//printf("discriminant = %.6lf\n", discriminant);
 	if (fabs(discriminant) < EPSILON)
 		return (0);
 	t = (ft_dot_product(n, *ray->origin) + ft_dot_product(n, *triangle->vec)) / discriminant;
