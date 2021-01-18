@@ -138,35 +138,35 @@ int			ft_triangle_inside_outside(t_vector p, t_vector a, t_vector b)
 	t_vector	p_edge;
 
 	edge = ft_vec_sub(b, a);
-	p_edge = ft_vec_sub(p, edge);
-	if (ft_cross_product(edge, p_edge) < 0)
+	p_edge = ft_vec_sub(p, a);
+	if (ft_dot_product(edge, p_edge) < 0)
 		return (0);
 	return (1);
 }
 
-int			ft_ray_hit_triangle(t_object *triangle, t_ray *ray)
+int			ft_ray_hit_triangle(t_object *triangle, t_ray *ray, int t)
 {
 	t_vector	a;
 	t_vector	b;
-	t_vector	n;
 	t_vector	p;
-	double		t;
-	t_vector	oc;
+	t_vector	n;
+	double		discriminant;
 
 	a = ft_vec_sub(*triangle->vec, *triangle->vec_second);
 	b = ft_vec_sub(*triangle->vec, *triangle->vec_third);
-	oc = ft_dot_product(ft_cross_product(a, b), *ray->dir);
-	if (fabs(oc) < EPSILON)
+	n = ft_cross_product(a, b);
+	discriminant = ft_dot_product(n, *ray->dir);
+	if (fabs(discriminant) < EPSILON)
 		return (0);
-	t = (ft_dot_product(ft_cross_product(a, b), *ray->origin) + ft_dot_product(n, *triangle->vec)) / oc;
+	t = (ft_dot_product(n, *ray->origin) + ft_dot_product(n, *triangle->vec)) / discriminant;
 	if (t < 0)
 		return (0);
 	p = ft_vec_add(*ray->origin, ft_vec_product_const(*ray->dir, t));
 	if (ft_triangle_inside_outside(p, *triangle->vec, *triangle->vec_second) == 0)
 		return (0);
-	else if (ft_triangle_inside_outside(p, *triangle->vec, *triangle->vec_third) == 0)
-		return (0);
 	else if (ft_triangle_inside_outside(p, *triangle->vec_second, *triangle->vec_third) == 0)
+		return (0);
+	else if (ft_triangle_inside_outside(p, *triangle->vec_second, *triangle->vec) == 0)
 		return (0);
 	return (1);
 }
@@ -174,7 +174,6 @@ int			ft_ray_hit_triangle(t_object *triangle, t_ray *ray)
 t_color		*ft_ray_color(t_ray *ray, t_object *obj)
 {
 	t_color		*ret;
-	int			ray_st;
 	int			id;
 	t_object	*now_obj;
 	//t_vector	now;
@@ -199,7 +198,7 @@ t_color		*ft_ray_color(t_ray *ray, t_object *obj)
 			ft_color_cpy(ret, now_obj->color);
 		if (id == SQUARE && ft_ray_hit_square(now_obj, ray) > 0)
 				ft_color_cpy(ret, now_obj->color);
-		if (id == TRIANGLE && ft_ray_hit_triangle(now_obj, ray) > 0)
+		if (id == TRIANGLE && ft_ray_hit_triangle(now_obj, ray, 0) > 0)
 				ft_color_cpy(ret, now_obj->color);
 		now_obj = now_obj->next;
 	}

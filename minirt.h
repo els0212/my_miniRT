@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:13:18 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/17 14:58:45 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/18 16:08:13 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int					ft_ins_triangle(char **chunks, t_compo *compo, int size);
 ** ft_math_utils.c 
 */
 double				ft_degree_to_radian(double degree);
-t_vector			*ft_cross_product(t_vector a, t_vector b);
+t_vector			ft_cross_product(t_vector a, t_vector b);
 double				ft_dot_product(t_vector a, t_vector b);
 double				ft_get_dist(t_vector a, t_vector b);
 /*
@@ -115,5 +115,6 @@ void		ft_square_t_range(double *min, double *max, double origin, double dir);
 int			ft_ray_hit_square(t_object *square, t_ray *ray);
 int					ft_ray_hit_sphere(t_object *sphere, t_ray *ray, int t);
 int					ft_ray_hit_plane(t_object *plane, t_ray *ray, int t);
+int			ft_ray_hit_triangle(t_object *triangle, t_ray *ray, int t);
 t_color				*ft_ray_color(t_ray *ray, t_object *obj);
 #endif

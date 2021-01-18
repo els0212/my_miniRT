@@ -104,13 +104,13 @@ int main(int argc, char **argv)
 	img.addr = (char *)mlx_get_data_addr(img.img, &img.bpp, &img.line_len, &img.endian);
 	*/
 	//printf("with = %f, ht = %f\n", compo->camera->ndc_width, compo->camera->ndc_height);
-	int img_w = 640;
-	int img_h = img_w / compo->resolution->ratio;
-	for(int i = 0 ; i <img_w; i++)
-		for(int j = 0 ; j < img_h; j++)
+	//int img_w = 640;
+	//int img_h = img_w / compo->resolution->ratio;
+	for(int i = 0 ; i <compo->resolution->x; i++)
+		for(int j = 0 ; j < compo->resolution->y; j++)
 		{
-			double u = (double)i / (img_w - 1);
-			double v = (double)j / (img_h - 1);
+			double u = (double)i / (compo->resolution->x - 1);
+			double v = (double)j / (compo->resolution->y - 1);
 			ray = ft_ray_init(compo->camera->vec, ft_vec_sub(ft_vec_add(compo->camera->ndc_left_bottom, ft_vec_add(ft_vec_product_const(compo->camera->ndc_horizon, u), ft_vec_product_const(compo->camera->ndc_vertical, v))), *compo->camera->vec));
 			//printf("ray_dir x = %f, y = %f, z = %f\n",ray->dir->x, ray->dir->y, ray->dir->z);
 			t_color *temp_color = ft_ray_color(ray, compo->objects);

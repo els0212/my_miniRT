@@ -8,15 +8,13 @@ double	ft_degree_to_radian(double degree)
 	return (radian);
 }
 
-t_vector	*ft_cross_product(t_vector a, t_vector b)
+t_vector	ft_cross_product(t_vector a, t_vector b)
 {
-	t_vector	*ret;
+	t_vector	ret;
 
-	if (!(ret = (t_vector *)malloc(sizeof(t_vector))))
-		return (0);
-	ret->x = a.y * b.z - a.z * b.y;
-	ret->y = a.z * b.x - b.x * a.z;
-	ret->z = a.x * b.y - a.y * b.x;
+	ret.x = a.y * b.z - a.z * b.y;
+	ret.y = a.z * b.x - b.x * a.z;
+	ret.z = a.x * b.y - a.y * b.x;
 	return (ret);
 }
 
