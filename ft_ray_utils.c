@@ -152,8 +152,8 @@ int			ft_ray_hit_triangle(t_object *triangle, t_ray *ray, int t)
 	t_vector	n;
 	double		discriminant;
 
-	a = ft_vec_sub(*triangle->vec_second, *triangle->vec);
-	b = ft_vec_sub(*triangle->vec_third, *triangle->vec);
+	a = ft_vec_sub(*triangle->vec_third, *triangle->vec);
+	b = ft_vec_sub(*triangle->vec_second, *triangle->vec);
 	n = ft_cross_product(a, b);
 	discriminant = ft_dot_product(n, *ray->dir);
 	if (fabs(discriminant) < EPSILON)
@@ -164,9 +164,9 @@ int			ft_ray_hit_triangle(t_object *triangle, t_ray *ray, int t)
 	p = ft_vec_add(*ray->origin, ft_vec_product_const(*ray->dir, t));
 	if (ft_triangle_inside_outside(p, *triangle->vec, *triangle->vec_second) == 0)
 		return (0);
-	else if (ft_triangle_inside_outside(p, *triangle->vec_second, *triangle->vec_third) == 0)
+	else if (ft_triangle_inside_outside(p, *triangle->vec_third, *triangle->vec_second) == 0)
 		return (0);
-	else if (ft_triangle_inside_outside(p, *triangle->vec_second, *triangle->vec) == 0)
+	else if (ft_triangle_inside_outside(p, *triangle->vec, *triangle->vec_third) == 0)
 		return (0);
 	return (1);
 }
