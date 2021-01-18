@@ -132,14 +132,14 @@ int			ft_ray_hit_square(t_object *square, t_ray *ray)
 	return (1);
 }
 
-int			ft_triangle_inside_outside(t_vector p, t_vector a, t_vector b)
+int			ft_triangle_inside_outside(t_vector p, t_vector a, t_vector b, t_vector n)
 {
 	t_vector	edge;
 	t_vector	p_edge;
 
-	edge = ft_vec_sub(b, a);
-	p_edge = ft_vec_sub(p, a);
-	if (ft_dot_product(edge, p_edge) < 0)
+	edge = ft_vec_sub(a, b);
+	p_edge = ft_vec_sub(p, b);
+	if (ft_dot_product(ft_cross_product(edge, p_edge), n) < 0)
 		return (0);
 	return (1);
 }
@@ -156,17 +156,18 @@ int			ft_ray_hit_triangle(t_object *triangle, t_ray *ray, int t)
 	b = ft_vec_sub(*triangle->vec_second, *triangle->vec);
 	n = ft_cross_product(a, b);
 	discriminant = ft_dot_product(n, *ray->dir);
+	printf("discriminant = %.6lf\n", discriminant);
 	if (fabs(discriminant) < EPSILON)
 		return (0);
 	t = (ft_dot_product(n, *ray->origin) + ft_dot_product(n, *triangle->vec)) / discriminant;
 	if (t < 0)
 		return (0);
-	p = ft_vec_add(*ray->origin, ft_vec_product_const(*ray->dir, t));
-	if (ft_triangle_inside_outside(p, *triangle->vec, *triangle->vec_second) == 0)
+	p = ft_ray_at(*ray, t);
+	if (ft_triangle_inside_outside(p, *triangle->vec, *triangle->vec_second, n) == 0)
 		return (0);
-	else if (ft_triangle_inside_outside(p, *triangle->vec_third, *triangle->vec_second) == 0)
+	else if (ft_triangle_inside_outside(p, *triangle->vec_second, *triangle->vec_third, n) == 0)
 		return (0);
-	else if (ft_triangle_inside_outside(p, *triangle->vec, *triangle->vec_third) == 0)
+	else if (ft_triangle_inside_outside(p, *triangle->vec_third, *triangle->vec, n) == 0)
 		return (0);
 	return (1);
 }
