@@ -152,8 +152,8 @@ int			ft_ray_hit_triangle(t_object *triangle, t_ray *ray, int t)
 	t_vector	n;
 	double		discriminant;
 
-	a = ft_vec_sub(*triangle->vec, *triangle->vec_second);
-	b = ft_vec_sub(*triangle->vec, *triangle->vec_third);
+	a = ft_vec_sub(*triangle->vec_second, *triangle->vec);
+	b = ft_vec_sub(*triangle->vec_third, *triangle->vec);
 	n = ft_cross_product(a, b);
 	discriminant = ft_dot_product(n, *ray->dir);
 	if (fabs(discriminant) < EPSILON)
