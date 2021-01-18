@@ -99,7 +99,15 @@ int			ft_ray_hit_square(t_object *square, t_ray *ray)
 {
 	double	tmin[3];
 	double	tmax[3];
+	t_vector	vup;
+	t_vector	u;
+	t_vector	v;
 
+	ft_vector_init(&vup, 0, 1.0, 0);
+	u = ft_vec_cross_product(n, vup);
+	v = ft_vec_cross_product(u, n);
+	printf("u.x = %.6lf, u.y = %.6lf, u.z = %.6lf, v.x = %.6lf, v.y = %.6lf, v.z = %.6lf\n",\
+			u.x, u.y, u.z, v.x, v.y, v.z);
 	tmin[0] = ((square->vec->x - square->size / 2) - ray->origin->x) / ray->dir->x;
 	tmax[0] = ((square->vec->x + square->size / 2) - ray->origin->x) / ray->dir->x;
 	//printf("square.x.min = %.6lf, tmin[0] = %.6lf\n", square->vec->x - square->size / 2, tmin[0]);
