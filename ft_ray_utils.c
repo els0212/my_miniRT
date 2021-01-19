@@ -41,25 +41,25 @@ int			ft_ray_change_hit(t_ray *ray, int t)
 ** c = oc dot oc - r^2
 */
 
-int			ft_ray_hit_sphere(t_object *sphere, t_ray *ray, int t)
+int			ft_ray_hit_sphere(t_object *sphere, t_ray *ray, double t)
 {
 	t_vector	oc;
 	double		a;
 	double		b;
 	double		c;
-	//t_vector	now;
+	double		discriminant;
 
-	while (t <= RAYMAX)
+	oc = ft_vec_sub(*ray->origin, *sphere->vec);
+	a = ft_dot_product(*ray->dir, *ray->dir);
+	b = 2.0 * ft_dot_product(oc, *ray->dir);
+	c = ft_dot_product(oc, oc) - (sphere->dia / 2) * (sphere->dia / 2);
+	discriminant = b * b - 4 * a * c;
+	if (discriminant >= 0)
 	{
-		oc = ft_vec_sub(*ray->origin, *sphere->vec);
-		a = t * t * ft_dot_product(*ray->dir, *ray->dir);
-		b = 2.0 * t * ft_dot_product(oc, *ray->dir);
-		c = ft_dot_product(oc, oc) - (sphere->dia / 2) * (sphere->dia / 2);
-		if ((b * b - 4 * a * c) > EPSILON && ft_ray_change_hit(ray, t))
+		t = (-b - sqrt(discriminant)) / (2 * a);
+		//printf("t = %.6lf\n", t);
+		if (t >= 0 && ft_ray_change_hit(ray, t))
 			return (1);
-		//printf("det = %f, ret = %d\n", discriminant, discriminant > 0 ? 1 : 0);
-		//return (discriminant > 0 ? 1 : 0);
-		t++;
 	}
 	return (0);
 }
@@ -100,24 +100,25 @@ int			ft_ray_hit_square(t_object *square, t_ray *ray)
 	double		denom;
 	t_vector	oc;
 	t_vector	p;
+	double		t;
 	
 	denom = ft_dot_product(*square->dir, *ray->dir);
 	//printf("denom = %f\n",denom);
-	if (denom > EPSILON)
+	if (fabs(denom) > EPSILON)
 	{
 		ft_vec_cpy(&oc, ft_vec_sub(*square->vec, *ray->origin));
-		t = ft_dot_product(oc, *plane->dir) / denom;
+		t = ft_dot_product(oc, *square->dir) / denom;
 		if (t >= 0)
 		{
 			p = ft_ray_at(*ray, t);
-			if (fabs(p.x - square->vec->x) > (square->side_size / 2))
+			if (fabs(p.x - square->vec->x) > (square->size / 2))
 				return (0);
-			if (fabs(p.y - square->vec->y) > (square->side_size / 2))
+			if (fabs(p.y - square->vec->y) > (square->size / 2))
 				return (0);
-			if (fabs(p.z - square->vec->z) > (square->side_size / 2))
+			if (fabs(p.z - square->vec->z) > (square->size / 2))
 				return (0);
 			if (ft_ray_change_hit(ray, t) > 0)
-			return (1);
+				return (1);
 		}
 	}
 	return (0);
@@ -265,9 +266,9 @@ t_color		*ft_ray_color(t_ray *ray, t_object *obj)
 		if (id == SPHERE && ft_ray_hit_sphere(now_obj, ray, 0) > 0)
 			ft_color_cpy(ret, now_obj->color);
 		if (id == SQUARE && ft_ray_hit_square(now_obj, ray) > 0)
-				ft_color_cpy(ret, now_obj->color);
+			ft_color_cpy(ret, now_obj->color);
 		if (id == TRIANGLE && ft_ray_hit_triangle(now_obj, ray, 0) > 0)
-				ft_color_cpy(ret, now_obj->color);
+			ft_color_cpy(ret, now_obj->color);
 		now_obj = now_obj->next;
 	}
 	return (ret);

@@ -18,9 +18,6 @@ int		ft_get_sign(const char *nptr, int *sign)
 	ret = 0;
 	st = 0;
 	*sign = 1;
-	while (nptr[st] && (nptr[st] == ' ' ||
-				(nptr[st] >= 0x09 && nptr[st] <= 0x0D)))
-		st++;
 	if (!nptr[st])
 		return (-1);
 	if (nptr[st] == '-')
@@ -45,6 +42,8 @@ int		ft_atoi(const char *nptr)
 	ret = 0;
 	while (nptr[--st] && nptr[st] >= '0' && nptr[st] <= '9')
 	{
+		if (st < 0)
+			break ;
 		ret += (nptr[st] - '0') * mul;
 		mul *= 10;
 	}
@@ -62,20 +61,15 @@ double	ft_atod(const char *nptr)
 	if ((st = ft_get_sign(nptr, &sign)) < 0)
 		return (0);
 	ret = 0;
-	mul = 1;
-	pt_st = st;
-	while (st >= 0 && nptr[--st] && nptr[st] >= '0' && nptr[st] <= '9')
-	{
-		ret += (nptr[st] - '0') * mul;
-		mul *= 10;
-	}
 	mul = 0.1;
+	pt_st = st;
 	if (nptr[pt_st] == '.')
 		pt_st++;
+	ret = ft_atoi(nptr);
 	while (nptr[pt_st] && nptr[pt_st] >= '0' && nptr[pt_st] <= '9')
 	{
 		ret += (nptr[pt_st++] - '0') * mul;
 		mul *= 0.1;
 	}
-	return (ret * (double)sign);
+	return (ret);
 }

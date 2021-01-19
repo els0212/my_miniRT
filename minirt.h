@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:13:18 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/18 16:08:13 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/19 18:48:47 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ t_ray				*ft_ray_init(t_vector *origin, t_vector dir);
 t_vector			ft_ray_at(t_ray ray, double d);
 void		ft_square_t_range(double *min, double *max, double origin, double dir);
 int			ft_ray_hit_square(t_object *square, t_ray *ray);
-int					ft_ray_hit_sphere(t_object *sphere, t_ray *ray, int t);
+int					ft_ray_hit_sphere(t_object *sphere, t_ray *ray, double t);
 int					ft_ray_hit_plane(t_object *plane, t_ray *ray, int t);
 int			ft_ray_hit_triangle(t_object *triangle, t_ray *ray, int t);
 t_color				*ft_ray_color(t_ray *ray, t_object *obj);

@@ -63,11 +63,12 @@ void			ft_color_init(t_color *color, int r, int g, int b)
 	color->blue = b;
 }
 
-void					ft_color_cpy(t_color *c1, t_color *c2)
+t_color			*ft_color_cpy(t_color *c1, t_color *c2)
 {
 	c1->red = c2->red;
 	c1->green = c2->green;
 	c1->blue = c2->blue;
+	return (c1);
 }
 
 t_vector		*ft_make_vector(char *str)
