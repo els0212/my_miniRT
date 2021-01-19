@@ -122,7 +122,6 @@ int			ft_ray_hit_square(t_object *square, t_ray *ray)
 		}
 	}
 	return (0);
-
 }
 /*
 int			ft_ray_hit_square(t_object *square, t_ray *ray)
