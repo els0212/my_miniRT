@@ -134,6 +134,8 @@ int			ft_ray_hit_square(t_object *square, t_ray *ray)
 		new_axis[0] = r[0][0] * axis[0] + r[0][1] * axis[1] + r[0][2] * axis[2];
 		new_axis[1] = r[1][0] * axis[0] + r[1][1] * axis[1] + r[1][2] * axis[2];
 		new_axis[2] = r[2][0] * axis[0] + r[2][1] * axis[1] + r[2][2] * axis[2];
+		pirntf("before x = %.6lf, y = %.6lf, z = %.6lf\n",axis[0], axis[1], axis[2]);
+		pirntf("after x = %.6lf, y = %.6lf, z = %.6lf\n",new_axis[0], new_axis[1], new_axis[2]);
 	//end
 
 	tmin[0] = ((square->vec->x - (square->size / 2)) - ray->origin->x) / ray->dir->x;
