@@ -97,6 +97,35 @@ void		ft_swap(double *a, double *b)
 
 int			ft_ray_hit_square(t_object *square, t_ray *ray)
 {
+	double		denom;
+	t_vector	oc;
+	t_vector	p;
+	
+	denom = ft_dot_product(*square->dir, *ray->dir);
+	//printf("denom = %f\n",denom);
+	if (denom > EPSILON)
+	{
+		ft_vec_cpy(&oc, ft_vec_sub(*square->vec, *ray->origin));
+		t = ft_dot_product(oc, *plane->dir) / denom;
+		if (t >= 0)
+		{
+			p = ft_ray_at(*ray, t);
+			if (fabs(p.x - square->vec->x) > (square->side_size / 2))
+				return (0);
+			if (fabs(p.y - square->vec->y) > (square->side_size / 2))
+				return (0);
+			if (fabs(p.z - square->vec->z) > (square->side_size / 2))
+				return (0);
+			if (ft_ray_change_hit(ray, t) > 0)
+			return (1);
+		}
+	}
+	return (0);
+
+}
+/*
+int			ft_ray_hit_square(t_object *square, t_ray *ray)
+{
 	double	tmin[3];
 	double	tmax[3];
 	t_vector	default_n;
@@ -169,7 +198,7 @@ int			ft_ray_hit_square(t_object *square, t_ray *ray)
 		return (0);
 	return (1);
 }
-
+*/
 int			ft_triangle_inside_outside(t_vector p, t_vector a, t_vector b, t_vector n)
 {
 	t_vector	edge;
