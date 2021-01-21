@@ -120,18 +120,23 @@ int			ft_ray_hit_square(t_object *square, t_ray *ray)
 		ft_vec_cpy(&oc, ft_vec_sub(*square->vec, *ray->origin));
 		//printf("square->x = %f\n", square->vec->x);
 		t = ft_dot_product(oc, *square->dir) / denom;
+		//printf("square t = %f\n", t);
 		if (t >= 0)
 		{
 			p = ft_ray_at(*ray, t);
 			ft_vec_cpy(&left_corner, *square->vec);
 			left_corner.x -= square->size / 2;
 			left_corner.y -= square->size / 2;
-			//printf("left_corner.x = %.6lf, y = %.6lf, z = %.6lf\n", left_corner.x,left_corner.y,left_corner.z);
+			printf("origin x = %.6lf, y = %.6lf, z = %.6lf\n", left_corner.x,left_corner.y,left_corner.z);
 			left_corner = ft_rotate_z(ft_rotate_y(ft_rotate_x(left_corner, alpha), beta), gamma);
-			double diff_x = (left_corner.x - square->vec->x - square->size / 2);
-			double diff_y = (left_corner.y - square->vec->y - square->size / 2);
+			t_vector test;
+			ft_vec_cpy(&test, ft_vec_sub(p, *square->vec));
+			//printf("dot prod = %f\n", ft_dot_product(test, *square->dir));
+			double diff_x = (left_corner.x - square->vec->x + square->size / 2);
+			double diff_y = (left_corner.y - square->vec->y + square->size / 2);
 			double diff_z = (left_corner.z - square->vec->z);
-			printf("origin x = %lf, y= %.6lf, z = %.6lf, new x = %.6lf, y = %.6lf, z = %.6lf\n", square->vec->x - square->size / 2, square->vec->y - square->size / 2, square->vec->z, left_corner.x, left_corner.y, left_corner.z);
+			printf("new x = %.6lf, y = %.6lf, z = %.6lf\n", left_corner.x, left_corner.y, left_corner.z);
+			printf("diff x = %f, y = %f, z = %f\n", diff_x, diff_y, diff_z);
 			if (fabs(p.x - square->vec->x) > (square->size / 2 + diff_x))
 				return (0);
 			if (fabs(p.y - square->vec->y + diff_y) > (square->size / 2 + diff_y))
@@ -248,11 +253,11 @@ int			ft_ray_hit_triangle(t_object *triangle, t_ray *ray, int t)
 	//printf("discriminant = %.6lf\n", discriminant);
 	if (fabs(discriminant) < EPSILON)
 		return (0);
-	printf("ray_dir x %f y %f z %f\n",ray->dir->x, ray->dir->y, ray->dir->z);
+	//printf("ray_dir x %f y %f z %f\n",ray->dir->x, ray->dir->y, ray->dir->z);
 	//printf("n.ray = %lf, n.triangle = %lf\n", ft_dot_product(n, *ray->origin), ft_dot_product(n, *triangle->vec));
 	t = (ft_dot_product(ft_vec_sub(*triangle->vec, *ray->origin), n) / discriminant);
 	//t = (ft_dot_product(n, *ray->origin) + ft_dot_product(n, *triangle->vec)) / discriminant;
-	printf("t = %d\n", t);
+	//printf("t = %d\n", t);
 	if (t < 0)
 		return (0);
 	p = ft_ray_at(*ray, t);
