@@ -123,15 +123,13 @@ t_color		*ft_make_color(char *str)
 	return (ret);
 }
 
-t_vector	*ft_normalize(t_vector *vec)
+t_vector	ft_normalize(t_vector vec)
 {
 	double	size;
-	t_vector	*target;
 
-	target = vec;
-	size = sqrt(pow(target->x, 2) + pow(target->y, 2) + pow(target->z, 2));
-	target->x /= size;
-	target->y /= size;
-	target->z /= size;
-	return (target);
+	size = sqrt(pow(vec.x, 2) + pow(vec.y, 2) + pow(vec.z, 2));
+	vec.x /= size;
+	vec.y /= size;
+	vec.z /= size;
+	return (vec);
 }

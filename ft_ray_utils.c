@@ -49,15 +49,18 @@ int			ft_ray_hit_sphere(t_object *sphere, t_ray *ray, double t)
 	double		c;
 	double		discriminant;
 
+//	printf("ori x =%.6f, y=%.6f, z=%.6f\n",ray->origin->x, ray->origin->y, ray->origin->z);
+//	printf("sph x =%.6f, y=%.6f, z=%.6f\n",sphere->vec->x, sphere->vec->y, sphere->vec->z);
 	oc = ft_vec_sub(*ray->origin, *sphere->vec);
 	a = ft_dot_product(*ray->dir, *ray->dir);
+	//printf("ray x =%.6f, y=%.6f, z=%.6f\n",ray->dir->x, ray->dir->y, ray->dir->z);
 	b = 2.0 * ft_dot_product(oc, *ray->dir);
 	c = ft_dot_product(oc, oc) - (sphere->dia / 2) * (sphere->dia / 2);
 	discriminant = b * b - 4 * a * c;
 	if (discriminant >= 0)
 	{
 		t = (-b - sqrt(discriminant)) / (2 * a);
-		//printf("t = %.6lf\n", t);
+		printf("a = %.6lf, b = %.6lf, t = %.6lf\n", a,b,t);
 		if (t >= 0 && ft_ray_change_hit(ray, t))
 			return (1);
 	}
@@ -101,41 +104,39 @@ int			ft_ray_hit_square(t_object *square, t_ray *ray)
 	t_vector	oc;
 	t_vector	p;
 	double		t;
-	t_vector	temp;
+	t_vector	left_corner;
 	
 	denom = ft_dot_product(*square->dir, *ray->dir);
 	//printf("denom = %f\n",denom);
-
 	// x축 회전각
 	double alpha = square->dir->z ? atan(square->dir->y / square->dir->z) * M_PI / 180 : 0;
 	// y축 회전각
-	double beta = square->dir->z ? atan(-1 * square->dir->x / square->dir->z) * M_PI / 180: 0;
+	double beta = square->dir->z ? atan(-square->dir->x / square->dir->z) * M_PI / 180: 0;
 	// z axis angle
 	double gamma = square->dir->x ? atan(square->dir->y / square->dir->x) * M_PI / 180: 0;
-	printf("alpha = %.6lf, beta = %.6lf, gamma = %.6lf\n", alpha, beta, gamma);
+	//printf("alpha = %.6lf, beta = %.6lf, gamma = %.6lf\n", alpha, beta, gamma);
 	if (fabs(denom) > EPSILON)
 	{
 		ft_vec_cpy(&oc, ft_vec_sub(*square->vec, *ray->origin));
+		//printf("square->x = %f\n", square->vec->x);
 		t = ft_dot_product(oc, *square->dir) / denom;
 		if (t >= 0)
 		{
 			p = ft_ray_at(*ray, t);
-			if (fabs(ft_dot_product(ft_vec_sub(p, *square->vec), *square->dir)) > EPSILON)
+			ft_vec_cpy(&left_corner, *square->vec);
+			left_corner.x -= square->size / 2;
+			left_corner.y -= square->size / 2;
+			//printf("left_corner.x = %.6lf, y = %.6lf, z = %.6lf\n", left_corner.x,left_corner.y,left_corner.z);
+			left_corner = ft_rotate_z(ft_rotate_y(ft_rotate_x(left_corner, alpha), beta), gamma);
+			double diff_x = (left_corner.x - square->vec->x - square->size / 2);
+			double diff_y = (left_corner.y - square->vec->y - square->size / 2);
+			double diff_z = (left_corner.z - square->vec->z);
+			printf("origin x = %lf, y= %.6lf, z = %.6lf, new x = %.6lf, y = %.6lf, z = %.6lf\n", square->vec->x - square->size / 2, square->vec->y - square->size / 2, square->vec->z, left_corner.x, left_corner.y, left_corner.z);
+			if (fabs(p.x - square->vec->x) > (square->size / 2 + diff_x))
 				return (0);
-			ft_vec_cpy(&temp, *square->vec);
-			temp.x += square->size / 2;
-			temp.y += square->size / 2;
-			temp.z += square->size / 2;
-			printf("temp.x = %.6lf, y = %.6lf, z = %.6lf\n", temp.x,temp.y,temp.z);
-			temp = ft_rotate_z(ft_rotate_y(ft_rotate_x(temp, alpha), beta), gamma);
-			double diff_x = fabs(temp.x - square->vec->x - square->size / 2);
-			double diff_y = fabs(temp.y - square->vec->y - square->size / 2);
-			double diff_z = fabs(temp.z - square->vec->z - square->size / 2);
-			if (fabs(p.x - square->vec->x) > (square->size / 2 - diff_x ))
+			if (fabs(p.y - square->vec->y + diff_y) > (square->size / 2 + diff_y))
 				return (0);
-			if (fabs(p.y - square->vec->y) > (square->size / 2 - diff_y))
-				return (0);
-			if (fabs(p.z - square->vec->z) > (square->size / 2 - diff_z))
+			if (fabs(p.z - square->vec->z + diff_z) > (square->size / 2 + diff_z))
 				return (0);
 			if (ft_ray_change_hit(ray, t) > 0)
 				return (1);
@@ -242,11 +243,16 @@ int			ft_ray_hit_triangle(t_object *triangle, t_ray *ray, int t)
 	a = ft_vec_sub(*triangle->vec_third, *triangle->vec);
 	b = ft_vec_sub(*triangle->vec_second, *triangle->vec);
 	n = ft_cross_product(a, b);
+	//printf("n.x = %f y= %f z = %f\n",n.x,n.y, n.z);
 	discriminant = ft_dot_product(n, *ray->dir);
 	//printf("discriminant = %.6lf\n", discriminant);
 	if (fabs(discriminant) < EPSILON)
 		return (0);
-	t = (ft_dot_product(n, *ray->origin) + ft_dot_product(n, *triangle->vec)) / discriminant;
+	printf("ray_dir x %f y %f z %f\n",ray->dir->x, ray->dir->y, ray->dir->z);
+	//printf("n.ray = %lf, n.triangle = %lf\n", ft_dot_product(n, *ray->origin), ft_dot_product(n, *triangle->vec));
+	t = (ft_dot_product(ft_vec_sub(*triangle->vec, *ray->origin), n) / discriminant);
+	//t = (ft_dot_product(n, *ray->origin) + ft_dot_product(n, *triangle->vec)) / discriminant;
+	printf("t = %d\n", t);
 	if (t < 0)
 		return (0);
 	p = ft_ray_at(*ray, t);
