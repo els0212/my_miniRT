@@ -20,6 +20,7 @@ t_vector	ft_ray_at(t_ray ray, double d)
 	return (ft_vec_add(*ray.origin,
 				ft_vec_product_const(*ray.dir, d)));
 }
+
 int			ft_ray_change_hit(t_ray *ray, int t)
 {
 	t_vector	now;
@@ -104,7 +105,6 @@ int			ft_ray_hit_square(t_object *square, t_ray *ray)
 	t_vector	oc;
 	t_vector	p;
 	double		t;
-	t_vector	left_corner;
 	
 	denom = ft_dot_product(*square->dir, *ray->dir);
 	//printf("denom = %f\n", denom);
@@ -177,34 +177,40 @@ int			ft_ray_hit_triangle(t_object *triangle, t_ray *ray, int t)
 int			ft_ray_hit_cylinder(t_object *cylinder, t_ray *ray)
 {
 	t_vector	oc;
-	t_vector	denom;
+	t_vector	h;
+	t_vector	h_norm;
 	t_vector	p;
 	double		a;
+	double		b;
+	double		c;
+	double		t;
+	double		discriminant;
+	double		height;
 
-	a = ft_dot_product(*ray->dir, *ray->dir);
-	b = 2.0 * ft_dot_product(oc, *ray->dir);
-	c = ft_dot_product(oc, oc) - pow((cylinder->dia / 2), 2);
+	oc = ft_vec_sub(*ray->origin, *cylinder->vec); // w
+	h = ft_vec_add(*cylinder->vec, ft_vec_product_const(*cylinder->dir, cylinder->height));
+	h_norm = ft_vec_div_const(h, sqrt(pow(h.x, 2) + pow(h.y, 2) + pow(h.z, 2)));
+	//printf("h ! x = %f y  = %f z = %f\n", h.x, h.y, h.z);
+	//printf("h_norm ! x = %f y  = %f z = %f\n", h_norm.x, h_norm.y, h_norm.z);
+	a = ft_dot_product(*ray->dir, *ray->dir) - pow(ft_dot_product(*ray->dir, h_norm), 2);
+	b = 2.0 * (ft_dot_product(oc, *ray->dir) - ft_dot_product(*ray->dir, h_norm) * ft_dot_product(oc, h_norm));
+	c = ft_dot_product(oc, oc) -pow(ft_dot_product(oc, h_norm), 2) - pow((cylinder->dia / 2), 2);
 	discriminant = b * b - 4 * a * c;
+	//printf("discriminant = %f\n", discriminant);
 	if (discriminant >= 0)
 	{
 		t = (-b - sqrt(discriminant)) / (2 * a);
+		//printf("cylinder t = %f\n", t);
+		p = ft_ray_at(*ray, t);
+		height = ft_dot_product(ft_vec_sub(*cylinder->vec, p), h);
+		//printf("ht = %f, norm = %f\n", height, sqrt(pow(h.x , 2) + pow(h.y, 2) + pow(h.z, 2)));
+		if (height >= 0 && height <= sqrt(pow(h.x , 2) + pow(h.y, 2) + pow(h.z, 2)))
+		{
 		//printf("a = %.6lf, b = %.6lf, t = %.6lf\n", a,b,t);
-		if (t >= 0 && ft_ray_change_hit(ray, t))
+		if (ft_ray_change_hit(ray, t))//t >= 0 && ft_ray_change_hit(ray, t))
 			return (1);
+		}
 	}
-
-	}
-	
-	//h = ft_vec_sub(cylinder->
-	/*
-	// x축 회전각
-	double alpha = square->dir->z ? atan(square->dir->y / square->dir->z) * M_PI / 180 : 0;
-	// y축 회전각
-	double beta = square->dir->z ? atan(-square->dir->x / square->dir->z) * M_PI / 180: 0;
-	// z axis angle
-	double gamma = square->dir->x ? atan(square->dir->y / square->dir->x) * M_PI / 180: 0;
-	//printf("alpha = %.6lf, beta = %.6lf, gamma = %.6lf\n", alpha, beta, gamma);
-	*/
 	return (0);
 }
 
@@ -236,6 +242,8 @@ t_color		*ft_ray_color(t_ray *ray, t_object *obj)
 		if (id == SQUARE && ft_ray_hit_square(now_obj, ray) > 0)
 			ft_color_cpy(ret, now_obj->color);
 		if (id == TRIANGLE && ft_ray_hit_triangle(now_obj, ray, 0) > 0)
+			ft_color_cpy(ret, now_obj->color);
+		if (id == CYLINDER && ft_ray_hit_cylinder(now_obj, ray) > 0)
 			ft_color_cpy(ret, now_obj->color);
 		now_obj = now_obj->next;
 	}
