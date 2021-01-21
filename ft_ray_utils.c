@@ -101,9 +101,16 @@ int			ft_ray_hit_square(t_object *square, t_ray *ray)
 	t_vector	oc;
 	t_vector	p;
 	double		t;
+	t_vector	temp;
 	
 	denom = ft_dot_product(*square->dir, *ray->dir);
 	//printf("denom = %f\n",denom);
+
+	// x축 회전각
+	double alpha = atan(square->dir->y / square->dir->z);
+	// y축 회전각
+	double beta = atan(square->dir->x / square->dir->z);
+
 	if (fabs(denom) > EPSILON)
 	{
 		ft_vec_cpy(&oc, ft_vec_sub(*square->vec, *ray->origin));
@@ -111,11 +118,12 @@ int			ft_ray_hit_square(t_object *square, t_ray *ray)
 		if (t >= 0)
 		{
 			p = ft_ray_at(*ray, t);
-			if (fabs(p.x - square->vec->x) > (square->size / 2))
+			temp = ft_rotate_y(ft_rotate_x(*square->vec, alpha), beta);
+			if (fabs(p.x - temp.x) > (square->size / 2))
 				return (0);
-			if (fabs(p.y - square->vec->y) > (square->size / 2))
+			if (fabs(p.y - temp.y) > (square->size / 2))
 				return (0);
-			if (fabs(p.z - square->vec->z) > (square->size / 2))
+			if (fabs(p.z - temp.z) > (square->size / 2))
 				return (0);
 			if (ft_ray_change_hit(ray, t) > 0)
 				return (1);
@@ -237,6 +245,15 @@ int			ft_ray_hit_triangle(t_object *triangle, t_ray *ray, int t)
 	else if (ft_triangle_inside_outside(p, *triangle->vec_third, *triangle->vec, n) == 0)
 		return (0);
 	return (1);
+}
+
+int			ft_ray_hit_cylinder(t_object *cylinder, t_ray *ray)
+{
+	t_vector	oc;
+	t_vector	h;
+
+	oc = ft_vec_sub(ray->origin, cylinder->vec);
+	h = ft_vec_sub(cylinder->
 }
 
 t_color		*ft_ray_color(t_ray *ray, t_object *obj)

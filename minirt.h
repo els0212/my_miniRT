@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_miniRT.h                                        :+:      :+:    :+:   */
+/*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:13:18 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/19 18:48:47 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/21 15:39:26 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,4 +117,11 @@ int					ft_ray_hit_sphere(t_object *sphere, t_ray *ray, double t);
 int					ft_ray_hit_plane(t_object *plane, t_ray *ray, int t);
 int			ft_ray_hit_triangle(t_object *triangle, t_ray *ray, int t);
 t_color				*ft_ray_color(t_ray *ray, t_object *obj);
+
+/*
+** ft_rotations.c
+*/
+t_vector	ft_rotate_x(t_vector now, double angle);
+t_vector	ft_rotate_y(t_vector now, double angle);
+t_vector	ft_rotate_z(t_vector now, double angle);
 #endif
