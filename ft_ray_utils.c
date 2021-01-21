@@ -54,13 +54,13 @@ int			ft_ray_hit_sphere(t_object *sphere, t_ray *ray, double t)
 	oc = ft_vec_sub(*ray->origin, *sphere->vec);
 	a = ft_dot_product(*ray->dir, *ray->dir);
 	//printf("ray x =%.6f, y=%.6f, z=%.6f\n",ray->dir->x, ray->dir->y, ray->dir->z);
-	b = 2.0 * ft_dot_product(oc, *ray->dir);
-	c = ft_dot_product(oc, oc) - (sphere->dia / 2) * (sphere->dia / 2);
+	b = 2.0 * ft_dot_product(*ray->dir, oc);
+	c = ft_dot_product(oc, oc) - pow((sphere->dia / 2), 2);
 	discriminant = b * b - 4 * a * c;
 	if (discriminant >= 0)
 	{
 		t = (-b - sqrt(discriminant)) / (2 * a);
-		printf("a = %.6lf, b = %.6lf, t = %.6lf\n", a,b,t);
+		//printf("a = %.6lf, b = %.6lf, t = %.6lf\n", a,b,t);
 		if (t >= 0 && ft_ray_change_hit(ray, t))
 			return (1);
 	}
@@ -107,10 +107,12 @@ int			ft_ray_hit_square(t_object *square, t_ray *ray)
 	t_vector	left_corner;
 	
 	denom = ft_dot_product(*square->dir, *ray->dir);
+	//printf("denom = %f\n", denom);
 	if (fabs(denom) > EPSILON)
 	{
 		ft_vec_cpy(&oc, ft_vec_sub(*square->vec, *ray->origin));
 		t = ft_dot_product(oc, *square->dir) / denom;
+		//printf("t = %f\n", t);
 		if (t >= 0)
 		{
 			p = ft_ray_at(*ray, t);
@@ -123,128 +125,10 @@ int			ft_ray_hit_square(t_object *square, t_ray *ray)
 			if (ft_ray_change_hit(ray, t) > 0)
 				return (1);
 		}
-
 	}
-	/*
-	//printf("denom = %f\n",denom);
-	// x축 회전각
-	double alpha = square->dir->z ? atan(square->dir->y / square->dir->z) * M_PI / 180 : 0;
-	// y축 회전각
-	double beta = square->dir->z ? atan(-square->dir->x / square->dir->z) * M_PI / 180: 0;
-	// z axis angle
-	double gamma = square->dir->x ? atan(square->dir->y / square->dir->x) * M_PI / 180: 0;
-	//printf("alpha = %.6lf, beta = %.6lf, gamma = %.6lf\n", alpha, beta, gamma);
-	if (fabs(denom) > EPSILON)
-	{
-		ft_vec_cpy(&oc, ft_vec_sub(*square->vec, *ray->origin));
-		//printf("square->x = %f\n", square->vec->x);
-		t = ft_dot_product(oc, *square->dir) / denom;
-		//printf("square t = %f\n", t);
-		if (t >= 0)
-		{
-			p = ft_ray_at(*ray, t);
-			ft_vec_cpy(&left_corner, *square->vec);
-			left_corner.x -= square->size / 2;
-			left_corner.y -= square->size / 2;
-			printf("origin x = %.6lf, y = %.6lf, z = %.6lf\n", left_corner.x,left_corner.y,left_corner.z);
-			left_corner = ft_rotate_z(ft_rotate_y(ft_rotate_x(left_corner, alpha), beta), gamma);
-			t_vector test;
-			ft_vec_cpy(&test, ft_vec_sub(p, *square->vec));
-			//printf("dot prod = %f\n", ft_dot_product(test, *square->dir));
-			double diff_x = (left_corner.x - square->vec->x + square->size / 2);
-			double diff_y = (left_corner.y - square->vec->y + square->size / 2);
-			double diff_z = (left_corner.z - square->vec->z);
-			printf("new x = %.6lf, y = %.6lf, z = %.6lf\n", left_corner.x, left_corner.y, left_corner.z);
-			printf("diff x = %f, y = %f, z = %f\n", diff_x, diff_y, diff_z);
-			if (fabs(p.x - square->vec->x) > (square->size / 2 + diff_x))
-				return (0);
-			if (fabs(p.y - square->vec->y + diff_y) > (square->size / 2 + diff_y))
-				return (0);
-			if (fabs(p.z - square->vec->z + diff_z) > (square->size / 2 + diff_z))
-				return (0);
-			if (ft_ray_change_hit(ray, t) > 0)
-				return (1);
-		}
-	}
-	*/
 	return (0);
 }
-/*
-int			ft_ray_hit_square(t_object *square, t_ray *ray)
-{
-	double	tmin[3];
-	double	tmax[3];
-	t_vector	default_n;
-	double	r[3][3];
-	double	axis[3];
-	double	new_axis[3];
-	//t_vector	vup;
-	//t_vector	u;
-	//t_vector	v;
 
-	ft_vector_init(&default_n, 0, 0, 1.0);
-	//u = ft_cross_product(vup, *square->dir);
-	double angle = acos((ft_dot_product(default_n, *square->dir) / (1 * sqrt(pow(square->dir->x, 2) + pow(square->dir->y, 2) + pow(square->dir->z, 2)))));
-	printf("cos(angle) = %.6lf\n", cos(angle));
-	//v = ft_cross_product(u, *square->dir);
-	//printf("u.x = %.6lf, u.y = %.6lf, u.z = %.6lf, v.x = %.6lf, v.y = %.6lf, v.z = %.6lf\n",\
-	//		u.x, u.y, u.z, v.x, v.y, v.z);
-
-	// init Rotation matrix
-	r[0][0] = cos(angle) + square->dir->x * square->dir->x * (1 - cos(angle));
-	r[0][1] = square->dir->x * square->dir->y * (1 - cos(angle)) - square->dir->z * sin(angle);
-	r[0][2] = square->dir->x * square->dir->z * (1 - cos(angle)) + square->dir->y * sin(angle);
-	r[1][0] = square->dir->y * square->dir->z * (1 - cos(angle)) + square->dir->z * sin(angle);
-	r[1][1] = cos(angle) + square->dir->y * square->dir->y * (1 - cos(angle));
-	r[1][2] = square->dir->y * square->dir->z * (1 - cos(angle)) + square->dir->x * sin(angle);
-	r[2][0] = square->dir->z * square->dir->x * (1 - cos(angle)) + square->dir->y * sin(angle);
-	r[2][1] = square->dir->z * square->dir->y * (1 - cos(angle)) + square->dir->x * sin(angle);
-	r[2][2] = cos(angle) + square->dir->z * square->dir->z * (1 - cos(angle));
-	// end
-
-	//rotate x, y, z
-		axis[0] = square->vec->x - square->size / 2;
-		axis[1] = square->vec->y - square->size / 2;
-		axis[2] = square->vec->z - square->size / 2;
-		new_axis[0] = r[0][0] * axis[0] + r[0][1] * axis[1] + r[0][2] * axis[2];
-		new_axis[1] = r[1][0] * axis[0] + r[1][1] * axis[1] + r[1][2] * axis[2];
-		new_axis[2] = r[2][0] * axis[0] + r[2][1] * axis[1] + r[2][2] * axis[2];
-		pirntf("before x = %.6lf, y = %.6lf, z = %.6lf\n",axis[0], axis[1], axis[2]);
-		pirntf("after x = %.6lf, y = %.6lf, z = %.6lf\n",new_axis[0], new_axis[1], new_axis[2]);
-	//end
-
-	tmin[0] = ((square->vec->x - (square->size / 2)) - ray->origin->x) / ray->dir->x;
-	tmax[0] = ((square->vec->x + square->size / 2) - ray->origin->x) / ray->dir->x;
-	//printf("square.x.min = %.6lf, tmin[0] = %.6lf\n", square->vec->x - square->size / 2, tmin[0]);
-	//printf("ray.ori.x = %.6lf, ray.dir.x = %.6lf\n", ray->origin->x, ray->dir->x);
-	if (tmin[0] > tmax[0])
-		ft_swap(&tmin[0], &tmax[0]);
-	tmin[1] = ((square->vec->y - square->size / 2) - ray->origin->y) / ray->dir->y;
-	tmax[1] = ((square->vec->y + square->size / 2) - ray->origin->y) / ray->dir->y;
-	if (tmin[1] > tmax[1])
-		ft_swap(&tmin[1], &tmax[1]);
-//	printf("tmin[0] = %.6lf, tmax[0]=%.6lf, tmin[1] = %.6lf, tmax[1] = %.6lf\n", tmin[0], tmax[0], tmin[1], tmax[1]);
-	// default
-	if ((tmin[0] > tmax[1]) || (tmin[1] > tmax[0]))
-		return (0);
-	tmin[0] = (tmin[1] > tmin[0]) ? tmin[1] : tmin[0];
-	tmax[0] = (tmax[1] < tmax[0]) ? tmax[1] : tmax[0];
-	tmin[2] = ((square->vec->z - square->size / 2) - ray->origin->z) / ray->dir->z;
-	tmax[2] = ((square->vec->z + square->size / 2) - ray->origin->z) / ray->dir->z;
-	// default
-	if (tmin[2] > tmax[2])
-		ft_swap(&tmin[2], &tmax[2]);
-	if ((tmin[0] > tmax[2]) || (tmin[2] > tmax[0]))
-		return (0);
-	//printf("tmin[0] = %.6lf, tmax[0] = %.6lf, tmin[2] = %.6lf, tmax[2] = %.6lf\n", tmin[0], tmax[0], tmin[2], tmax[2]);
-	tmin[0] = (tmin[2] > tmin[0]) ? tmin[2] : tmin[0];
-	tmax[0] = (tmax[2] < tmax[0]) ? tmax[2] : tmax[0];
-	//printf("tmin = %.6lf, tmax = %.6lf\n", tmin[0], tmax[0]);
-	if (tmin[0] < -RAYMAX || tmax[0] > RAYMAX)
-		return (0);
-	return (1);
-}
-*/
 int			ft_triangle_inside_outside(t_vector p, t_vector a, t_vector b, t_vector n)
 {
 	t_vector	edge;
@@ -293,10 +177,34 @@ int			ft_ray_hit_triangle(t_object *triangle, t_ray *ray, int t)
 int			ft_ray_hit_cylinder(t_object *cylinder, t_ray *ray)
 {
 	t_vector	oc;
-	t_vector	h;
+	t_vector	denom;
+	t_vector	p;
+	double		a;
 
-	oc = ft_vec_sub(*ray->origin, *cylinder->vec);
+	a = ft_dot_product(*ray->dir, *ray->dir);
+	b = 2.0 * ft_dot_product(oc, *ray->dir);
+	c = ft_dot_product(oc, oc) - pow((cylinder->dia / 2), 2);
+	discriminant = b * b - 4 * a * c;
+	if (discriminant >= 0)
+	{
+		t = (-b - sqrt(discriminant)) / (2 * a);
+		//printf("a = %.6lf, b = %.6lf, t = %.6lf\n", a,b,t);
+		if (t >= 0 && ft_ray_change_hit(ray, t))
+			return (1);
+	}
+
+	}
+	
 	//h = ft_vec_sub(cylinder->
+	/*
+	// x축 회전각
+	double alpha = square->dir->z ? atan(square->dir->y / square->dir->z) * M_PI / 180 : 0;
+	// y축 회전각
+	double beta = square->dir->z ? atan(-square->dir->x / square->dir->z) * M_PI / 180: 0;
+	// z axis angle
+	double gamma = square->dir->x ? atan(square->dir->y / square->dir->x) * M_PI / 180: 0;
+	//printf("alpha = %.6lf, beta = %.6lf, gamma = %.6lf\n", alpha, beta, gamma);
+	*/
 	return (0);
 }
 
