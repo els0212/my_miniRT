@@ -107,10 +107,12 @@ int			ft_ray_hit_square(t_object *square, t_ray *ray)
 	//printf("denom = %f\n",denom);
 
 	// x축 회전각
-	double alpha = atan(square->dir->y / square->dir->z);
+	double alpha = square->dir->z ? atan(square->dir->y / square->dir->z) * M_PI / 180 : 0;
 	// y축 회전각
-	double beta = atan(square->dir->x / square->dir->z);
-
+	double beta = square->dir->z ? atan(-1 * square->dir->x / square->dir->z) * M_PI / 180: 0;
+	// z axis angle
+	double gamma = square->dir->x ? atan(square->dir->y / square->dir->x) * M_PI / 180: 0;
+	printf("alpha = %.6lf, beta = %.6lf, gamma = %.6lf\n", alpha, beta, gamma);
 	if (fabs(denom) > EPSILON)
 	{
 		ft_vec_cpy(&oc, ft_vec_sub(*square->vec, *ray->origin));
@@ -118,12 +120,20 @@ int			ft_ray_hit_square(t_object *square, t_ray *ray)
 		if (t >= 0)
 		{
 			p = ft_ray_at(*ray, t);
-			temp = ft_rotate_y(ft_rotate_x(*square->vec, alpha), beta);
-			if (fabs(p.x - temp.x) > (square->size / 2))
+			ft_vec_cpy(&temp, *square->vec);
+			temp.x += square->size / 2;
+			temp.y += square->size / 2;
+			temp.z += square->size / 2;
+			printf("temp.x = %.6lf, y = %.6lf, z = %.6lf\n", temp.x,temp.y,temp.z);
+			temp = ft_rotate_z(ft_rotate_y(ft_rotate_x(temp, alpha), beta), gamma);
+			double diff_x = temp.x - square->vec->x - square->size / 2;
+			double diff_y = temp.y - square->vec->y - square->size / 2;
+			double diff_z = temp.z - square->vec->z - square->size / 2;
+			if (fabs(p.x - square->vec->x) > (square->size / 2 - diff_x ))
 				return (0);
-			if (fabs(p.y - temp.y) > (square->size / 2))
+			if (fabs(p.y - square->vec->y) > (square->size / 2 - diff_y))
 				return (0);
-			if (fabs(p.z - temp.z) > (square->size / 2))
+			if (fabs(p.z - square->vec->z) > (square->size / 2 - diff_z))
 				return (0);
 			if (ft_ray_change_hit(ray, t) > 0)
 				return (1);
@@ -252,8 +262,9 @@ int			ft_ray_hit_cylinder(t_object *cylinder, t_ray *ray)
 	t_vector	oc;
 	t_vector	h;
 
-	oc = ft_vec_sub(ray->origin, cylinder->vec);
-	h = ft_vec_sub(cylinder->
+	oc = ft_vec_sub(*ray->origin, *cylinder->vec);
+	//h = ft_vec_sub(cylinder->
+	return (0);
 }
 
 t_color		*ft_ray_color(t_ray *ray, t_object *obj)
