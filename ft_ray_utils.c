@@ -107,6 +107,25 @@ int			ft_ray_hit_square(t_object *square, t_ray *ray)
 	t_vector	left_corner;
 	
 	denom = ft_dot_product(*square->dir, *ray->dir);
+	if (fabs(denom) > EPSILON)
+	{
+		ft_vec_cpy(&oc, ft_vec_sub(*square->vec, *ray->origin));
+		t = ft_dot_product(oc, *square->dir) / denom;
+		if (t >= 0)
+		{
+			p = ft_ray_at(*ray, t);
+			if (fabs(p.x - square->vec->x) > (square->size / 2))
+				return (0);
+			if (fabs(p.y - square->vec->y) > (square->size / 2))
+				return (0);
+			if (fabs(p.z - square->vec->z) > (square->size / 2))
+				return (0);
+			if (ft_ray_change_hit(ray, t) > 0)
+				return (1);
+		}
+
+	}
+	/*
 	//printf("denom = %f\n",denom);
 	// x축 회전각
 	double alpha = square->dir->z ? atan(square->dir->y / square->dir->z) * M_PI / 180 : 0;
@@ -147,6 +166,7 @@ int			ft_ray_hit_square(t_object *square, t_ray *ray)
 				return (1);
 		}
 	}
+	*/
 	return (0);
 }
 /*
