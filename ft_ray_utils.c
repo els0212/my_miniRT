@@ -120,15 +120,17 @@ int			ft_ray_hit_square(t_object *square, t_ray *ray)
 		if (t >= 0)
 		{
 			p = ft_ray_at(*ray, t);
+			if (fabs(ft_dot_product(ft_vec_sub(p, *square->vec), *square->dir)) > EPSILON)
+				return (0);
 			ft_vec_cpy(&temp, *square->vec);
 			temp.x += square->size / 2;
 			temp.y += square->size / 2;
 			temp.z += square->size / 2;
 			printf("temp.x = %.6lf, y = %.6lf, z = %.6lf\n", temp.x,temp.y,temp.z);
 			temp = ft_rotate_z(ft_rotate_y(ft_rotate_x(temp, alpha), beta), gamma);
-			double diff_x = temp.x - square->vec->x - square->size / 2;
-			double diff_y = temp.y - square->vec->y - square->size / 2;
-			double diff_z = temp.z - square->vec->z - square->size / 2;
+			double diff_x = fabs(temp.x - square->vec->x - square->size / 2);
+			double diff_y = fabs(temp.y - square->vec->y - square->size / 2);
+			double diff_z = fabs(temp.z - square->vec->z - square->size / 2);
 			if (fabs(p.x - square->vec->x) > (square->size / 2 - diff_x ))
 				return (0);
 			if (fabs(p.y - square->vec->y) > (square->size / 2 - diff_y))
