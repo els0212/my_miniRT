@@ -109,16 +109,16 @@ int main(int argc, char **argv)
 	for(int i = 0 ; i <compo->resolution->y; i++)
 		for(int j = 0 ; j < compo->resolution->x; j++)
 		{
-			double u = (double)j / (compo->resolution->x - 1);
-			double v = (double)i / (compo->resolution->y - 1);
-			ray = ft_ray_init(compo->camera->vec, ft_vec_sub(ft_vec_add(compo->camera->ndc_left_bottom, ft_vec_add(ft_vec_product_const(compo->camera->ndc_horizon, u), ft_vec_product_const(compo->camera->ndc_vertical, v))), *compo->camera->vec));
+			double u = (double)i / (compo->resolution->y - 1);
+			double v = (double)j / (compo->resolution->x - 1);
+			ray = ft_ray_init(compo->camera->vec, ft_vec_sub(ft_vec_add(compo->camera->ndc_left_bottom, ft_vec_add(ft_vec_product_const(compo->camera->ndc_horizon, v), ft_vec_product_const(compo->camera->ndc_vertical, u))), *compo->camera->vec));
 			ft_vec_cpy(ray->dir, ft_normalize(*ray->dir));
 			printf("ray origin x = %f y = %f z = %f\n", ray->origin->x, ray->origin->y, ray->origin->z);
 			printf("ray_dir x = %f, y = %f, z = %f\n",ray->dir->x, ray->dir->y, ray->dir->z);
 			t_color *temp_color = ft_ray_color(ray, compo->objects);
 			int col = (temp_color->red<<16) + (temp_color->green<<8) + (temp_color->blue<<0);
 				free(temp_color);
-			my_mlx_pixel_put(&img, i, j, col);
+			my_mlx_pixel_put(&img, j, i, col);
 		}
 	mlx_put_image_to_window(mlx.mlx, mlx.win, img.img, 0, 0);
 	//mlx_destroy_window(&mlx.mlx, &mlx.win);
