@@ -197,13 +197,14 @@ int			ft_ray_hit_cylinder(t_object *cylinder, t_ray *ray)
 	c = ft_dot_product(oc, oc) -pow(ft_dot_product(oc, h_norm), 2) - pow((cylinder->dia / 2), 2);
 	discriminant = b * b - 4 * a * c;
 	//printf("discriminant = %f\n", discriminant);
-	if (discriminant >= 0)
+	if (discriminant == 0)
 	{
 		t = (-b - sqrt(discriminant)) / (2 * a);
 		//printf("cylinder t = %f\n", t);
 		p = ft_ray_at(*ray, t);
-		height = ft_dot_product(ft_vec_sub(*cylinder->vec, p), h);
-		//printf("ht = %f, norm = %f\n", height, sqrt(pow(h.x , 2) + pow(h.y, 2) + pow(h.z, 2)));
+		printf("p x = %f y = %f z = %f\n", p.x, p.y, p.z);
+		height = ft_dot_product(ft_vec_sub(*cylinder->vec, p), h_norm);
+		printf("ht = %f, norm = %f\n", height, sqrt(pow(h.x , 2) + pow(h.y, 2) + pow(h.z, 2)));
 		if (height >= 0 && height <= sqrt(pow(h.x , 2) + pow(h.y, 2) + pow(h.z, 2)))
 		{
 		//printf("a = %.6lf, b = %.6lf, t = %.6lf\n", a,b,t);
