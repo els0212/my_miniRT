@@ -186,31 +186,41 @@ int			ft_ray_hit_cylinder(t_object *cylinder, t_ray *ray)
 	double		t;
 	double		discriminant;
 	double		height;
+	int			hit_flag;
 
 	oc = ft_vec_sub(*ray->origin, *cylinder->vec); // w
-	h = ft_vec_add(*cylinder->vec, ft_vec_product_const(*cylinder->dir, cylinder->height));
+	h = ft_vec_sub(ft_vec_add(*cylinder->vec, ft_vec_product_const(*cylinder->dir, cylinder->height)), *cylinder->vec);
 	h_norm = ft_vec_div_const(h, sqrt(pow(h.x, 2) + pow(h.y, 2) + pow(h.z, 2)));
 	//printf("h ! x = %f y  = %f z = %f\n", h.x, h.y, h.z);
+	//printf("c ! x = %f y  = %f z = %f\n", cylinder->vec->x, cylinder->vec->y, cylinder->vec->z);
 	//printf("h_norm ! x = %f y  = %f z = %f\n", h_norm.x, h_norm.y, h_norm.z);
+
 	a = ft_dot_product(*ray->dir, *ray->dir) - pow(ft_dot_product(*ray->dir, h_norm), 2);
 	b = 2.0 * (ft_dot_product(oc, *ray->dir) - ft_dot_product(*ray->dir, h_norm) * ft_dot_product(oc, h_norm));
-	c = ft_dot_product(oc, oc) -pow(ft_dot_product(oc, h_norm), 2) - pow((cylinder->dia / 2), 2);
+	c = ft_dot_product(oc, oc) - pow(ft_dot_product(oc, h_norm), 2) - pow((cylinder->dia / 2), 2);
+	//printf("dot(oc, oc) = %f pow(2) = %f\n",ft_dot_product(oc, oc), pow(ft_dot_product(oc, h_norm), 2));
 	discriminant = b * b - 4 * a * c;
-	//printf("discriminant = %f\n", discriminant);
-	if (discriminant == 0)
+	//printf("a = %f b = %f c = %f det = %f\n", a,b,c,discriminant);
+	if (discriminant >= 0)
 	{
 		t = (-b - sqrt(discriminant)) / (2 * a);
 		//printf("cylinder t = %f\n", t);
+		if (t < 0)
+			return (0);
 		p = ft_ray_at(*ray, t);
-		printf("p x = %f y = %f z = %f\n", p.x, p.y, p.z);
-		height = ft_dot_product(ft_vec_sub(*cylinder->vec, p), h_norm);
-		printf("ht = %f, norm = %f\n", height, sqrt(pow(h.x , 2) + pow(h.y, 2) + pow(h.z, 2)));
-		if (height >= 0 && height <= sqrt(pow(h.x , 2) + pow(h.y, 2) + pow(h.z, 2)))
-		{
+		//printf("p x = %f y = %f z = %f\n", p.x, p.y, p.z);
+		hit_flag = 0;
+		height = ft_dot_product(ft_vec_sub(*cylinder->vec, p), h);
+		//printf("ht = %f, norm = %f\n", height, sqrt(pow(h.x , 2) + pow(h.y, 2) + pow(h.z, 2)));
+		if (height > sqrt(pow(h.x , 2) + pow(h.y, 2) + pow(h.z, 2)))
+			hit_flag = 1;
+		else if (height >= 0 && height <= sqrt(pow(h.x , 2) + pow(h.y, 2) + pow(h.z, 2)))
+			hit_flag = 1;
+		else if (height < 0)
+			hit_flag = 1;
 		//printf("a = %.6lf, b = %.6lf, t = %.6lf\n", a,b,t);
-		if (ft_ray_change_hit(ray, t))//t >= 0 && ft_ray_change_hit(ray, t))
+		if (hit_flag == 1 && ft_ray_change_hit(ray, t))//t >= 0 && ft_ray_change_hit(ray, t))
 			return (1);
-		}
 	}
 	return (0);
 }
