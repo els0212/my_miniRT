@@ -203,22 +203,28 @@ int			ft_ray_hit_cylinder(t_object *cylinder, t_ray *ray)
 	//printf("a = %f b = %f c = %f det = %f\n", a,b,c,discriminant);
 	if (discriminant >= 0)
 	{
+		// need to check t and t2..
 		t = (-b - sqrt(discriminant)) / (2 * a);
+		double t2;
+		t2 = (-b + sqrt(discriminant)) / (2 * a);
+
 		//printf("cylinder t = %f\n", t);
-		if (t < 0)
+		if (t < 0 || t2 < 0)
 			return (0);
 		p = ft_ray_at(*ray, t);
 		//printf("p x = %f y = %f z = %f\n", p.x, p.y, p.z);
 		hit_flag = 0;
-		height = ft_dot_product(ft_vec_sub(*cylinder->vec, p), h);
-		//printf("ht = %f, norm = %f\n", height, sqrt(pow(h.x , 2) + pow(h.y, 2) + pow(h.z, 2)));
-		if (height > sqrt(pow(h.x , 2) + pow(h.y, 2) + pow(h.z, 2)))
-			hit_flag = 1;
-		else if (height >= 0 && height <= sqrt(pow(h.x , 2) + pow(h.y, 2) + pow(h.z, 2)))
-			hit_flag = 1;
-		else if (height < 0)
-			hit_flag = 1;
+		height = ft_dot_product(ft_vec_sub(p, *cylinder->vec), h_norm);
+		printf("p x = %f y = %f z = %f\n", p.x, p.y, p.z);
+		printf("ht = %f, norm = %f\n", height, cylinder->height);
+	
 		//printf("a = %.6lf, b = %.6lf, t = %.6lf\n", a,b,t);
+		if (height >= 0 && height <= cylinder->height)
+			hit_flag = 1;
+		p = ft_ray_at(*ray, t2);
+		height = ft_dot_product(ft_vec_sub(p, *cylinder->vec), h_norm);
+		if (height >= 0 && height <= cylinder->height)
+			hit_flag = 1;
 		if (hit_flag == 1 && ft_ray_change_hit(ray, t))//t >= 0 && ft_ray_change_hit(ray, t))
 			return (1);
 	}
