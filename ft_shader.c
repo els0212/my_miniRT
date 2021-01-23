@@ -14,14 +14,10 @@ t_color	ft_get_light_color(t_lht *now, t_object *objs, t_ray ray)
 	if (ft_chk_intersect(objs, temp_ray) == 0 ||
 			ft_get_dist(*temp_ray->hit_point, *ray.hit_point) > ft_get_dist(*now->vec, *ray.hit_point))
 	{
-		printf("ok light can go!\n");
 		angle = fmax(0, ft_dot_product(*ray.hit_norm, dir));
 		light_color = ft_color_mult_const(now->color, now->ratio);
 		ret = ft_color_mult_const(ft_color_mult(&light_color, ray.hit_obj->color), angle);
 	}
-	double dist = ft_get_dist(*temp_ray->hit_point, *ray.hit_point);
-	double dist2 = ft_get_dist(*now->vec, *ray.hit_point);
-	printf("f = %f, s  = %f\n", dist, dist2);
 	free(temp_ray);
 	return (ret);
 }
@@ -40,5 +36,7 @@ t_color	ft_shader(t_lht *lht, t_object *objs, t_ray ray)
 		ret = ft_color_add(ret, light_color);
 		now = now->next;
 	}
+	//if (ret.red >255 || ret.green > 255 || ret.blue > 255)
+	//printf("ret red = %d gr = %d bl = %d\n", ret.red, ret.green, ret.blue);
 	return (ret);
 }

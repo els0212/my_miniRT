@@ -117,7 +117,6 @@ int main(int argc, char **argv)
 			temp_color = ft_color_mult(temp_color, &ambient); 
 			if (ray->ray_hit)
 			{
-//				printf("hit !\n");
 				t_color shader = ft_shader(compo->light, compo->objects, *ray);
 				printf("shader r = %d g = %d b = %d\n",shader.red, shader.green, shader.blue);
 				temp_color = ft_color_cpy(temp_color, ft_color_add(*temp_color, shader));
