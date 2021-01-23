@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:13:18 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/23 22:32:17 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/23 23:20:23 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,4 +125,10 @@ int		ft_chk_intersect(t_object *obj, t_ray *ray);
 t_vector	ft_rotate_x(t_vector now, double angle);
 t_vector	ft_rotate_y(t_vector now, double angle);
 t_vector	ft_rotate_z(t_vector now, double angle);
+
+/*
+** ft_shader.c
+*/
+t_color	ft_get_light_color(t_lht *now, t_object *objs, t_ray ray);
+t_color	ft_shader(t_lht *lht, t_object *objs, t_ray ray);
 #endif

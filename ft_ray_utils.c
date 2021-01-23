@@ -211,10 +211,8 @@ int			ft_ray_hit_triangle(t_object *triangle, t_ray *ray, int t)
 		//printf("third ret\n");
 		return (0);
 	}
-	printf("before hit\n");
 	if (ft_ray_change_hit(ray, t, triangle) > 0)
 	{
-		printf("triangle end!\n");
 		return (1);
 	}
 	return (0);
@@ -297,21 +295,21 @@ t_color		*ft_ray_color(t_ray *ray, t_object *obj)
 		id = now_obj->id;
 	//	printf("id = %d\n", id);
 		if (id == PLANE && ft_ray_hit_plane(now_obj, ray, 0) > 0)
-			ft_color_cpy(ret, now_obj->color);
+			ft_color_cpy(ret, *now_obj->color);
 		if (id == SPHERE && ft_ray_hit_sphere(now_obj, ray, 0) > 0)
-			ft_color_cpy(ret, now_obj->color);
+			ft_color_cpy(ret, *now_obj->color);
 		if (id == SQUARE && ft_ray_hit_square(now_obj, ray) > 0)
-			ft_color_cpy(ret, now_obj->color);
+			ft_color_cpy(ret, *now_obj->color);
 		if (id == TRIANGLE && ft_ray_hit_triangle(now_obj, ray, 0) > 0)
-			ft_color_cpy(ret, now_obj->color);
+			ft_color_cpy(ret, *now_obj->color);
 		if (id == CYLINDER && ft_ray_hit_cylinder(now_obj, ray) > 0)
-			ft_color_cpy(ret, now_obj->color);
+			ft_color_cpy(ret, *now_obj->color);
 	//	printf("hit = %d\n", ray->ray_hit);
 		now_obj = now_obj->next;
 	}
 	//printf("end loop!");
 	ray->hit_norm = ray->ray_hit ? ft_get_normal(*ray->hit_point, *ray->hit_obj) : 0;
-	if (ray->hit_norm && ft_dot_product(ray->hit_norm, ray->dir) > 0)
+	if (ray->hit_norm && ft_dot_product(*ray->hit_norm, *ray->dir) > 0)
 		ft_vec_cpy(ray->hit_norm, ft_vec_product_const(*ray->hit_norm, -1));
 
 	//if (ray->ray_hit)
@@ -326,15 +324,15 @@ int		ft_chk_intersect(t_object *obj, t_ray *ray)
 	now = obj;
 	while(now)
 	{
-		if (id == PLANE && ft_ray_hit_plane(now_obj, ray, 0) > 0)
+		if (now->id == PLANE && ft_ray_hit_plane(now, ray, 0) > 0)
 			return (1);
-		if (id == SPHERE && ft_ray_hit_sphere(now_obj, ray, 0) > 0)
+		if (now->id == SPHERE && ft_ray_hit_sphere(now, ray, 0) > 0)
 			return (1);
-		if (id == SQUARE && ft_ray_hit_square(now_obj, ray) > 0)
+		if (now->id == SQUARE && ft_ray_hit_square(now, ray) > 0)
 			return (1);
-		if (id == TRIANGLE && ft_ray_hit_triangle(now_obj, ray, 0) > 0)
+		if (now->id == TRIANGLE && ft_ray_hit_triangle(now, ray, 0) > 0)
 			return (1);
-		if (id == CYLINDER && ft_ray_hit_cylinder(now_obj, ray) > 0)
+		if (now->id == CYLINDER && ft_ray_hit_cylinder(now, ray) > 0)
 			return (1);
 		now = now->next;
 	}

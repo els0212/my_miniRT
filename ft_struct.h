@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:35:12 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/23 22:21:23 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/23 23:25:20 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ t_compo					*ft_compo_init();
 t_object				*ft_object_init(int id);
 void					ft_vector_init(t_vector *vec, double x, double y, double z);
 void			ft_color_init(t_color *color, int r, int g, int b);
-t_color					*ft_color_cpy(t_color *c1, t_color *c2);
+t_color					*ft_color_cpy(t_color *c1, t_color c2);
 t_color					*ft_color_mult(t_color *c1, t_color *c2);
 t_color					ft_color_mult_const(t_color *c1, double ratio);
 t_color					ft_color_add(t_color c1, t_color c2);

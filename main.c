@@ -91,7 +91,7 @@ int main(int argc, char **argv)
 	mlx.win = mlx_new_window(mlx.mlx, compo->resolution->x, compo->resolution->y, "hello world!");
 	mlx_hook(mlx.win, KEYPRESS, KEYPRESSMASK, ft_key_press, &mlx);
 	mlx_hook(mlx.win, DESTROYNOTIFY, STRUCTURENOTIFYMASK, ft_close, &mlx);
-	img.img = mlx_new_image(mlx.mlx, 640, 480);
+	img.img = mlx_new_image(mlx.mlx, 1920, 1080);
 	img.addr = (char *)mlx_get_data_addr(img.img, &img.bpp, &img.line_len, &img.endian);
 	//printf("addr = %s, bpp = %d, len = %d, endian = %d\n",img.addr, img.bpp, img.line_len, img.endian);
 	/*
@@ -115,7 +115,13 @@ int main(int argc, char **argv)
 			t_color *temp_color = ft_ray_color(ray, compo->objects);
 			t_color ambient = ft_color_mult_const(compo->ambient->color, compo->ambient->ratio);
 			temp_color = ft_color_mult(temp_color, &ambient); 
-			t_color shader = ft_shader(compo->light, compo->objects, *ray);
+			if (ray->ray_hit)
+			{
+//				printf("hit !\n");
+				t_color shader = ft_shader(compo->light, compo->objects, *ray);
+				printf("shader r = %d g = %d b = %d\n",shader.red, shader.green, shader.blue);
+				temp_color = ft_color_cpy(temp_color, ft_color_add(*temp_color, shader));
+			}
 			//printf("r = %d, g = %d, b = %d\n", temp_color->red, temp_color->blue, temp_color->green);
 			//printf("amb r = %d g = %d b = %d\n",ambient.red, ambient.blue, ambient.green);
 			int col = (temp_color->red<<16) + (temp_color->green<<8) + (temp_color->blue<<0);
