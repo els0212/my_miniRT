@@ -311,7 +311,32 @@ t_color		*ft_ray_color(t_ray *ray, t_object *obj)
 	}
 	//printf("end loop!");
 	ray->hit_norm = ray->ray_hit ? ft_get_normal(*ray->hit_point, *ray->hit_obj) : 0;
-	if (ray->ray_hit)
-		printf("hit norm x = %f y = %f z = %f\n", ray->hit_norm->x, ray->hit_norm->y, ray->hit_norm->z);
+	if (ray->hit_norm && ft_dot_product(ray->hit_norm, ray->dir) > 0)
+		ft_vec_cpy(ray->hit_norm, ft_vec_product_const(*ray->hit_norm, -1));
+
+	//if (ray->ray_hit)
+	//	printf("hit norm x = %f y = %f z = %f\n", ray->hit_norm->x, ray->hit_norm->y, ray->hit_norm->z);
 	return (ret);
+}
+
+int		ft_chk_intersect(t_object *obj, t_ray *ray)
+{
+	t_object	*now;
+
+	now = obj;
+	while(now)
+	{
+		if (id == PLANE && ft_ray_hit_plane(now_obj, ray, 0) > 0)
+			return (1);
+		if (id == SPHERE && ft_ray_hit_sphere(now_obj, ray, 0) > 0)
+			return (1);
+		if (id == SQUARE && ft_ray_hit_square(now_obj, ray) > 0)
+			return (1);
+		if (id == TRIANGLE && ft_ray_hit_triangle(now_obj, ray, 0) > 0)
+			return (1);
+		if (id == CYLINDER && ft_ray_hit_cylinder(now_obj, ray) > 0)
+			return (1);
+		now = now->next;
+	}
+	return (0);
 }

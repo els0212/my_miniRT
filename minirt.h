@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:13:18 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/21 16:45:06 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/23 22:32:17 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ int					ft_ray_hit_sphere(t_object *sphere, t_ray *ray, double t);
 int					ft_ray_hit_plane(t_object *plane, t_ray *ray, int t);
 int			ft_ray_hit_triangle(t_object *triangle, t_ray *ray, int t);
 t_color				*ft_ray_color(t_ray *ray, t_object *obj);
+int		ft_chk_intersect(t_object *obj, t_ray *ray);
 
 /*
 ** ft_rotations.c

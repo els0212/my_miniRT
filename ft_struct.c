@@ -88,6 +88,16 @@ t_color			ft_color_mult_const(t_color *c1, double ratio)
 	return (ret);
 }
 
+t_color					ft_color_add(t_color c1, t_color c2)
+{
+	t_color	ret;
+
+	ret.red = c1.red + c2.red;
+	ret.green = c1.green + c2.green;
+	ret.blue = c1.blue + c2.blue;
+	return (ret);
+}
+
 t_vector		*ft_make_vector(char *str)
 {
 	t_vector	*ret;
