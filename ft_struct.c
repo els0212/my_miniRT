@@ -71,6 +71,23 @@ t_color			*ft_color_cpy(t_color *c1, t_color *c2)
 	return (c1);
 }
 
+t_color			*ft_color_mult(t_color *c1, t_color *c2)
+{
+	c1->red = fmin((c1->red * c2->red) / 255, 255);
+	c1->green = fmin((c1->green * c2->green) / 255, 255);
+	c1->blue = fmin((c1->blue * c2->blue) / 255, 255);
+	return (c1);
+}
+
+t_color			ft_color_mult_const(t_color *c1, double ratio)
+{
+	t_color	ret;
+	ret.red = c1->red * ratio;
+	ret.green = c1->green * ratio;
+	ret.blue = c1->blue * ratio;
+	return (ret);
+}
+
 t_vector		*ft_make_vector(char *str)
 {
 	t_vector	*ret;

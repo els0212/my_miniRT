@@ -215,8 +215,8 @@ int			ft_ray_hit_cylinder(t_object *cylinder, t_ray *ray)
 		//printf("p x = %f y = %f z = %f\n", p.x, p.y, p.z);
 		hit_flag = 0;
 		height = ft_dot_product(ft_vec_sub(p, *cylinder->vec), h_norm);
-		printf("p x = %f y = %f z = %f\n", p.x, p.y, p.z);
-		printf("ht = %f, norm = %f\n", height, cylinder->height);
+		//printf("p x = %f y = %f z = %f\n", p.x, p.y, p.z);
+		//printf("ht = %f, norm = %f\n", height, cylinder->height);
 	
 		//printf("a = %.6lf, b = %.6lf, t = %.6lf\n", a,b,t);
 		if (height >= 0 && height <= cylinder->height)
@@ -241,9 +241,9 @@ t_color		*ft_ray_color(t_ray *ray, t_object *obj)
 
 	if (!(ret = (t_color *)malloc(sizeof(t_color))))
 		return (0);
-	ret->red = 255;
-	ret->green = 255;
-	ret->blue = 255;
+	ret->red = 0;
+	ret->green = 0;
+	ret->blue = 0;
 	//printf("ray_st = %d\n", ray_st);
 	//printf("ori x = %f, y = %f, z = %f\n",ray->origin->x, ray->origin->y, ray->origin->z);
 	//printf("now x = %f, y = %f, z = %f\n",now.x, now.y, now.z);
