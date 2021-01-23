@@ -21,7 +21,7 @@ t_vector	ft_ray_at(t_ray ray, double d)
 				ft_vec_product_const(*ray.dir, d)));
 }
 
-int			ft_ray_change_hit(t_ray *ray, int t)
+int			ft_ray_change_hit(t_ray *ray, int t, int hit_id)
 {
 	t_vector	now;
 	
@@ -30,6 +30,7 @@ int			ft_ray_change_hit(t_ray *ray, int t)
 	{
 		free(ray->hit_point);
 		ray->hit_point = ft_vec_dup(now);
+		ray->hit_id = hit_id;
 		ray->ray_hit = 1;
 		return (1);
 	}
@@ -62,7 +63,7 @@ int			ft_ray_hit_sphere(t_object *sphere, t_ray *ray, double t)
 	{
 		t = (-b - sqrt(discriminant)) / (2 * a);
 		//printf("a = %.6lf, b = %.6lf, t = %.6lf\n", a,b,t);
-		if (t >= 0 && ft_ray_change_hit(ray, t))
+		if (t >= 0 && ft_ray_change_hit(ray, t, SPHERE))
 			return (1);
 	}
 	return (0);
@@ -79,7 +80,7 @@ int			ft_ray_hit_plane(t_object *plane, t_ray *ray, int t)
 	{
 		ft_vec_cpy(&oc, ft_vec_sub(*plane->vec, *ray->origin));
 		t = ft_dot_product(oc, *plane->dir) / denom;
-		if (t >= 0 && ft_ray_change_hit(ray, t) > 0)
+		if (t >= 0 && ft_ray_change_hit(ray, t, PLANE) > 0)
 			return (1);
 		/*
 		//printf("oc.x = %f y = %f, z = %f\n", oc.x,oc.y,oc.z);
@@ -122,7 +123,7 @@ int			ft_ray_hit_square(t_object *square, t_ray *ray)
 				return (0);
 			if (fabs(p.z - square->vec->z) > (square->size / 2))
 				return (0);
-			if (ft_ray_change_hit(ray, t) > 0)
+			if (ft_ray_change_hit(ray, t, SQUARE) > 0)
 				return (1);
 		}
 	}
@@ -171,7 +172,9 @@ int			ft_ray_hit_triangle(t_object *triangle, t_ray *ray, int t)
 		return (0);
 	else if (ft_triangle_inside_outside(p, *triangle->vec_third, *triangle->vec, n) == 0)
 		return (0);
-	return (1);
+	if (ft_ray_change_hit(ray, t, TRIANGLE) > 0)
+		return (1);
+	return (0);
 }
 
 int			ft_ray_hit_cylinder(t_object *cylinder, t_ray *ray)
@@ -217,7 +220,6 @@ int			ft_ray_hit_cylinder(t_object *cylinder, t_ray *ray)
 		height = ft_dot_product(ft_vec_sub(p, *cylinder->vec), h_norm);
 		//printf("p x = %f y = %f z = %f\n", p.x, p.y, p.z);
 		//printf("ht = %f, norm = %f\n", height, cylinder->height);
-	
 		//printf("a = %.6lf, b = %.6lf, t = %.6lf\n", a,b,t);
 		if (height >= 0 && height <= cylinder->height)
 			hit_flag = 1;
@@ -225,7 +227,7 @@ int			ft_ray_hit_cylinder(t_object *cylinder, t_ray *ray)
 		height = ft_dot_product(ft_vec_sub(p, *cylinder->vec), h_norm);
 		if (height >= 0 && height <= cylinder->height)
 			hit_flag = 1;
-		if (hit_flag == 1 && ft_ray_change_hit(ray, t))//t >= 0 && ft_ray_change_hit(ray, t))
+		if (hit_flag == 1 && ft_ray_change_hit(ray, t, CYLINDER))
 			return (1);
 	}
 	return (0);

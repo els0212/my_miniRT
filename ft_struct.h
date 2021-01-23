@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:35:12 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/23 15:22:14 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/23 17:24:36 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct			s_ray{
 	t_vector			*origin;
 	t_vector			*dir;
 	t_vector			*hit_point;
+	int					hit_id;
 	int					ray_hit;
 }						t_ray;
 
