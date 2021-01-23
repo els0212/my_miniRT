@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:35:12 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/23 21:17:41 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/23 21:25:36 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct			s_vector{
 	double				z;
 }						t_vector;
 
+typedef struct s_object	t_object;
 typedef struct			s_ray{
 	t_vector			*origin;
 	t_vector			*dir;
@@ -94,7 +95,6 @@ struct					s_light
 **							: in range [-1, 1]
 ** size						: Square
 */
-typedef struct s_object	t_object;
 struct					s_object
 {
 	int					id;

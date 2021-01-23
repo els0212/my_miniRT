@@ -11,8 +11,8 @@ t_ray	*ft_ray_init(t_vector *origin, t_vector dir)
 	ret->dir = ft_vec_dup(dir);
 	ft_vector_init(hit_point, RAYMAX, RAYMAX, RAYMAX);
 	ret->hit_point = hit_point;
-	ray->hit_id = -1;
-	ray->hit_norm = 0;
+	ret->hit_obj = 0;
+	ret->hit_norm = 0;
 	ret->ray_hit = 0;
 	return (ret);
 }
@@ -26,22 +26,20 @@ t_vector	ft_ray_at(t_ray ray, double d)
 t_vector	*ft_get_normal(t_vector hit_point, t_object obj)
 {
 	t_vector	pc;
-
-	if (!obj)
-		return (0);
+	//printf("get normal ! \n");
 	if (obj.id == SPHERE)
-		return (ft_vec_dup(ft_normalize(ft_vec_sub(hit_point, obj->vec))));
+		return (ft_vec_dup(ft_normalize(ft_vec_sub(hit_point, *obj.vec))));
 	else if (obj.id == PLANE || obj.id == SQUARE)
-		return (ft_vec_dup(obj->dir));
+		return (ft_vec_dup(*obj.dir));
 	else if (obj.id == CYLINDER)
 	{
-		pc = ft_vec_sub(hit_point, obj->vec);
+		pc = ft_vec_sub(hit_point, *obj.vec);
 		return (ft_vec_dup(ft_normalize(ft_vec_sub(hit_point, 
-						ft_vec_product_const(obj->dir, ft_dot_product(obj->dir, pc))))));
+						ft_vec_product_const(*obj.dir, ft_dot_product(*obj.dir, pc))))));
 	}
-	else if (obj.id == TRIANGLE)
-	return (ft_vec_dup(ft_cross_product(ft_vec_sub(*triangle->vec_third, *triangle->vec),
-				ft_vec_sub(*triangle->vec_second, *triangle->vec))));
+	else
+		return (ft_vec_dup(ft_cross_product(ft_vec_sub(*obj.vec_third, *obj.vec),
+				ft_vec_sub(*obj.vec_second, *obj.vec))));
 }
 
 int			ft_ray_change_hit(t_ray *ray, int t, t_object *hit_obj)
@@ -49,6 +47,7 @@ int			ft_ray_change_hit(t_ray *ray, int t, t_object *hit_obj)
 	t_vector	now;
 	
 	now = ft_vec_add(*ray->origin, ft_vec_product_const(*ray->dir, t));
+	//printf("id = %d, t = %d, hit\n",hit_obj->id, t);
 	if (ft_get_dist(*ray->origin, *ray->hit_point) > ft_get_dist(*ray->origin, now))
 	{
 		free(ray->hit_point);
@@ -74,18 +73,20 @@ int			ft_ray_hit_sphere(t_object *sphere, t_ray *ray, double t)
 	double		c;
 	double		discriminant;
 
-//	printf("ori x =%.6f, y=%.6f, z=%.6f\n",ray->origin->x, ray->origin->y, ray->origin->z);
-//	printf("sph x =%.6f, y=%.6f, z=%.6f\n",sphere->vec->x, sphere->vec->y, sphere->vec->z);
+	//printf("ori x =%.6f, y=%.6f, z=%.6f\n",ray->origin->x, ray->origin->y, ray->origin->z);
+	//printf("sph x =%.6f, y=%.6f, z=%.6f\n",sphere->vec->x, sphere->vec->y, sphere->vec->z);
 	oc = ft_vec_sub(*ray->origin, *sphere->vec);
 	a = ft_dot_product(*ray->dir, *ray->dir);
 	//printf("ray x =%.6f, y=%.6f, z=%.6f\n",ray->dir->x, ray->dir->y, ray->dir->z);
 	b = 2.0 * ft_dot_product(*ray->dir, oc);
 	c = ft_dot_product(oc, oc) - pow((sphere->dia / 2), 2);
 	discriminant = b * b - 4 * a * c;
+	//printf("b = %f c = %f det = %f\n", b, c, discriminant);
 	if (discriminant >= 0)
 	{
 		t = (-b - sqrt(discriminant)) / (2 * a);
 		//printf("a = %.6lf, b = %.6lf, t = %.6lf\n", a,b,t);
+		//printf("bef hit\n");
 		if (t >= 0 && ft_ray_change_hit(ray, t, sphere) > 0)
 			return (1);
 	}
@@ -160,6 +161,7 @@ int			ft_triangle_inside_outside(t_vector p, t_vector a, t_vector b, t_vector n)
 
 	edge = ft_vec_sub(a, b);
 	p_edge = ft_vec_sub(p, b);
+	//printf("io prob?\n");
 	if (ft_dot_product(ft_cross_product(edge, p_edge), n) < 0)
 		return (0);
 	return (1);
@@ -189,14 +191,32 @@ int			ft_ray_hit_triangle(t_object *triangle, t_ray *ray, int t)
 	if (t < 0)
 		return (0);
 	p = ft_ray_at(*ray, t);
+	/*
+	printf("vec x = %f y = %f z = %f\n",triangle->vec->x, triangle->vec->y, triangle->vec->z);
+	printf("vec2 x = %f y = %f z = %f\n",triangle->vec_second->x, triangle->vec_second->y, triangle->vec_second->z);
+	printf("vec3 x = %f y = %f z = %f\n",triangle->vec_third->x, triangle->vec_third->y, triangle->vec_third->z);
+	*/
 	if (ft_triangle_inside_outside(p, *triangle->vec, *triangle->vec_second, n) == 0)
+	{
+		//printf("first ret\n");
 		return (0);
+	}
 	else if (ft_triangle_inside_outside(p, *triangle->vec_second, *triangle->vec_third, n) == 0)
+	{
+		//printf("second ret\n");
 		return (0);
+	}
 	else if (ft_triangle_inside_outside(p, *triangle->vec_third, *triangle->vec, n) == 0)
+	{
+		//printf("third ret\n");
 		return (0);
+	}
+	printf("before hit\n");
 	if (ft_ray_change_hit(ray, t, triangle) > 0)
+	{
+		printf("triangle end!\n");
 		return (1);
+	}
 	return (0);
 }
 
@@ -226,7 +246,6 @@ int			ft_ray_hit_cylinder(t_object *cylinder, t_ray *ray)
 	c = ft_dot_product(oc, oc) - pow(ft_dot_product(oc, h_norm), 2) - pow((cylinder->dia / 2), 2);
 	//printf("dot(oc, oc) = %f pow(2) = %f\n",ft_dot_product(oc, oc), pow(ft_dot_product(oc, h_norm), 2));
 	discriminant = b * b - 4 * a * c;
-	//printf("a = %f b = %f c = %f det = %f\n", a,b,c,discriminant);
 	if (discriminant >= 0)
 	{
 		// need to check t and t2..
@@ -250,7 +269,7 @@ int			ft_ray_hit_cylinder(t_object *cylinder, t_ray *ray)
 		height = ft_dot_product(ft_vec_sub(p, *cylinder->vec), h_norm);
 		if (height >= 0 && height <= cylinder->height)
 			hit_flag = 1;
-		if (hit_flag == 1 && ft_ray_change_hit(ray, t, CYLINDER))
+		if (hit_flag == 1 && ft_ray_change_hit(ray, t, cylinder))
 			return (1);
 	}
 	return (0);
@@ -276,7 +295,7 @@ t_color		*ft_ray_color(t_ray *ray, t_object *obj)
 	while (now_obj)
 	{
 		id = now_obj->id;
-		//printf("id = %d\n", id);
+	//	printf("id = %d\n", id);
 		if (id == PLANE && ft_ray_hit_plane(now_obj, ray, 0) > 0)
 			ft_color_cpy(ret, now_obj->color);
 		if (id == SPHERE && ft_ray_hit_sphere(now_obj, ray, 0) > 0)
@@ -287,9 +306,12 @@ t_color		*ft_ray_color(t_ray *ray, t_object *obj)
 			ft_color_cpy(ret, now_obj->color);
 		if (id == CYLINDER && ft_ray_hit_cylinder(now_obj, ray) > 0)
 			ft_color_cpy(ret, now_obj->color);
+	//	printf("hit = %d\n", ray->ray_hit);
 		now_obj = now_obj->next;
 	}
-	ret->hit_norm = ray->ray_hit ? ft_get_norm(*ray->hit_point, *ray->hit_obj) : 0;
-	printf("hit norm x = %f y = %f z = %f", ret->hit_norm->x, ret->hit_norm->y, ret->hit_norm->z);
+	//printf("end loop!");
+	ray->hit_norm = ray->ray_hit ? ft_get_normal(*ray->hit_point, *ray->hit_obj) : 0;
+	if (ray->ray_hit)
+		printf("hit norm x = %f y = %f z = %f\n", ray->hit_norm->x, ray->hit_norm->y, ray->hit_norm->z);
 	return (ret);
 }
