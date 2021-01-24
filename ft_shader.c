@@ -9,7 +9,7 @@ t_color	ft_get_light_color(t_lht *now, t_object *objs, t_ray ray)
 	double		angle;
 
 	ft_color_init(&ret, 0, 0, 0);
-	dir = ft_normalize(ft_vec_sub(*now->vec, *ray.hit_point));
+	dir = ft_vec_sub(*now->vec, *ray.hit_point);//ft_normalize(ft_vec_sub(*now->vec, *ray.hit_point));
 	//printf("dir.x = %f y = %f z = %f\n", dir.x, dir.y, dir.z);
 	temp_ray = ft_ray_init(ray.hit_point, dir);
 	if (ft_chk_intersect(objs, temp_ray) == 0 ||

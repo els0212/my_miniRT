@@ -10,7 +10,7 @@ t_ray	*ft_ray_init(t_vector *origin, t_vector dir)
 	ret->origin = ft_vec_dup(*origin);
 	//t_vector test = ft_vec_sub(dir, *origin);
 	//printf("test x = %f y = %f z = %f\n", test.x, test.y, test.z);
-	ret->dir = ft_vec_dup(ft_vec_sub(dir, *origin));//ft_vec_dup(ft_normalize(ft_vec_sub(dir, *origin)));
+	ret->dir = ft_vec_dup(ft_normalize(ft_vec_sub(dir, *origin))); //ft_vec_dup(ft_vec_sub(dir, *origin));//
 	ft_vector_init(hit_point, RAYMAX, RAYMAX, RAYMAX);
 	ret->hit_point = hit_point;
 	ret->hit_obj = 0;
