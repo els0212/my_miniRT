@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:35:12 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/23 23:25:20 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/24 13:43:00 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,15 +63,9 @@ struct					s_camera
 {
 	t_vector			*vec;
 	t_vector			*dir;
-//	t_vector			*u;
-//	t_vector			*v;
+	t_vector			*u;
+	t_vector			*v;
 	double				fov;
-	double				focal_len;
-	t_vector			ndc_left_bottom;
-	double			ndc_width;
-	double			ndc_height;
-	t_vector		ndc_horizon;
-	t_vector		ndc_vertical;
 	t_cam				*next;
 };
 

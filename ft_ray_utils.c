@@ -8,7 +8,9 @@ t_ray	*ft_ray_init(t_vector *origin, t_vector dir)
 	if (!(hit_point = (t_vector *)malloc(sizeof(t_vector))) || !(ret = (t_ray *)malloc(sizeof(t_ray))))
 		return (0);
 	ret->origin = ft_vec_dup(*origin);
-	ret->dir = ft_vec_dup(dir);
+	//t_vector test = ft_vec_sub(dir, *origin);
+	//printf("test x = %f y = %f z = %f\n", test.x, test.y, test.z);
+	ret->dir = ft_vec_dup(ft_vec_sub(dir, *origin));//ft_vec_dup(ft_normalize(ft_vec_sub(dir, *origin)));
 	ft_vector_init(hit_point, RAYMAX, RAYMAX, RAYMAX);
 	ret->hit_point = hit_point;
 	ret->hit_obj = 0;
@@ -100,7 +102,7 @@ int			ft_ray_hit_plane(t_object *plane, t_ray *ray, int t)
 	
 	denom = ft_dot_product(*plane->dir, *ray->dir);
 	//printf("denom = %f\n",denom);
-	if (denom > EPSILON)// && ft_ray_change_hit(ray, t))
+	if (fabs(denom) > EPSILON)// && ft_ray_change_hit(ray, t))
 	{
 		ft_vec_cpy(&oc, ft_vec_sub(*plane->vec, *ray->origin));
 		t = ft_dot_product(oc, *plane->dir) / denom;

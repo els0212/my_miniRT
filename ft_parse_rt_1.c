@@ -47,7 +47,6 @@ int		ft_ins_camera(char **chunks, t_compo *compo, int size)
 	t_cam		*camera;
 	t_vector	*vec;
 	t_vector	*dir;
-	t_vector	vup;
 	t_vector	ndc_origin;
 
 	if (size != 4 || !(camera = (t_cam *)malloc(sizeof(t_cam))))
@@ -66,27 +65,23 @@ int		ft_ins_camera(char **chunks, t_compo *compo, int size)
 	camera->vec = vec;
 	camera->dir = dir;
 	camera->fov = ft_atod(chunks[3]) * (M_PI / 180.0);
+	//ndc_origin.z = vec->z + 1;
+	t_vector	vup;
 	ft_vector_init(&vup, 0, 1, 0);
-	//how to calc focal len ?
-	camera->focal_len = 1;//camera->fov;// ((compo->resolution->x) * 2);
-	camera->ndc_width = 2;//camera->focal_len * 2;
-	camera->ndc_height = 2;//camera->ndc_width / compo->resolution->ratio;
-	//printf("ht = %f\n", camera->ndc_height);
-	ft_vector_init(&camera->ndc_horizon, camera->ndc_width, 0, 0);
-	ft_vector_init(&camera->ndc_vertical, 0, camera->ndc_height, 0);
-	ft_vec_cpy(&ndc_origin, *camera->vec);
-	ndc_origin.z = 1;//camera->focal_len;
-	ft_vec_cpy(&camera->ndc_left_bottom, ft_vec_sub(ft_vec_sub(ndc_origin, ft_vec_div_const(camera->ndc_horizon, 2)), ft_vec_div_const(camera->ndc_vertical, 2)));
+	t_vector temp = ft_cross_product(*dir, vup);
+	camera->v = ft_vec_dup(ft_cross_product(vup, *dir));
+	camera->u = ft_vec_dup(ft_cross_product(*dir, *camera->v));
+	//ft_vec_cpy(&camera->ndc_left_bottom, ft_vec_sub(ft_vec_sub(ndc_origin, ft_vec_div_const(camera->ndc_horizon, 2)), ft_vec_div_const(camera->ndc_vertical, 2)));
 	//camera->left_up = tan(atan2(camera->focal_len, (compo->resolution->x / 2)));
 	ft_add_camera_last(&(compo->camera), camera);
 	printf("## processing camera\n\
-	focal = %lf, wid = %f, ht = %f, \n\
-	llc x = %f, llc y = %f, llc z = %f,\n\
+	u x = %f y = %f z = %f,\n\
+	v x = %f y = %f z = %f,\n\
 	x = %lf, y = %lf, z = %lf\n\
 	dir.x = %lf, dir.y = %lf, dir.z = %lf\n\
 	fov = %lf\n",\
-	camera->focal_len, camera->ndc_width, camera->ndc_height,\
-	camera->ndc_left_bottom.x, camera->ndc_left_bottom.y, camera->ndc_left_bottom.z,\
+	camera->u->x, camera->u->y, camera->u->z,\
+	camera->v->x, camera->v->y, camera->v->z,\
 	vec->x, vec->y, vec->z,\
 	dir->x, dir->y, dir->z,\
 	camera->fov);

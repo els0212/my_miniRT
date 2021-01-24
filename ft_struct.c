@@ -92,9 +92,9 @@ t_color					ft_color_add(t_color c1, t_color c2)
 {
 	t_color	ret;
 
-	ret.red = c1.red + c2.red;
-	ret.green = c1.green + c2.green;
-	ret.blue = c1.blue + c2.blue;
+	ret.red = fmin(c1.red + c2.red, 255);
+	ret.green = fmin(c1.green + c2.green, 255);
+	ret.blue = fmin(c1.blue + c2.blue, 255);
 	return (ret);
 }
 
@@ -154,7 +154,7 @@ t_vector	ft_normalize(t_vector vec)
 {
 	double	size;
 
-	size = sqrt(pow(vec.x, 2) + pow(vec.y, 2) + pow(vec.z, 2));
+	size = sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
 	vec.x /= size;
 	vec.y /= size;
 	vec.z /= size;

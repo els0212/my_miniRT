@@ -13,7 +13,7 @@ t_vector	ft_cross_product(t_vector a, t_vector b)
 	t_vector	ret;
 
 	ret.x = a.y * b.z - a.z * b.y;
-	ret.y = a.z * b.x - b.x * a.z;
+	ret.y = a.z * b.x - a.x * b.z;
 	ret.z = a.x * b.y - a.y * b.x;
 	return (ret);
 }
