@@ -91,6 +91,9 @@ int			ft_ray_hit_sphere(t_object *sphere, t_ray *ray, double t)
 		//printf("bef hit\n");
 		if (t >= 0 && ft_ray_change_hit(ray, t, sphere) > 0)
 			return (1);
+		t = (-b + sqrt(discriminant)) / (2 * a);
+		if (t >= 0 && ft_ray_change_hit(ray, t, sphere) > 0)
+			return (1);
 	}
 	return (0);
 }

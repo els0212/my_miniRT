@@ -47,7 +47,6 @@ int		ft_ins_camera(char **chunks, t_compo *compo, int size)
 	t_cam		*camera;
 	t_vector	*vec;
 	t_vector	*dir;
-	t_vector	ndc_origin;
 
 	if (size != 4 || !(camera = (t_cam *)malloc(sizeof(t_cam))))
 		return (-1);
@@ -68,7 +67,6 @@ int		ft_ins_camera(char **chunks, t_compo *compo, int size)
 	//ndc_origin.z = vec->z + 1;
 	t_vector	vup;
 	ft_vector_init(&vup, 0, 1, 0);
-	t_vector temp = ft_cross_product(*dir, vup);
 	camera->v = ft_vec_dup(ft_cross_product(vup, *dir));
 	camera->u = ft_vec_dup(ft_cross_product(*dir, *camera->v));
 	//ft_vec_cpy(&camera->ndc_left_bottom, ft_vec_sub(ft_vec_sub(ndc_origin, ft_vec_div_const(camera->ndc_horizon, 2)), ft_vec_div_const(camera->ndc_vertical, 2)));
