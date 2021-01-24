@@ -40,8 +40,8 @@ t_vector	*ft_get_normal(t_vector hit_point, t_object obj)
 						ft_vec_product_const(*obj.dir, ft_dot_product(*obj.dir, pc))))));
 	}
 	else
-		return (ft_vec_dup(ft_cross_product(ft_vec_sub(*obj.vec_third, *obj.vec),
-				ft_vec_sub(*obj.vec_second, *obj.vec))));
+		return (ft_vec_dup(ft_normalize(ft_cross_product(ft_vec_sub(*obj.vec_third, *obj.vec),
+				ft_vec_sub(*obj.vec_second, *obj.vec)))));
 }
 
 int			ft_ray_change_hit(t_ray *ray, int t, t_object *hit_obj)
@@ -182,8 +182,8 @@ int			ft_ray_hit_triangle(t_object *triangle, t_ray *ray, int t)
 
 	a = ft_vec_sub(*triangle->vec_third, *triangle->vec);
 	b = ft_vec_sub(*triangle->vec_second, *triangle->vec);
-	n = ft_cross_product(a, b);
-	//printf("n.x = %f y= %f z = %f\n",n.x,n.y, n.z);
+	n = ft_normalize(ft_cross_product(a, b));
+	//printf("triangle normal n.x = %f y= %f z = %f\n",n.x,n.y, n.z);
 	discriminant = ft_dot_product(n, *ray->dir);
 	//printf("discriminant = %.6lf\n", discriminant);
 	if (fabs(discriminant) < EPSILON)
@@ -314,6 +314,10 @@ t_color		*ft_ray_color(t_ray *ray, t_object *obj)
 	}
 	//printf("end loop!");
 	ray->hit_norm = ray->ray_hit ? ft_get_normal(*ray->hit_point, *ray->hit_obj) : 0;
+	if (ray->ray_hit && ray->hit_obj->id == TRIANGLE)
+	{
+		printf("hit_norm x = %f y = %f z = %f\n", ray->hit_norm->x, ray->hit_norm->y, ray->hit_norm->z);
+	}
 	if (ray->hit_norm && ft_dot_product(*ray->hit_norm, *ray->dir) > 0)
 		ft_vec_cpy(ray->hit_norm, ft_vec_product_const(*ray->hit_norm, -1));
 
