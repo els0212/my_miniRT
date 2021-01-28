@@ -12,9 +12,10 @@ t_color	ft_specular(t_lht *now, t_ray ray)
 	ft_color_init(&hlight, 255, 255, 255);
 	hlight = ft_color_mult_const(&hlight, 1 - metalness);
 	ret = ft_color_add(ft_color_mult_const(ray.hit_obj->color, metalness), hlight);
-	dir = ft_normalize(ft_vec_sub(*now->vec, *ray.hit_point));
-	reflect = ft_vec_sub(dir, ft_vec_product_const(*ray.hit_norm, 2 * ft_dot_product(*ray.hit_norm, dir)));
-	ft_color_mult_const(&ret, fmax(ft_dot_product(reflect, ft_normalize(ft_vec_sub(*ray.hit_point, *ray.origin))), 0));
+	dir = ft_normalize(ft_vec_sub(*now->vec, *ray.hit_point)); //light vector
+	reflect = ft_vec_sub(ft_vec_product_const(*ray.hit_norm, 2 * ft_dot_product(*ray.hit_norm, dir)), dir); // 2 * (n . l)n - l
+	ret = ft_color_mult_const(&ret, pow(fmax(ft_dot_product(reflect, ft_normalize(ft_vec_sub(*ray.origin, *ray.hit_point))), 0), 10));
+	//printf("specular r = %d g = %d b = %d\n", ret.red, ret.green, ret.blue);
 	return (ret);
 }
 
