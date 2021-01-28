@@ -122,18 +122,24 @@ int main(int argc, char **argv)
 			dir = ft_vec_add(*compo->camera->vec, ft_vec_add(ft_vec_add(ft_vec_product_const(*compo->camera->u, u), ft_vec_product_const(*compo->camera->v, v)), *compo->camera->dir));
 			//printf("x = %f y = %f z = %f\n", x, y, z);
 			ray = ft_ray_init(compo->camera->vec, dir);
-			printf("dir x = %f y = %f z = %f\n", ray->dir->x, ray->dir->y, ray->dir->z);
+			//printf("dir x = %f y = %f z = %f\n", ray->dir->x, ray->dir->y, ray->dir->z);
 		//	ray = ft_ray_init(compo->camera->vec, ft_vec_add(compo->camera->ndc_left_bottom, ft_vec_add(ft_vec_product_const(compo->camera->ndc_horizon, v), ft_vec_product_const(compo->camera->ndc_vertical, u))));
 			//printf("ray dir x = %f y = %f z = %f\n", ray->dir->x, ray->dir->y, ray->dir->z);
 			t_color *temp_color = ft_ray_color(ray, compo->objects);
+
+			/*
+			 * ambient
+			*/
 			t_color ambient = ft_color_mult_const(compo->ambient->color, compo->ambient->ratio);
 			temp_color = ft_color_mult(temp_color, &ambient); 
-			if (ray->ray_hit)
-			{
-				t_color shader = ft_shader(compo->light, compo->objects, *ray);
-				//printf("shader r = %d g = %d b = %d\n",shader.red, shader.green, shader.blue);
-				temp_color = ft_color_cpy(temp_color, ft_color_add(*temp_color, shader));
-			}
+
+			/*
+			 * diffuse + specular
+			*/
+			t_color shader = ft_shader(compo->light, compo->objects, *ray);
+			//printf("shader r = %d g = %d b = %d\n",shader.red, shader.green, shader.blue);
+			temp_color = ft_color_cpy(temp_color, ft_color_add(*temp_color, shader));
+
 			//printf("r = %d, g = %d, b = %d\n", temp_color->red, temp_color->blue, temp_color->green);
 			//printf("amb r = %d g = %d b = %d\n",ambient.red, ambient.blue, ambient.green);
 			int col = (temp_color->red<<16) + (temp_color->green<<8) + (temp_color->blue<<0);

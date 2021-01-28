@@ -39,9 +39,11 @@ t_vector	*ft_get_normal(t_vector hit_point, t_object obj)
 		return (ft_vec_dup(ft_normalize(ft_vec_sub(hit_point, 
 						ft_vec_product_const(*obj.dir, ft_dot_product(*obj.dir, pc))))));
 	}
-	else
+	else if (obj.id == TRIANGLE)
 		return (ft_vec_dup(ft_normalize(ft_cross_product(ft_vec_sub(*obj.vec_third, *obj.vec),
 				ft_vec_sub(*obj.vec_second, *obj.vec)))));
+	else
+		return (0);
 }
 
 int			ft_ray_change_hit(t_ray *ray, int t, t_object *hit_obj)
@@ -164,8 +166,8 @@ int			ft_triangle_inside_outside(t_vector p, t_vector a, t_vector b, t_vector n)
 	t_vector	edge;
 	t_vector	p_edge;
 
-	edge = ft_vec_sub(a, b);
-	p_edge = ft_vec_sub(p, b);
+	edge = ft_vec_sub(b, a);
+	p_edge = ft_vec_sub(p, a);
 	//printf("io prob?\n");
 	if (ft_dot_product(ft_cross_product(edge, p_edge), n) < 0)
 		return (0);
@@ -180,8 +182,8 @@ int			ft_ray_hit_triangle(t_object *triangle, t_ray *ray, int t)
 	t_vector	n;
 	double		discriminant;
 
-	a = ft_vec_sub(*triangle->vec_third, *triangle->vec);
-	b = ft_vec_sub(*triangle->vec_second, *triangle->vec);
+	a = ft_vec_sub(*triangle->vec_second, *triangle->vec);
+	b = ft_vec_sub(*triangle->vec_third, *triangle->vec);
 	n = ft_normalize(ft_cross_product(a, b));
 	//printf("triangle normal n.x = %f y= %f z = %f\n",n.x,n.y, n.z);
 	discriminant = ft_dot_product(n, *ray->dir);
@@ -190,7 +192,7 @@ int			ft_ray_hit_triangle(t_object *triangle, t_ray *ray, int t)
 		return (0);
 	//printf("ray_dir x %f y %f z %f\n",ray->dir->x, ray->dir->y, ray->dir->z);
 	//printf("n.ray = %lf, n.triangle = %lf\n", ft_dot_product(n, *ray->origin), ft_dot_product(n, *triangle->vec));
-	t = (ft_dot_product(ft_vec_sub(*triangle->vec, *ray->origin), n) / discriminant);
+	t = ft_dot_product(ft_vec_sub(*triangle->vec, *ray->origin), n) / discriminant;
 	//t = (ft_dot_product(n, *ray->origin) + ft_dot_product(n, *triangle->vec)) / discriminant;
 	//printf("t = %d\n", t);
 	if (t < 0)
@@ -314,13 +316,12 @@ t_color		*ft_ray_color(t_ray *ray, t_object *obj)
 	}
 	//printf("end loop!");
 	ray->hit_norm = ray->ray_hit ? ft_get_normal(*ray->hit_point, *ray->hit_obj) : 0;
-	if (ray->ray_hit && ray->hit_obj->id == TRIANGLE)
-	{
-		printf("hit_norm x = %f y = %f z = %f\n", ray->hit_norm->x, ray->hit_norm->y, ray->hit_norm->z);
-	}
+	//if (ray->ray_hit && ray->hit_obj->id == TRIANGLE)
+	//	printf("hit_norm x = %f y = %f z = %f\n", ray->hit_norm->x, ray->hit_norm->y, ray->hit_norm->z);
 	if (ray->hit_norm && ft_dot_product(*ray->hit_norm, *ray->dir) > 0)
-		ft_vec_cpy(ray->hit_norm, ft_vec_product_const(*ray->hit_norm, -1));
-
+			ft_vec_cpy(ray->hit_norm, ft_vec_product_const(*ray->hit_norm, -1));
+	//if (ray->hit_norm)
+	//	printf("id = %d, norm x = %f y = %f z = %f\n", ray->hit_obj->id, ray->hit_norm->x, ray->hit_norm->y, ray->hit_norm->z);
 	//if (ray->ray_hit)
 	//	printf("hit norm x = %f y = %f z = %f\n", ray->hit_norm->x, ray->hit_norm->y, ray->hit_norm->z);
 	return (ret);
