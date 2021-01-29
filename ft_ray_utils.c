@@ -109,7 +109,7 @@ int			ft_ray_hit_plane(t_object *plane, t_ray *ray, int t)
 	//printf("denom = %f\n",denom);
 	if (fabs(denom) > EPSILON)// && ft_ray_change_hit(ray, t))
 	{
-		ft_vec_cpy(&oc, ft_vec_sub(*plane->vec, *ray->origin));
+		oc = ft_vec_sub(*plane->vec, *ray->origin);//	ft_vec_cpy(&oc, 
 		t = ft_dot_product(oc, *plane->dir) / denom;
 		if (t >= 0 && ft_ray_change_hit(ray, t, plane) > 0)
 			return (1);

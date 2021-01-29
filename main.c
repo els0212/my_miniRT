@@ -93,50 +93,29 @@ int main(int argc, char **argv)
 	mlx_hook(mlx.win, DESTROYNOTIFY, STRUCTURENOTIFYMASK, ft_close, &mlx);
 	img.img = mlx_new_image(mlx.mlx, 1920, 1080);
 	img.addr = (char *)mlx_get_data_addr(img.img, &img.bpp, &img.line_len, &img.endian);
-	//printf("addr = %s, bpp = %d, len = %d, endian = %d\n",img.addr, img.bpp, img.line_len, img.endian);
-	/*
-	for(int i = 0 ; i < 640; i++)
-		for(int j = 0 ; j < 1920; j++)
-			my_mlx_pixel_put(&img, i, j, 0x00FFFFFF);
-	mlx_put_image_to_window(mlx.mlx, mlx.win, img.img, 0, 0);
-	mlx_destroy_image(mlx.mlx, img.img);
-	img.img = mlx_new_image(mlx.mlx, 640, 720);
-	img.addr = (char *)mlx_get_data_addr(img.img, &img.bpp, &img.line_len, &img.endian);
-	*/
-	//printf("with = %f, ht = %f\n", compo->camera->ndc_width, compo->camera->ndc_height);
-	//int img_w = 640;
-	//int img_h = img_w / compo->resolution->ratio;
 	for(int i = 0 ; i <compo->resolution->y; i++)
 		for(int j = 0 ; j < compo->resolution->x; j++)
 		{
 			double u = (1 - 2 * ((double)i + 0.5) / (compo->resolution->y - 1)) * tan(compo->camera->fov / 2);
 			double v = (2 * ((double)j + 0.5) / (compo->resolution->x - 1) - 1) * compo->resolution->ratio * tan(compo->camera->fov / 2);
 			t_vector dir;
-			/*
-			double x = v * compo->camera->v->x + u * compo->camera->u->x + compo->camera->dir->x + compo->camera->vec->x;
-			double y = v * compo->camera->v->y + u * compo->camera->u->y + compo->camera->dir->y + compo->camera->vec->y;
-			double z = compo->camera->v->z + compo->camera->u->z + compo->camera->dir->z + compo->camera->vec->z;
-			ft_vector_init(&dir, x, y, z);
-			*/
-			//printf("u = %f v = %f\n", u, v);
 			dir = ft_vec_add(*compo->camera->vec, ft_vec_add(ft_vec_add(ft_vec_product_const(*compo->camera->u, u), ft_vec_product_const(*compo->camera->v, v)), *compo->camera->dir));
-			//printf("x = %f y = %f z = %f\n", x, y, z);
 			ray = ft_ray_init(compo->camera->vec, dir);
-			//printf("dir x = %f y = %f z = %f\n", ray->dir->x, ray->dir->y, ray->dir->z);
-		//	ray = ft_ray_init(compo->camera->vec, ft_vec_add(compo->camera->ndc_left_bottom, ft_vec_add(ft_vec_product_const(compo->camera->ndc_horizon, v), ft_vec_product_const(compo->camera->ndc_vertical, u))));
-			//printf("ray dir x = %f y = %f z = %f\n", ray->dir->x, ray->dir->y, ray->dir->z);
 			t_color *temp_color = ft_ray_color(ray, compo->objects);
-
 			/*
 			 * ambient
 			*/
 			t_color ambient = ft_color_mult_const(compo->ambient->color, compo->ambient->ratio);
 			temp_color = ft_color_mult(temp_color, &ambient); 
-
 			/*
 			 * diffuse + specular
 			*/
 			t_color shader = ft_shader(compo->light, compo->objects, *ray);
+			if (ray->ray_hit && ray->hit_obj->id == PLANE)
+			{
+				printf("red = %d green = %d blue = %d\n", temp_color->red, temp_color->green, temp_color->blue);
+				printf("shader r = %d, g = %d, b = %d\n", shader.red, shader.blue, shader.green);
+			}
 			//printf("shader r = %d g = %d b = %d\n",shader.red, shader.green, shader.blue);
 			temp_color = ft_color_cpy(temp_color, ft_color_add(*temp_color, shader));
 
