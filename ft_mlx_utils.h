@@ -15,5 +15,14 @@ typedef struct	s_img
 	int			bpp;
 	int			line_len;
 	int			endian;
+	int			width;
+	int			height;
 }				t_img;
+
+typedef struct		s_pixel
+{
+	unsigned char	red;
+	unsigned char	green;
+	unsigned char	blue;
+}					t_pixel;
 #endif

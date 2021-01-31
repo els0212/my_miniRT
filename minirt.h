@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:13:18 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/24 15:16:54 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/31 17:58:28 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,10 @@
 # define STRUCTURENOTIFYMASK (1L<<17)
 # define RAYMAX 1000
 # define EPSILON 0.0000001
+# define REDMASK 0x00FF0000 
+# define GREENMASK 0x0000FF00
+# define BLUEMASK 0x000000FF
+# define HEADERSIZE 54
 # include <fcntl.h>
 # include <unistd.h>
 # include <stdlib.h>
@@ -131,4 +135,11 @@ t_vector	ft_rotate_z(t_vector now, double angle);
 */
 t_color	ft_get_light_color(t_lht *now, t_object *objs, t_ray ray);
 t_color	ft_shader(t_lht *lht, t_object *objs, t_ray ray);
+
+/*
+** ft_save.c
+*/
+t_pixel		**ft_init_buffer(int width, int height);
+void		ft_free_buffer(t_pixel **del, int height);
+int		ft_save_bmp(char *filename, t_pixel **target, int width, int height);
 #endif

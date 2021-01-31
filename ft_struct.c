@@ -11,6 +11,7 @@ t_compo			*ft_compo_init()
 	ret->camera = 0;
 	ret->light = 0;
 	ret->objects = 0;
+	ret->save = 0;
 	return (ret);
 }
 

@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:35:12 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/24 13:43:00 by hyi              ###   ########.fr       */
+/*   Updated: 2021/01/31 12:59:08 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,7 @@ typedef struct			s_component
 	t_cam				*camera;
 	t_lht				*light;
 	t_object			*objects;
+	int					save;
 }						t_compo;
 
 t_compo					*ft_compo_init();

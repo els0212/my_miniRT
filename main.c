@@ -72,14 +72,20 @@ int main(int argc, char **argv)
 	t_compo	*compo;
 	t_mlx	mlx;
 	t_img	img;
+	t_pixel		**save;
 	t_ray	*ray;
 
 	compo = ft_compo_init();
 
 	if (argc < 2 || argc > 3)
 		return (-1);
-	else if (argc == 3 && ft_strncmp(argv[2], "--save", 6))
-		return (-1);
+	else if (argc == 3)
+	{
+		if (ft_strncmp(argv[2], "--save", 6))
+			return (-1);
+		else
+			compo->save = 1;
+	}
 	if (ft_strncmp(ft_strrchr(argv[1], '.'), ".rt", 3))
 		return (-1);
 	else if ((fd = open(argv[1], O_RDONLY)) <= 0)
@@ -91,8 +97,22 @@ int main(int argc, char **argv)
 	mlx.win = mlx_new_window(mlx.mlx, compo->resolution->x, compo->resolution->y, "hello world!");
 	mlx_hook(mlx.win, KEYPRESS, KEYPRESSMASK, ft_key_press, &mlx);
 	mlx_hook(mlx.win, DESTROYNOTIFY, STRUCTURENOTIFYMASK, ft_close, &mlx);
-	img.img = mlx_new_image(mlx.mlx, 1920, 1080);
+
+	// change resolution's width or height if img width or height greater than resolution's one 
+	img.width = 1920;
+	img.height = 1080;
+	if (img.width > compo->resolution->x)
+		compo->resolution->x = img.width;
+	if (img.height > compo->resolution->y)
+		compo->resolution->y = img.height;
+
+	// image init
+	img.img = mlx_new_image(mlx.mlx, img.width, img.height);
 	img.addr = (char *)mlx_get_data_addr(img.img, &img.bpp, &img.line_len, &img.endian);
+
+	// init bmp file
+	save = compo->save ? ft_init_buffer(img.width, img.height) : 0;
+	//rendering
 	for(int i = 0 ; i <compo->resolution->y; i++)
 		for(int j = 0 ; j < compo->resolution->x; j++)
 		{
@@ -124,11 +144,24 @@ int main(int argc, char **argv)
 			//printf("r = %d, g = %d, b = %d\n", temp_color->red, temp_color->blue, temp_color->green);
 			//printf("amb r = %d g = %d b = %d\n",ambient.red, ambient.blue, ambient.green);
 			int col = (temp_color->red<<16) + (temp_color->green<<8) + (temp_color->blue<<0);
-				free(temp_color);
-			my_mlx_pixel_put(&img, j, i, col);
+			//int col = (temp_color->red & REDMASK) + (temp_color->green & GREENMASK) + (temp_color->blue & BLUEMASK);
+			free(temp_color);
+			if (compo->save)
+			{
+				save[i][j].red = col & REDMASK;//temp_color->red & REDMASK;
+				save[i][j].green = col & GREENMASK; //temp_color->green & GREENMASK;
+				save[i][j].blue = col & BLUEMASK; //temp_color->blue & BLUEMASK;
+			}
+			else
+				my_mlx_pixel_put(&img, j, i, col);
 		}
-	mlx_put_image_to_window(mlx.mlx, mlx.win, img.img, 0, 0);
-	//mlx_destroy_window(&mlx.mlx, &mlx.win);
-	mlx_loop(mlx.mlx);
+	if (compo->save)
+		ft_save_bmp("hell.bmp", save, img.width, img.height);
+	else
+	{
+		mlx_put_image_to_window(mlx.mlx, mlx.win, img.img, 0, 0);
+		//mlx_destroy_window(&mlx.mlx, &mlx.win);
+		mlx_loop(mlx.mlx);
+	}
 	return (0);
 }
