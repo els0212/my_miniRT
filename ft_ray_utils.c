@@ -37,7 +37,7 @@ t_vector	*ft_get_normal(t_vector hit_point, t_object obj)
 	{
 		pc = ft_vec_sub(hit_point, *obj.vec);
 		return (ft_vec_dup(ft_normalize(ft_vec_sub(hit_point, 
-						ft_vec_product_const(*obj.dir, ft_dot_product(*obj.dir, pc))))));
+						ft_vec_add(*obj.vec, ft_vec_product_const(*obj.dir, ft_dot_product(*obj.dir, pc)))))));
 	}
 	else if (obj.id == TRIANGLE)
 		return (ft_vec_dup(ft_normalize(ft_cross_product(ft_vec_sub(*obj.vec_third, *obj.vec),
@@ -239,7 +239,7 @@ int			ft_ray_hit_cylinder(t_object *cylinder, t_ray *ray)
 	double		height;
 	int			hit_flag;
 
-	oc = ft_vec_sub(*ray->origin, *cylinder->vec); // w
+	oc = ft_vec_sub(*ray->origin, *cylinder->vec);// w
 	h = ft_vec_sub(ft_vec_add(*cylinder->vec, ft_vec_product_const(*cylinder->dir, cylinder->height)), *cylinder->vec);
 	h_norm = ft_vec_div_const(h, sqrt(pow(h.x, 2) + pow(h.y, 2) + pow(h.z, 2)));
 	//printf("h ! x = %f y  = %f z = %f\n", h.x, h.y, h.z);
@@ -268,12 +268,28 @@ int			ft_ray_hit_cylinder(t_object *cylinder, t_ray *ray)
 		//printf("p x = %f y = %f z = %f\n", p.x, p.y, p.z);
 		//printf("ht = %f, norm = %f\n", height, cylinder->height);
 		//printf("a = %.6lf, b = %.6lf, t = %.6lf\n", a,b,t);
-		if (height >= 0 && height <= cylinder->height)
+		if (height > 0 && height < cylinder->height)
 			hit_flag = 1;
+		/*
+		else if ((fabs(height) < EPSILON || fabs(height - cylinder->height) < EPSILON))// && ft_get_dist(*cylinder->vec, p) <= cylinder->dia / 2)
+		{
+			printf("hithit");
+			hit_flag = 1;
+		}
+		//printf("height -t = %f\n", height);
+		*/
 		p = ft_ray_at(*ray, t2);
 		height = ft_dot_product(ft_vec_sub(p, *cylinder->vec), h_norm);
-		if (height >= 0 && height <= cylinder->height)
+		if (height > 0 && height <= cylinder->height)
 			hit_flag = 1;
+		/*
+		else if ((fabs(height) < EPSILON || fabs(height - cylinder->height) < EPSILON))// && ft_get_dist(*cylinder->vec, p) <= cylinder->dia / 2)
+		{
+			printf("hithit");
+			hit_flag = 1;
+		}
+		printf("height +t = %f\n", height);
+		*/
 		if (hit_flag == 1 && ft_ray_change_hit(ray, t, cylinder))
 			return (1);
 	}

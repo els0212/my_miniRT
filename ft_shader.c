@@ -37,13 +37,13 @@ t_color	ft_get_light_color(t_lht *now, t_object *objs, t_ray ray)
 		ft_get_dist(*temp_ray->hit_point, *ray.hit_point) > ft_get_dist(*now->vec, *ray.hit_point))
 		diffuse = fmax(0, ft_dot_product(*ray.hit_norm, *temp_ray->dir));
 	ret = ft_color_mult_const(ft_color_mult(&light_color, ray.hit_obj->color), diffuse);
-	if (temp_ray->ray_hit && ray.ray_hit && ray.hit_obj->id == PLANE)
-		printf("hit id = %d\n", temp_ray->hit_obj->id);
+	//if (temp_ray->ray_hit && ray.ray_hit && ray.hit_obj->id == PLANE)
+	//	printf("hit id = %d\n", temp_ray->hit_obj->id);
 	free(temp_ray);
 	//	printf("hit x = %f y = %f z = %f\n", ray.hit_point->x, ray.hit_point->y, ray.hit_point->z);
 		//printf("angle = %f\n", diffuse);
 //		printf("light r = %d g = %d b = %d\n", ret.red, ret.green, ret.blue);
-	//return (ret = (diffuse != 0) ? ft_color_add(ret, ft_specular(now, ray)) : ret);
+	return (ret = (diffuse != 0) ? ft_color_add(ret, ft_specular(now, ray)) : ret);
 	return (ret);
 }
 

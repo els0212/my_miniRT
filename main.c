@@ -111,12 +111,14 @@ int main(int argc, char **argv)
 			 * diffuse + specular
 			*/
 			t_color shader = ft_shader(compo->light, compo->objects, *ray);
+			/*
 			if (ray->ray_hit && ray->hit_obj->id == PLANE)
 			{
 				printf("red = %d green = %d blue = %d\n", temp_color->red, temp_color->green, temp_color->blue);
 				printf("shader r = %d, g = %d, b = %d\n", shader.red, shader.blue, shader.green);
 			}
-			//printf("shader r = %d g = %d b = %d\n",shader.red, shader.green, shader.blue);
+			printf("shader r = %d g = %d b = %d\n",shader.red, shader.green, shader.blue);
+			*/
 			temp_color = ft_color_cpy(temp_color, ft_color_add(*temp_color, shader));
 
 			//printf("r = %d, g = %d, b = %d\n", temp_color->red, temp_color->blue, temp_color->green);
