@@ -36,14 +36,11 @@ int		ft_parse(char *line, t_compo *compo)
 	if ((chunks = ft_split(line, &ft_isspace)) == 0)
 		return (-1);
 	if ((size = ft_get_size(chunks)))
-	{
-		printf("----- start -----\n");
 		ft_branch(chunks, compo, size);
-		printf("----- end -----\n");
-	}
 	ft_free(chunks, 0);
 	return (0);
 }
+
 void my_mlx_pixel_put(t_img *data, int x, int y, int color)
 {
 	char	*dst;
@@ -64,19 +61,12 @@ int	ft_key_press(int keycode)
 	return (0);
 }
 
-int main(int argc, char **argv)
+int	ft_chk_input(int argc, char **argv, t_compo **compo)
 {
-	int		option;
 	int		fd;
 	char	*line;
-	t_compo	*compo;
-	t_mlx	mlx;
-	t_img	img;
-	int		**save;
-	t_ray	*ray;
 
-	compo = ft_compo_init();
-
+	*compo = ft_compo_init();
 	if (argc < 2 || argc > 3)
 		return (-1);
 	else if (argc == 3)
@@ -84,19 +74,38 @@ int main(int argc, char **argv)
 		if (ft_strncmp(argv[2], "--save", 6))
 			return (-1);
 		else
-			compo->save = 1;
+			(*compo)->save = 1;
 	}
 	if (ft_strncmp(ft_strrchr(argv[1], '.'), ".rt", 3))
 		return (-1);
 	else if ((fd = open(argv[1], O_RDONLY)) <= 0)
 		return (-1);
 	while (get_next_line(fd, &line) > 0)
-		ft_parse(line, compo);
-	option = argc == 3 ? 1 : 0;
-	mlx.mlx = mlx_init();
-	mlx.win = mlx_new_window(mlx.mlx, compo->resolution->x, compo->resolution->y, "hello world!");
-	mlx_hook(mlx.win, KEYPRESS, KEYPRESSMASK, ft_key_press, &mlx);
-	mlx_hook(mlx.win, DESTROYNOTIFY, STRUCTURENOTIFYMASK, ft_close, &mlx);
+		ft_parse(line, *compo);
+	return (0);
+}
+
+int	ft_rerender(int key, t_mlx *mlx)
+{
+	if (key == 124)
+		;
+	else if (key == 123)
+		;
+	else if (key == 53)
+		exit(0);
+	(void *)mlx;
+	return (0);
+}
+
+int main(int argc, char **argv)
+{
+	t_compo	*compo;
+	t_mlx	mlx;
+	t_img	img;
+	int		**save;
+	t_ray	*ray;
+
+	ft_chk_input(argc, argv, &compo);
 
 	// change resolution's width or height if img width or height greater than resolution's one 
 	img.width = 1920;
@@ -106,6 +115,11 @@ int main(int argc, char **argv)
 	if (img.height > compo->resolution->y)
 		compo->resolution->y = img.height;
 
+	mlx.mlx = mlx_init();
+	mlx.win = mlx_new_window(mlx.mlx, compo->resolution->x, compo->resolution->y, "miniRT");
+	mlx_hook(mlx.win, KEYPRESS, KEYPRESSMASK, ft_key_press, &mlx);
+	mlx_hook(mlx.win, DESTROYNOTIFY, STRUCTURENOTIFYMASK, ft_close, &mlx);
+	mlx_key_hook(mlx.win, ft_rerender, &mlx);
 	// image init
 	img.img = mlx_new_image(mlx.mlx, img.width, img.height);
 	img.addr = (char *)mlx_get_data_addr(img.img, &img.bpp, &img.line_len, &img.endian);
@@ -147,14 +161,7 @@ int main(int argc, char **argv)
 			//int col = (temp_color->red & REDMASK) + (temp_color->green & GREENMASK) + (temp_color->blue & BLUEMASK);
 			free(temp_color);
 			if (compo->save)
-			{
 				save[i][j] = col;
-				/*
-				save[i][j].red = ((temp_color->red<<16) & REDMASK);
-				save[i][j].green = ((temp_color->green<<8) & GREENMASK);
-				save[i][j].blue = (temp_color->blue & BLUEMASK);
-				*/
-			}
 			else
 				my_mlx_pixel_put(&img, j, i, col);
 		}

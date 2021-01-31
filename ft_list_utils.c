@@ -32,15 +32,22 @@ void	ft_add_light_last(t_lht **list, t_lht *obj)
 
 void	ft_add_camera_last(t_cam **list, t_cam *obj)
 {
-	t_cam	 *curr;
+	t_cam	*curr;
+	int		cnt;
 
+	cnt = 1;
 	if (!*list)
 		*list = obj;
 	else
 	{
 		curr = *list;
+		cnt++;
 		while (curr->next)
+		{
 			curr = curr->next;
+			cnt++;
+		}
 		curr->next = obj;
 	}
+	obj->order = cnt;
 }

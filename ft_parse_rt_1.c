@@ -19,8 +19,6 @@ int		ft_ins_resolution(char **chunks, t_compo *compo, int size)
 	resolution->y = y;
 	resolution->ratio = (double)x / (double)y;
 	compo->resolution = resolution;
-	printf("## processing resolution\n\
-			x = %d\ny = %d ratio = %f\n", x, y, resolution->ratio);
 	return (0);
 }
 
@@ -64,25 +62,24 @@ int		ft_ins_camera(char **chunks, t_compo *compo, int size)
 	camera->vec = vec;
 	camera->dir = dir;
 	camera->fov = ft_atod(chunks[3]) * (M_PI / 180.0);
+	camera->next = 0;
 	//ndc_origin.z = vec->z + 1;
 	t_vector	vup;
 	ft_vector_init(&vup, 0, 1, 0);
 	camera->v = ft_vec_dup(ft_cross_product(vup, *dir));
 	camera->u = ft_vec_dup(ft_cross_product(*dir, *camera->v));
-	//ft_vec_cpy(&camera->ndc_left_bottom, ft_vec_sub(ft_vec_sub(ndc_origin, ft_vec_div_const(camera->ndc_horizon, 2)), ft_vec_div_const(camera->ndc_vertical, 2)));
-	//camera->left_up = tan(atan2(camera->focal_len, (compo->resolution->x / 2)));
 	ft_add_camera_last(&(compo->camera), camera);
 	printf("## processing camera\n\
 	u x = %f y = %f z = %f,\n\
 	v x = %f y = %f z = %f,\n\
 	x = %lf, y = %lf, z = %lf\n\
 	dir.x = %lf, dir.y = %lf, dir.z = %lf\n\
-	fov = %lf\n",\
+	fov = %lf order = %d\n",\
 	camera->u->x, camera->u->y, camera->u->z,\
 	camera->v->x, camera->v->y, camera->v->z,\
 	vec->x, vec->y, vec->z,\
 	dir->x, dir->y, dir->z,\
-	camera->fov);
+	camera->fov, camera->order);
 	return (0);
 }
 
