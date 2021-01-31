@@ -72,7 +72,7 @@ int main(int argc, char **argv)
 	t_compo	*compo;
 	t_mlx	mlx;
 	t_img	img;
-	t_pixel		**save;
+	int		**save;
 	t_ray	*ray;
 
 	compo = ft_compo_init();
@@ -143,20 +143,23 @@ int main(int argc, char **argv)
 
 			//printf("r = %d, g = %d, b = %d\n", temp_color->red, temp_color->blue, temp_color->green);
 			//printf("amb r = %d g = %d b = %d\n",ambient.red, ambient.blue, ambient.green);
-			int col = (temp_color->red<<16) + (temp_color->green<<8) + (temp_color->blue<<0);
+			int col = (temp_color->red<<16) + (temp_color->green<<8) + (temp_color->blue);
 			//int col = (temp_color->red & REDMASK) + (temp_color->green & GREENMASK) + (temp_color->blue & BLUEMASK);
 			free(temp_color);
 			if (compo->save)
 			{
-				save[i][j].red = col & REDMASK;//temp_color->red & REDMASK;
-				save[i][j].green = col & GREENMASK; //temp_color->green & GREENMASK;
-				save[i][j].blue = col & BLUEMASK; //temp_color->blue & BLUEMASK;
+				save[i][j] = col;
+				/*
+				save[i][j].red = ((temp_color->red<<16) & REDMASK);
+				save[i][j].green = ((temp_color->green<<8) & GREENMASK);
+				save[i][j].blue = (temp_color->blue & BLUEMASK);
+				*/
 			}
 			else
 				my_mlx_pixel_put(&img, j, i, col);
 		}
 	if (compo->save)
-		ft_save_bmp("hell.bmp", save, img.width, img.height);
+		ft_save_bmp("save.bmp", save, img.width, img.height);
 	else
 	{
 		mlx_put_image_to_window(mlx.mlx, mlx.win, img.img, 0, 0);
