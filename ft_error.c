@@ -1,4 +1,4 @@
-#include "minirt.h"
+#include "ft_error.h"
 
 int	ft_error(char *errmsg)
 {

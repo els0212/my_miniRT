@@ -1,4 +1,4 @@
-#include "minirt.h"
+#include "ft_save.h"
 
 int	**ft_init_buffer(int width, int height)
 {

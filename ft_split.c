@@ -6,11 +6,11 @@
 /*   By: hyi <hyi@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/21 10:59:43 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/07 23:31:47 by hyi              ###   ########.fr       */
+/*   Updated: 2021/02/01 19:07:37 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
+#include "ft_split.h"
 
 int		ft_iscomma(char c)
 {
@@ -51,7 +51,7 @@ void	ft_free(char **ret, int ret_st)
 
 	st = 0;
 	while (st < ret_st)
-		free(ret[st]);
+		free(ret[st++]);
 	free(ret);
 }
 

@@ -1,4 +1,4 @@
-#include "minirt.h"
+#include "ft_vec_operations.h"
 
 void		ft_vec_cpy(t_vector *vec1, t_vector vec2)
 {
@@ -6,6 +6,7 @@ void		ft_vec_cpy(t_vector *vec1, t_vector vec2)
 	vec1->y = vec2.y;
 	vec1->z = vec2.z;
 }
+
 t_vector	*ft_vec_dup(t_vector src)
 {
 	t_vector	*ret;
@@ -32,7 +33,7 @@ t_vector	ft_vec_sub(t_vector vec1, t_vector vec2)
 	return (vec1);
 }
 
-t_vector	ft_vec_product_const(t_vector vec, double d)
+t_vector	ft_vec_mult_const(t_vector vec, double d)
 {
 	vec.x *= d;
 	vec.y *= d;

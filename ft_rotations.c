@@ -1,4 +1,5 @@
-#include "minirt.h"
+#include "ft_rotations.h"
+
 t_vector	ft_rotate_x(t_vector now, double angle)
 {
 	t_vector	ret;

@@ -1,4 +1,4 @@
-#include "minirt.h"
+#include "ft_libft.h"
 
 int		ft_strncmp(const char *s1, const char *s2, int len)
 {

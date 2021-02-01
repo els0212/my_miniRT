@@ -6,12 +6,13 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:35:12 by hyi               #+#    #+#             */
-/*   Updated: 2021/02/01 17:32:55 by hyi              ###   ########.fr       */
+/*   Updated: 2021/02/01 19:01:59 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_STRUCT_H
 # define FT_STRUCT_H
+# include <math.h>
 # define RESOLUTION 1
 # define AMBIENT 2
 # define CAMERA 3
@@ -130,12 +131,7 @@ t_object		*ft_cylinder_init(t_compo *compo, t_color *color, t_vector *vec, t_vec
 int			ft_triangle_init(t_compo *compo, t_color *color, char **chunks);
 char		**ft_parse_args(char *str);
 t_vector				ft_vector_init(double x, double y, double z);
-void			ft_color_init(t_color *color, int r, int g, int b);
-t_color					*ft_color_cpy(t_color *c1, t_color c2);
-t_color					*ft_color_mult(t_color *c1, t_color *c2);
-t_color					ft_color_mult_const(t_color *c1, double ratio);
-t_color					ft_color_add(t_color c1, t_color c2);
-t_vector				*ft_make_vector(char *str);
-t_color					*ft_make_color(char *str);
+t_vector				*ft_chunks_to_vec(char *str);
+t_color					*ft_chunks_to_color(char *str);
 t_vector				ft_normalize(t_vector vec);
 #endif

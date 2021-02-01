@@ -1,6 +1,6 @@
-#include "minirt.h"
+#include "ft_utils.h"
 
-int		ft_get_size(char **chunks)
+int		ft_get_chunks_size(char **chunks)
 {
 	int	cnt;
 
@@ -74,4 +74,13 @@ double	ft_atod(const char *nptr)
 	}
 	//printf("final ret = %f\n", ret * sign);
 	return (ret * sign);
+}
+
+void		ft_swap(double *a, double *b)
+{
+	double	temp;
+
+	temp = *a;
+	*a = *b;
+	*b = temp;
 }

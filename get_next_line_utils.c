@@ -6,11 +6,11 @@
 /*   By: hyi <hyi@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/24 00:28:14 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/07 23:32:08 by hyi              ###   ########.fr       */
+/*   Updated: 2021/02/01 19:15:16 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
+#include "get_next_line_utils.h"
 
 int		ft_memset(char **line, size_t size)
 {

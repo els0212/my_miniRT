@@ -155,7 +155,7 @@ int			ft_triangle_init(t_compo *compo, t_color *color, char **chunks)
 		return (ft_error("map error : triangle memory allocation is failed"));
 	while (st < 3)
 	{
-		if (!(vec[st] = ft_make_vector(chunks[st + 1])))
+		if (!(vec[st] = ft_chunks_to_vec(chunks[st + 1])))
 		{
 			while (st >= 0)
 				free(vec[st]);
@@ -179,7 +179,7 @@ char			**ft_parse_args(char *str)
 
 	if ((chunks = ft_split(str, &ft_iscomma)) == 0)
 		return (0);
-	len = ft_get_size(chunks);
+	len = ft_get_chunks_size(chunks);
 	if (len != 3) 
 	{
 		ft_free(chunks, len);
@@ -198,49 +198,7 @@ t_vector		ft_vector_init(double x, double y, double z)
 	return (vec);
 }
 
-void			ft_color_init(t_color *color, int r, int g, int b)
-{
-	color->red = r;
-	color->green = g;
-	color->blue = b;
-}
-
-t_color			*ft_color_cpy(t_color *c1, t_color c2)
-{
-	c1->red = c2.red;
-	c1->green = c2.green;
-	c1->blue = c2.blue;
-	return (c1);
-}
-
-t_color			*ft_color_mult(t_color *c1, t_color *c2)
-{
-	c1->red = fmin((c1->red * c2->red) / 255, 255);
-	c1->green = fmin((c1->green * c2->green) / 255, 255);
-	c1->blue = fmin((c1->blue * c2->blue) / 255, 255);
-	return (c1);
-}
-
-t_color			ft_color_mult_const(t_color *c1, double ratio)
-{
-	t_color	ret;
-	ret.red = fmin(c1->red * ratio, 255);
-	ret.green = fmin(c1->green * ratio, 255);
-	ret.blue = fmin(c1->blue * ratio, 255);
-	return (ret);
-}
-
-t_color					ft_color_add(t_color c1, t_color c2)
-{
-	t_color	ret;
-
-	ret.red = fmin(c1.red + c2.red, 255);
-	ret.green = fmin(c1.green + c2.green, 255);
-	ret.blue = fmin(c1.blue + c2.blue, 255);
-	return (ret);
-}
-
-t_vector		*ft_make_vector(char *str)
+t_vector		*ft_chunks_to_vec(char *str)
 {
 	t_vector	*vec;
 	char		**chunks;
@@ -251,11 +209,11 @@ t_vector		*ft_make_vector(char *str)
 	vec->x = ft_atod(chunks[0]);
 	vec->y = ft_atod(chunks[1]);
 	vec->z = ft_atod(chunks[2]);
-	ft_free(chunks, 3);
+	ft_free(chunks, ft_get_chunks_size(chunks));
 	return (vec);
 }
 
-t_color		*ft_make_color(char *str)
+t_color		*ft_chunks_to_color(char *str)
 {
 	t_color	*color;
 	char	**chunks;
@@ -269,10 +227,10 @@ t_color		*ft_make_color(char *str)
 	if (color->red < 0 || color->green < 0 || color->blue < 0)
 	{
 		free(color);
-		ft_free(chunks, 3);
+		ft_free(chunks, ft_get_chunks_size(chunks));
 		return (0);
 	}
-	ft_free (chunks, 3);
+	ft_free (chunks, ft_get_chunks_size(chunks));
 	return (color);
 }
 

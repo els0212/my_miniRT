@@ -1,4 +1,4 @@
-#include "minirt.h"
+#include "ft_parse_rt_1.h"
 
 int		ft_ins_resolution(char **chunks, t_compo *compo, int size)
 {
@@ -42,7 +42,7 @@ int		ft_ins_ambient(char **chunks, t_compo *compo, int size)
 		free(ambient);
 		return (ft_error("the range of ambient ratio is wrong"));
 	}
-	if (!(color = ft_make_color(chunks[2])))
+	if (!(color = ft_chunks_to_color(chunks[2])))
 		return (ft_error("ambient color is wrong"));
 	ambient->ratio = ft_atod(chunks[1]);
 	ambient->color = color;
@@ -57,9 +57,9 @@ int		ft_ins_camera(char **chunks, t_compo *compo, int size)
 
 	if (size != 4)
 		return (ft_error("camera has wrong number of attributes"));
-	else if (!(vec = ft_make_vector(chunks[1])))
+	else if (!(vec = ft_chunks_to_vec(chunks[1])))
 		return (ft_error("camera coordinte is wrong"));
-	else if (!(dir = ft_make_vector(chunks[2])))
+	else if (!(dir = ft_chunks_to_vec(chunks[2])))
 	{
 		free(vec);
 		return (ft_error("map errror : camera color is wrong"));
@@ -80,9 +80,9 @@ int		ft_ins_light(char **chunks, t_compo *compo, int size)
 
 	if (size != 4)
 		return (ft_error("light has wrong number of attributes"));
-	else if (!(vec = ft_make_vector(chunks[1])))
+	else if (!(vec = ft_chunks_to_vec(chunks[1])))
 		return (ft_error("light coordinte is wrong"));
-	else if (!(color = ft_make_color(chunks[3])))
+	else if (!(color = ft_chunks_to_color(chunks[3])))
 	{
 		free(vec);
 		return (ft_error("map errror : light color is wrong"));
@@ -103,9 +103,9 @@ int		ft_ins_sphere(char **chunks, t_compo *compo, int size)
 
 	if (size != 4)
 		return (ft_error("sphere has wrong number of attributes"));
-	else if (!(vec = ft_make_vector(chunks[1])))
+	else if (!(vec = ft_chunks_to_vec(chunks[1])))
 		return (ft_error("sphere coordinte is wrong"));
-	if (!(color = ft_make_color(chunks[3])))
+	if (!(color = ft_chunks_to_color(chunks[3])))
 	{
 		free(vec);
 		return (ft_error("map errror : sphere color is wrong"));

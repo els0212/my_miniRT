@@ -1,12 +1,4 @@
-#include "minirt.h"
-
-double	ft_degree_to_radian(double degree)
-{
-	double	radian;
-
-	radian = degree * ( PI / 180.0);
-	return (radian);
-}
+#include "ft_math_utils.h"
 
 t_vector	ft_cross_product(t_vector a, t_vector b)
 {

@@ -35,7 +35,7 @@ int		ft_parse(char *line, t_compo *compo)
 
 	if ((chunks = ft_split(line, &ft_isspace)) == 0)
 		return (-1);
-	if ((size = ft_get_size(chunks)))
+	if ((size = ft_get_chunks_size(chunks)))
 		ft_branch(chunks, compo, size);
 	ft_free(chunks, 0);
 	return (0);
@@ -133,7 +133,7 @@ int main(int argc, char **argv)
 			double u = (1 - 2 * ((double)i + 0.5) / (compo->resolution->y - 1)) * tan(compo->camera->fov / 2);
 			double v = (2 * ((double)j + 0.5) / (compo->resolution->x - 1) - 1) * compo->resolution->ratio * tan(compo->camera->fov / 2);
 			t_vector dir;
-			dir = ft_vec_add(*compo->camera->vec, ft_vec_add(ft_vec_add(ft_vec_product_const(*compo->camera->u, u), ft_vec_product_const(*compo->camera->v, v)), *compo->camera->dir));
+			dir = ft_vec_add(*compo->camera->vec, ft_vec_add(ft_vec_add(ft_vec_mult_const(*compo->camera->u, u), ft_vec_mult_const(*compo->camera->v, v)), *compo->camera->dir));
 			ray = ft_ray_init(compo->camera->vec, dir);
 			t_color *temp_color = ft_ray_color(ray, compo->objects);
 			/*
