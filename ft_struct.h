@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:35:12 by hyi               #+#    #+#             */
-/*   Updated: 2021/02/01 17:16:58 by hyi              ###   ########.fr       */
+/*   Updated: 2021/02/01 17:32:55 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,7 @@ int			ft_plane_init(t_compo *compo, t_color *color, t_vector *vec, t_vector *dir
 t_object		*ft_square_init(t_compo *compo, t_color *color, t_vector *vec, t_vector *dir);
 t_object		*ft_cylinder_init(t_compo *compo, t_color *color, t_vector *vec, t_vector *dir);
 int			ft_triangle_init(t_compo *compo, t_color *color, char **chunks);
+char		**ft_parse_args(char *str);
 t_vector				ft_vector_init(double x, double y, double z);
 void			ft_color_init(t_color *color, int r, int g, int b);
 t_color					*ft_color_cpy(t_color *c1, t_color c2);
@@ -136,6 +137,5 @@ t_color					ft_color_mult_const(t_color *c1, double ratio);
 t_color					ft_color_add(t_color c1, t_color c2);
 t_vector				*ft_make_vector(char *str);
 t_color					*ft_make_color(char *str);
-char					**ft_parse_args(char *str);
 t_vector				ft_normalize(t_vector vec);
 #endif

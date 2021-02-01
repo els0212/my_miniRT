@@ -182,7 +182,7 @@ char			**ft_parse_args(char *str)
 	len = ft_get_size(chunks);
 	if (len != 3) 
 	{
-		free(chunks);
+		ft_free(chunks, len);
 		return (0);
 	}
 	return (chunks);
@@ -242,54 +242,38 @@ t_color					ft_color_add(t_color c1, t_color c2)
 
 t_vector		*ft_make_vector(char *str)
 {
-	t_vector	*ret;
-	char		**vector;
-	int			len;
+	t_vector	*vec;
+	char		**chunks;
 	
-	if (!(vector = ft_parse_args(str)) ||
-			!(ret = (t_vector *)malloc(sizeof(t_vector))))
+	if (!(chunks = ft_parse_args(str)) ||
+			!(vec = (t_vector *)malloc(sizeof(t_vector))))
 		return (0);
-	if ((len = ft_get_size(vector)) != 3)
-	{
-		free(ret);
-		return (0);
-	}
-	ret->x = ft_atod(vector[0]);
-	ret->y = ft_atod(vector[1]);
-	ret->z = ft_atod(vector[2]);
-	while (--len >= 0)
-		free(vector[len]);
-	free(vector);
-	return (ret);
+	vec->x = ft_atod(chunks[0]);
+	vec->y = ft_atod(chunks[1]);
+	vec->z = ft_atod(chunks[2]);
+	ft_free(chunks, 3);
+	return (vec);
 }
 
 t_color		*ft_make_color(char *str)
 {
-	t_color	*ret;
-	char	**color;
-	int		len;
+	t_color	*color;
+	char	**chunks;
 	
-	if (!(color = ft_parse_args(str)) ||
-			!(ret = (t_color *)malloc(sizeof(t_color))))
+	if (!(chunks = ft_parse_args(str)) ||
+			!(color = (t_color *)malloc(sizeof(t_color))))
+		return (0);
+	color->red = atoi(chunks[0]);
+	color->green = atoi(chunks[1]);
+	color->blue =atoi(chunks[2]);
+	if (color->red < 0 || color->green < 0 || color->blue < 0)
 	{
-		free (color);
+		free(color);
+		ft_free(chunks, 3);
 		return (0);
 	}
-	if ((len = ft_get_size(color)) != 3)
-	{
-		free(ret);
-		return (0);
-	}
-	ret->red = atoi(color[0]);
-	ret->green = atoi(color[1]);
-	ret->blue =atoi(color[2]);
-	if (ret->red < 0 || ret->green < 0 || ret->blue < 0)
-	{
-		free(ret);
-		return (0);
-	}
-	free (color);
-	return (ret);
+	ft_free (chunks, 3);
+	return (color);
 }
 
 t_vector	ft_normalize(t_vector vec)
