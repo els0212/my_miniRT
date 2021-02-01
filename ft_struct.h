@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:35:12 by hyi               #+#    #+#             */
-/*   Updated: 2021/02/01 10:05:56 by hyi              ###   ########.fr       */
+/*   Updated: 2021/02/01 17:16:58 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,10 @@ t_object				*ft_object_init(int id);
 int			ft_camera_init(t_compo *compo, t_vector *vec, t_vector *dir, double angle);
 int			ft_light_init(t_compo *compo, t_color *color, t_vector *vec, double ratio);
 int			ft_sphere_init(t_compo *compo, t_color *color, t_vector *vec, double dia);
+int			ft_plane_init(t_compo *compo, t_color *color, t_vector *vec, t_vector *dir);
+t_object		*ft_square_init(t_compo *compo, t_color *color, t_vector *vec, t_vector *dir);
+t_object		*ft_cylinder_init(t_compo *compo, t_color *color, t_vector *vec, t_vector *dir);
+int			ft_triangle_init(t_compo *compo, t_color *color, char **chunks);
 t_vector				ft_vector_init(double x, double y, double z);
 void			ft_color_init(t_color *color, int r, int g, int b);
 t_color					*ft_color_cpy(t_color *c1, t_color c2);

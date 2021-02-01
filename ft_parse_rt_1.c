@@ -58,7 +58,7 @@ int		ft_ins_camera(char **chunks, t_compo *compo, int size)
 	if (size != 4)
 		return (ft_error("map error : camera has wrong number of attributes"));
 	else if (!(vec = ft_make_vector(chunks[1])))
-		return (ft_error("map error : camera coordintes is wrong"));
+		return (ft_error("map error : camera coordinte is wrong"));
 	else if (!(dir = ft_make_vector(chunks[2])))
 	{
 		free(vec);
@@ -68,7 +68,7 @@ int		ft_ins_camera(char **chunks, t_compo *compo, int size)
 	{
 		free(vec);
 		free(dir);
-		return (ft_error("map error : camera init failed"));
+		return (ft_error("map error : camera init is failed"));
 	}
 	return (0);
 }
@@ -81,7 +81,7 @@ int		ft_ins_light(char **chunks, t_compo *compo, int size)
 	if (size != 4) 
 		return (ft_error("map error : light has wrong number of attributes"));
 	else if (!(vec = ft_make_vector(chunks[1])))
-		return (ft_error("map error : light coordintes is wrong"));
+		return (ft_error("map error : light coordinte is wrong"));
 	else if (!(color = ft_make_color(chunks[3])))
 	{
 		free(vec);
@@ -91,7 +91,7 @@ int		ft_ins_light(char **chunks, t_compo *compo, int size)
 	{
 		free(vec);
 		free(color);
-		return (ft_error("map error : light init failed"));
+		return (ft_error("map error : light init is failed"));
 	}
 	return (0);
 }
@@ -104,7 +104,7 @@ int		ft_ins_sphere(char **chunks, t_compo *compo, int size)
 	if (size != 4)
 		return (ft_error("map error : sphere has wrong number of attributes"));
 	else if (!(vec = ft_make_vector(chunks[1])))
-		return (ft_error("map error : sphere coordintes is wrong"));
+		return (ft_error("map error : sphere coordinte is wrong"));
 	if (!(color = ft_make_color(chunks[3])))
 	{
 		free(vec);
@@ -114,7 +114,7 @@ int		ft_ins_sphere(char **chunks, t_compo *compo, int size)
 	{
 		free(vec);
 		free(color);
-		return (ft_error("map error : sphere init failed"));
+		return (ft_error("map error : sphere init is failed"));
 	}
 	return (0);
 }
