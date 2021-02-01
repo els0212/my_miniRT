@@ -12,7 +12,7 @@ int		ft_ins_plane(char **chunks, t_compo *compo, int size)
 		return (ft_error("map error : plane coordinate is wrong"));
 	else if (!(color = ft_make_color(chunks[3])))
 		return (ft_error("map error : plane color is wrong"));
-	else if (ft_plane_init(compo, color, vec, (dir = ft_make_vector(chunks))))
+	else if (ft_plane_init(compo, color, vec, (dir = ft_make_vector(chunks[2]))))
 	{
 		free(vec);
 		free(dir);
@@ -86,7 +86,7 @@ int		ft_ins_triangle(char **chunks, t_compo *compo, int size)
 		return (ft_error("map error : triangle has wrong number of attributes"));
 	else if (!(color = ft_make_color(chunks[4])))
 		return (ft_error("map error : triangle color is wrong"));
-	else if (ft_triangle(compo, color, chunks))
+	else if (ft_triangle_init(compo, color, chunks))
 	{
 		free(color);
 		return (ft_error("map error : triangle init is failed"));

@@ -89,7 +89,7 @@ int			ft_plane_init(t_compo *compo, t_color *color, t_vector *vec, t_vector *dir
 	t_object	*plane;
 
 	if (dir->x > 1 || dir->x < -1 || dir->y > 1 || dir->y < -1 ||
-			dir->z > 1 || dir->z < -1 || angle < 0 || angle > 180)
+			dir->z > 1 || dir->z < -1)
 		return (ft_error("map error : a range of plane direction is wrong"));
 	else if (!(plane = ft_object_init(PLANE)))
 		return (ft_error("map error : plane memory allocation is failed"));
@@ -105,10 +105,16 @@ t_object		*ft_square_init(t_compo *compo, t_color *color, t_vector *vec, t_vecto
 	t_object	*square;
 
 	if (dir->x > 1 || dir->x < -1 || dir->y > 1 || dir->y < -1 ||
-			dir->z > 1 || dir->z < -1 || angle < 0 || angle > 180)
-		return (ft_error("map error : a range of square direction is wrong"));
-	else if (!(square = ft_object init(SQUARE)))
-		return (ft_error("map error : square memory allocation is failed"));
+			dir->z > 1 || dir->z < -1)
+	{
+		ft_error("map error : a range of square direction is wrong");
+		return (0);
+	}
+	else if (!(square = ft_object_init(SQUARE)))
+	{
+		ft_error("map error : square memory allocation is failed");
+		return (0);
+	}
 	square->color = color;
 	square->dir = dir;
 	square->vec = vec;
@@ -121,14 +127,21 @@ t_object		*ft_cylinder_init(t_compo *compo, t_color *color, t_vector *vec, t_vec
 	t_object	*cylinder;
 
 	if (dir->x > 1 || dir->x < -1 || dir->y > 1 || dir->y < -1 ||
-			dir->z > 1 || dir->z < -1 || angle < 0 || angle > 180)
-		return (ft_error("map error : a range of cylinder direction is wrong"));
-	else if (!(cylinder = ft_object init(CYLINDER)))
-		return (ft_error("map error : cylinder memory allocation is failed"));
+			dir->z > 1 || dir->z < -1)
+	{
+		ft_error("map error : a range of cylinder direction is wrong");
+		return (0);
+	}
+	else if (!(cylinder = ft_object_init(CYLINDER)))
+	{
+		ft_error("map error : cylinder memory allocation is failed");
+		return (0);
+	}
 	cylinder->color = color;
 	cylinder->dir = dir;
 	cylinder->vec = vec;
 	ft_add_last(&compo->objects, cylinder);
+	return (cylinder);
 }
 
 int			ft_triangle_init(t_compo *compo, t_color *color, char **chunks)
@@ -138,7 +151,7 @@ int			ft_triangle_init(t_compo *compo, t_color *color, char **chunks)
 	int			st;
 
 	st = 0;
-	if (!(triangle = ft_object init(TRIANGLE)))
+	if (!(triangle = ft_object_init(TRIANGLE)))
 		return (ft_error("map error : triangle memory allocation is failed"));
 	while (st < 3)
 	{
@@ -148,9 +161,10 @@ int			ft_triangle_init(t_compo *compo, t_color *color, char **chunks)
 				free(vec[st]);
 			free(triangle);
 			return (ft_error("map error : triangle coordinate is wrong"));
+		}
+		st++;
 	}
 	triangle->color = color;
-	triangle->dir = dir;
 	triangle->vec = vec[0];
 	triangle->vec_second = vec[1];
 	triangle->vec_third = vec[2];
