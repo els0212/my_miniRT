@@ -34,6 +34,56 @@ t_object		*ft_object_init(int id)
 	return (ret);
 }
 
+int			ft_camera_init(t_compo *compo, t_vector *vec, t_vector *dir, double angle)
+{
+	t_cam		*camera;
+	t_vector	vup;
+
+	if (dir->x > 1 || dir->x < -1 || dir->y > 1 || dir->y < -1 || dir->z > 1 || dir->z < -1 || angle < 0 || angle > 180)
+		return (ft_error("map error : a range of camera direction is wrong"));
+	else if (!(camera = (t_cam *)malloc(sizeof(t_cam))))
+		return (ft_error("map error : light memory allocation is failed"));
+	camera->vec = vec;
+	camera->dir = dir;
+	camera->fov = angle * (M_PI / 180.0);
+	camera->next = 0;
+	vup = ft_vector_init(0, 1, 0);
+	camera->v = ft_vec_dup(ft_cross_product(vup, *dir));
+	camera->u = ft_vec_dup(ft_cross_product(*dir, *camera->v));
+	ft_add_camera_last(&compo->camera, camera);
+	return (0);
+}
+
+int			ft_light_init(t_compo *compo, t_color *color, t_vector *vec, double ratio)
+{
+	t_lht	*light;
+
+	if (ratio < 0 || ratio > 1)
+		return (ft_error("map error : a range of light ratio is wrong"));
+	else if (!(light = (t_lht *)malloc(sizeof(t_lht))))
+		return (ft_error("map error : light memory allocation is failed"));
+	light->color = color;
+	light->vec = vec;
+	light->next = 0;
+	ft_add_light_last(&compo->light, light);
+	return (0);
+}
+
+int			ft_sphere_init(t_compo *compo, t_color *color, t_vector *vec, double dia)
+{
+	t_object	*sphere;
+
+	if (dia <= 0)
+		return (ft_error("map error : sphere diameter is less than or equals to 0"));
+	else if (!(sphere = ft_object_init(SPHERE)))
+		return (ft_error("map error : sphere memory allocation is failed"));
+	sphere->dia = dia;
+	sphere->color = color;
+	sphere->vec = vec;
+	ft_add_last(&compo->objects, sphere);
+	return (0);
+}
+
 char			**ft_parse_args(char *str)
 {
 	char	**chunks;
@@ -50,11 +100,14 @@ char			**ft_parse_args(char *str)
 	return (chunks);
 }
 
-void			ft_vector_init(t_vector *vec, double x, double y, double z)
+t_vector		ft_vector_init(double x, double y, double z)
 {
-	vec->x = x;
-	vec->y = y;
-	vec->z = z;
+	t_vector	vec;
+
+	vec.x = x;
+	vec.y = y;
+	vec.z = z;
+	return (vec);
 }
 
 void			ft_color_init(t_color *color, int r, int g, int b)

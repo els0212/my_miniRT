@@ -26,13 +26,6 @@ int		ft_ins_plane(char **chunks, t_compo *compo, int size)
 	plane->dir = dir;
 	plane->vec = vec;
 	ft_add_last(&compo->objects, plane);
-	printf("## processing plane\n  \
-	r = %d, g = %d, b = %d\n\
-	dir x = %lf, y = %lf, z = %lf\n\
-	coordinates x = %lf, y = %lf, z = %lf\n",\
-	color->red, color->green, color->blue,
-	plane->dir->x, plane->dir->y, plane->dir->z,
-	plane->vec->x, plane->vec->y, plane->vec->z);
 	return (0);
 }
 

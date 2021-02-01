@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 23:13:18 by hyi               #+#    #+#             */
-/*   Updated: 2021/01/31 23:28:04 by hyi              ###   ########.fr       */
+/*   Updated: 2021/02/01 10:16:58 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,4 +143,8 @@ t_color	ft_shader(t_lht *lht, t_object *objs, t_ray ray);
 int		**ft_init_buffer(int width, int height);
 void		ft_free_buffer(int **del, int height);
 int		ft_save_bmp(char *filename, int **target, int width, int height);
+/*
+** ft_error.c
+*/
+int			ft_error(char *errmsg);
 #endif
