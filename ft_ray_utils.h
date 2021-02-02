@@ -8,4 +8,5 @@
 
 t_ray				*ft_ray_init(t_vector *origin, t_vector dir);
 t_vector			ft_ray_at(t_ray ray, double d);
+int					ft_ray_change_hit(t_ray *ray, int t, t_object *hit_obj);
 #endif

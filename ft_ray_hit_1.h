@@ -1,6 +1,6 @@
 #ifndef FT_RAY_HIT_1_H
 # define FT_RAY_HIT_1_H
-# include "ft_ray_hit_2.h"
+# include "ft_ray_utils.h"
 int					ft_ray_hit_sphere(t_object *sphere, t_ray *ray, double t);
 int					ft_ray_hit_plane(t_object *plane, t_ray *ray, int t);
 int					ft_ray_hit_square(t_object *square, t_ray *ray);

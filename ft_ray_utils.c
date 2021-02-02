@@ -22,3 +22,19 @@ t_vector	ft_ray_at(t_ray ray, double d)
 	return (ft_vec_add(*ray.origin,
 				ft_vec_mult_const(*ray.dir, d)));
 }
+
+int			ft_ray_change_hit(t_ray *ray, int t, t_object *hit_obj)
+{
+	t_vector	now;
+	
+	now = ft_vec_add(*ray->origin, ft_vec_mult_const(*ray->dir, t));
+	if (ft_get_dist(*ray->origin, *ray->hit_point) > ft_get_dist(*ray->origin, now))
+	{
+		free(ray->hit_point);
+		ray->hit_point = ft_vec_dup(now);
+		ray->hit_obj = hit_obj;
+		ray->ray_hit = 1;
+		return (1);
+	}
+	return (0);
+}
