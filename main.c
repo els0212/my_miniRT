@@ -95,74 +95,64 @@ int	ft_rerender(int key, t_mlx *mlx)
 	return (0);
 }
 
-void	ft_render_sub(t_compo *compo, t_mlx *mlx, t_img *img, int **save)
+void	ft_render_loop(t_scene *scene, int i)
 {
-	double	u;
-	double	v;
-	int		j;
+	int			j;
+	int			color;
+	t_ray		*ray;
+
+	j = 0;
+	while (j < scene->compo->resolution->x)
+	{
+		ray = ft_make_ray(scene->compo->resolution, scene->compo->camera, i, j);
+		color = ft_mix_color(scene->compo, ray);
+		ft_free_ray(ray);
+		if (scene->compo->save)
+			scene->save[i][j] = color;
+		else
+			my_mlx_pixel_put(&scene->img, j, i, color);
+		j++;
+	}
 }
 
-void	ft_render(t_compo *compo, t_mlx *mlx, t_img *img, int **save)
+int		ft_render(t_scene *scene)
 {
 	int			i;
-	int			j;
-	double		u;
-	double		v;
-	t_vector	dir;
-	t_ray	*ray;
 
 	i = 0;
-	while (i < compo->resolution->y)
-	{
-		j = 0;
-		while (j < compo->resolution->x)
-		{
-			u = (1 - 2 * ((double)i + 0.5) / (compo->resolution->y - 1))
-				* tan(compo->camera->fov / 2);
-			v = (2 * ((double)j + 0.5) / (compo->resolution->x - 1) - 1)
-				* compo->resolution->ratio * tan(compo->camera->fov / 2);
-			dir = ft_vec_add(*compo->camera->vec, ft_vec_add(
-						ft_vec_add(ft_vec_mult_const(*compo->camera->u, u),
-							ft_vec_mult_const(*compo->camera->v, v)), *compo->camera->dir));
-			ray = ft_ray_init(compo->camera->vec, dir);
-			int col = ft_mix_color(compo, ray);
-			if (compo->save)
-				save[i][j] = col;
-			else
-				my_mlx_pixel_put(img, j, i, col);
-			j++;
-		}
-		i++;
-	}
-	if (compo->save)
-		ft_save_bmp("save.bmp", save, img->width, img->height);
-	else
-		mlx_put_image_to_window(mlx->mlx, mlx->win, img->img, 0, 0);
+	while (i < scene->compo->resolution->y)
+		ft_render_loop(scene, i++);
+	if (scene->compo->save)
+		return (ft_save_bmp("save.bmp", scene->save, scene->img.width, scene->img.height));
+	mlx_put_image_to_window(scene->mlx.mlx, scene->mlx.win, scene->img.img, 0, 0);
+	return (0);
 }
 
 int main(int argc, char **argv)
 {
-	t_compo	*compo;
-	t_mlx	mlx;
-	t_img	img;
-	int		**save;
+	t_scene	scene;
 
-	if (ft_chk_input(argc, argv, &compo))
+	if (ft_chk_input(argc, argv, &scene.compo))
 		return (ft_error("program arguments are not valid"));
-	img.width = 1080;
-	img.height = 640;
-	if (img.width > compo->resolution->x)
-		compo->resolution->x = img.width;
-	if (img.height > compo->resolution->y)
-		compo->resolution->y = img.height;
-	mlx.mlx = mlx_init();
-	mlx.win = mlx_new_window(mlx.mlx, img.width, img.height, "miniRT");
-	img.img = mlx_new_image(mlx.mlx, img.width, img.height);
-	img.addr = (char *)mlx_get_data_addr(img.img, &img.bpp, &img.line_len, &img.endian);
-	mlx_hook(mlx.win, DESTROYNOTIFY, STRUCTURENOTIFYMASK, ft_close, &mlx);
-	mlx_key_hook(mlx.win, ft_rerender, &mlx);
-	save = compo->save ? ft_init_buffer(img.width, img.height) : 0;
-	ft_render(compo, &mlx, &img, save);
-	mlx_loop(mlx.mlx);
+	scene.img.width = 1080;
+	scene.img.height = 640;
+	if (scene.img.width > scene.compo->resolution->x)
+		scene.compo->resolution->x = scene.img.width;
+	if (scene.img.height > scene.compo->resolution->y)
+		scene.compo->resolution->y = scene.img.height;
+	scene.mlx.mlx = mlx_init();
+	scene.mlx.win = mlx_new_window(scene.mlx.mlx, scene.img.width,
+			scene.img.height, "miniRT");
+	scene.img.img = mlx_new_image(scene.mlx.mlx, scene.img.width,
+			scene.img.height);
+	scene.img.addr = (char *)mlx_get_data_addr(scene.img.img, &scene.img.bpp,
+			&scene.img.line_len, &scene.img.endian);
+	mlx_hook(scene.mlx.win, DESTROYNOTIFY, STRUCTURENOTIFYMASK, ft_close, &scene.mlx);
+	mlx_key_hook(scene.mlx.win, ft_rerender, &scene.mlx);
+	scene.save = scene.compo->save ?
+		ft_init_buffer(scene.img.width, scene.img.height) : 0;
+	if (ft_render(&scene))
+		return (1);
+	mlx_loop(scene.mlx.mlx);
 	return (0);
 }

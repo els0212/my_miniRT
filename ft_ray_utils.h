@@ -9,4 +9,6 @@
 t_ray				*ft_ray_init(t_vector *origin, t_vector dir);
 t_vector			ft_ray_at(t_ray ray, double d);
 int					ft_ray_change_hit(t_ray *ray, int t, t_object *hit_obj);
+t_ray				*ft_make_ray(t_res *res, t_cam *cam, int i, int j);
+void				ft_free_ray(t_ray *ray);
 #endif

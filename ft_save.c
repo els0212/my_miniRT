@@ -78,5 +78,5 @@ int		ft_save_bmp(char *filename, int **target, int width, int height)
 		height--;
 	}
 	close(fd);
-	return (0);
+	return (1);
 }

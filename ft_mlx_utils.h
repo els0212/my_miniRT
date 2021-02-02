@@ -25,4 +25,12 @@ typedef struct	s_pixel
 	unsigned char	green;
 	unsigned char	blue;
 }				t_pixel;
+
+typedef struct	s_scene
+{
+	t_compo		*compo;
+	t_mlx		mlx;
+	t_img		img;
+	int			**save;
+}				t_scene;
 #endif

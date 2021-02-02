@@ -43,7 +43,7 @@ t_color	ft_get_light_color(t_lht *now, t_object *objs, t_ray ray)
 		diffuse = fmax(0, ft_dot_product(*ray.hit_norm, *temp_ray->dir));
 	ret = ft_color_mult_const(ft_color_mult(&light_color,
 				*ray.hit_obj->color), diffuse);
-	free(temp_ray);
+	ft_free_ray(temp_ray);
 	return (ret = (diffuse != 0) ?
 			ft_color_add(ret, ft_specular(now, ray)) : ret);
 }

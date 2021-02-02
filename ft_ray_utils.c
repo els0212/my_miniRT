@@ -44,3 +44,30 @@ int			ft_ray_change_hit(t_ray *ray, int t, t_object *hit_obj)
 	}
 	return (0);
 }
+
+t_ray		*ft_make_ray(t_res *res, t_cam *cam, int i, int j)
+{
+	double		u;
+	double		v;
+	t_vector	dir;
+	t_ray		*ray;
+
+	u = (1 - 2 * ((double)i + 0.5) / (res->y - 1))
+		* tan(cam->fov / 2);
+	v = (2 * ((double)j + 0.5) / (res->x - 1) - 1)
+		* res->ratio * tan(cam->fov / 2);
+	dir = ft_vec_add(*cam->vec, ft_vec_add(ft_vec_add(ft_vec_mult_const(*cam->u, u),
+					ft_vec_mult_const(*cam->v, v)), *cam->dir));
+	ray = ft_ray_init(cam->vec, dir);
+	return (ray);
+}
+
+void		ft_free_ray(t_ray *ray)
+{
+	free(ray->origin);
+	free(ray->dir);
+	free(ray->hit_point);
+	free(ray->hit_norm);
+	free(ray);
+	ray = 0;
+}
