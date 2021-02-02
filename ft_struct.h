@@ -1,18 +1,8 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_struct.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/07 23:35:12 by hyi               #+#    #+#             */
-/*   Updated: 2021/02/01 19:01:59 by hyi              ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef FT_STRUCT_H
 # define FT_STRUCT_H
 # include <math.h>
+# include "ft_error.h"
+# include "ft_utils.h"
 # define RESOLUTION 1
 # define AMBIENT 2
 # define CAMERA 3

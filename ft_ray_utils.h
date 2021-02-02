@@ -2,8 +2,6 @@
 # define FT_RAY_UTILS_H
 # define RAYMAX 1000
 # define EPSILON 0.0000001
-# include "ft_struct.h"
-# include "ft_libft.h"
 # include "ft_vec_operations.h"
 # include "ft_math_utils.h"
 # include "ft_color_utils.h"

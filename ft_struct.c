@@ -1,4 +1,4 @@
-#include "minirt.h"
+#include "ft_struct.h"
 
 t_compo			*ft_compo_init()
 {
