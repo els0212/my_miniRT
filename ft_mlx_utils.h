@@ -19,10 +19,10 @@ typedef struct	s_img
 	int			height;
 }				t_img;
 
-typedef struct		s_pixel
+typedef struct	s_pixel
 {
 	unsigned char	red;
 	unsigned char	green;
 	unsigned char	blue;
-}					t_pixel;
+}				t_pixel;
 #endif

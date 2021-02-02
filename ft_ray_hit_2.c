@@ -23,7 +23,8 @@ t_vector	*ft_get_normal(t_vector hit_point, t_object obj)
 		return (0);
 }
 
-double		ft_get_discriminant(t_object *cylinder, t_ray *ray)
+t_vector	ft_get_discriminant(t_object *cylinder, t_ray *ray,
+		double *discriminant, double *t)
 {
 	t_vector	oc;
 	t_vector	h;
@@ -41,25 +42,27 @@ double		ft_get_discriminant(t_object *cylinder, t_ray *ray)
 			ft_dot_product(*ray->dir, h) * ft_dot_product(oc, h));
 	c = ft_dot_product(oc, oc) - pow(ft_dot_product(oc, h), 2)
 		- pow((cylinder->dia / 2), 2);
-	return (b * b - 4 * a * c);
+	*discriminant = b * b - 4 * a * c;
+	t[0] = (-b - sqrt(*discriminant)) / (2 * a);
+	t[1] = (-b + sqrt(*discriminant)) / (2 * a);
+	return (h);
 }
 
 int			ft_ray_hit_cylinder(t_object *cylinder, t_ray *ray)
 {
+	t_vector	h;
 	t_vector	p[2];
 	double		t[2];
 	double		discriminant;
 	double		height[2];
 
-	discriminant = ft_get_discriminant(cylinder, ray);
+	h = ft_get_discriminant(cylinder, ray, &discriminant, t);
 	if (discriminant >= 0)
 	{
-		if ((t[0] = (-b - sqrt(discriminant)) / (2 * a)) < 0 ||
-				(t[1] = (-b + sqrt(discriminant)) / (2 * a)) < 0)
+		if (t[0] < 0 || t[1] < 0)
 			return (0);
 		p[0] = ft_ray_at(*ray, t[0]);
 		p[1] = ft_ray_at(*ray, t[1]);
-		hit_flag = 0;
 		height[0] = ft_dot_product(ft_vec_sub(p[0], *cylinder->vec), h);
 		height[1] = ft_dot_product(ft_vec_sub(p[1], *cylinder->vec), h);
 		if ((height[0] > 0 && height[0] < cylinder->height &&
