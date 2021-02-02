@@ -3,15 +3,12 @@
 # include <math.h>
 # include "ft_error.h"
 # include "ft_utils.h"
-# define RESOLUTION 1
-# define AMBIENT 2
-# define CAMERA 3
-# define LIGHT 4
-# define SPHERE 5
-# define PLANE 6
-# define SQUARE 7
-# define CYLINDER 8
-# define TRIANGLE 9
+# include "ft_split.h"
+# define SPHERE 0
+# define PLANE 1
+# define SQUARE 2
+# define CYLINDER 3
+# define TRIANGLE 4
 
 typedef struct			s_vector{
 	double				x;
@@ -112,16 +109,6 @@ typedef struct			s_component
 
 t_compo					*ft_compo_init();
 t_object				*ft_object_init(int id);
-int			ft_camera_init(t_compo *compo, t_vector *vec, t_vector *dir, double angle);
-int			ft_light_init(t_compo *compo, t_color *color, t_vector *vec, double ratio);
-int			ft_sphere_init(t_compo *compo, t_color *color, t_vector *vec, double dia);
-int			ft_plane_init(t_compo *compo, t_color *color, t_vector *vec, t_vector *dir);
-t_object		*ft_square_init(t_compo *compo, t_color *color, t_vector *vec, t_vector *dir);
-t_object		*ft_cylinder_init(t_compo *compo, t_color *color, t_vector *vec, t_vector *dir);
-int			ft_triangle_init(t_compo *compo, t_color *color, char **chunks);
-char		**ft_parse_args(char *str);
 t_vector				ft_vector_init(double x, double y, double z);
-t_vector				*ft_chunks_to_vec(char *str);
-t_color					*ft_chunks_to_color(char *str);
 t_vector				ft_normalize(t_vector vec);
 #endif
