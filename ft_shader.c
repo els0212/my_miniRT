@@ -42,7 +42,7 @@ t_color	ft_get_light_color(t_lht *now, t_object *objs, t_ray ray)
 		ft_get_dist(*now->vec, *ray.hit_point))
 		diffuse = fmax(0, ft_dot_product(*ray.hit_norm, *temp_ray->dir));
 	ret = ft_color_mult_const(ft_color_mult(&light_color,
-				ray.hit_obj->color), diffuse);
+				*ray.hit_obj->color), diffuse);
 	free(temp_ray);
 	return (ret = (diffuse != 0) ?
 			ft_color_add(ret, ft_specular(now, ray)) : ret);
@@ -66,4 +66,22 @@ t_color	ft_shader(t_lht *lht, t_object *objs, t_ray ray)
 		}
 	}
 	return (ret);
+}
+
+
+int		ft_mix_color(t_compo *compo, t_ray *ray)
+{
+	t_color	ambient;
+	t_color	shader;
+	t_color	*bef;
+	int		color;
+
+	bef = ft_ray_color(ray, compo->objects);
+	ambient = ft_color_mult_const(compo->ambient->color, compo->ambient->ratio);
+	bef = ft_color_mult(bef, ambient);
+	shader = ft_shader(compo->light, compo->objects, *ray);
+	bef = ft_color_cpy(bef, ft_color_add(*bef, shader));
+	color = (bef->red<<16) + (bef->green<<8) + (bef->blue);
+	free(bef);
+	return (color);
 }

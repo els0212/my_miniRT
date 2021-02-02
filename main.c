@@ -4,7 +4,7 @@ int		ft_branch(char **chunks, t_compo *compo, int size)
 {
 	int		ret;
 
-	ret = 0;
+	ret = -1;
 	if (!ft_strncmp(chunks[0], "R", (int)ft_strlen(chunks[0])))
 		ret = ft_ins_resolution(chunks, compo, size);
 	else if (!ft_strncmp(chunks[0], "A", (int)ft_strlen(chunks[0])))
@@ -23,8 +23,6 @@ int		ft_branch(char **chunks, t_compo *compo, int size)
 		ret = ft_ins_cylinder(chunks, compo, size);
 	else if (!ft_strncmp(chunks[0], "tr", (int)ft_strlen(chunks[0])))
 		ret = ft_ins_triangle(chunks, compo, size);
-	else
-		return (-1);
 	return (ret);
 }
 
@@ -36,8 +34,14 @@ int		ft_parse(char *line, t_compo *compo)
 	if ((chunks = ft_split(line, &ft_isspace)) == 0)
 		return (-1);
 	if ((size = ft_get_chunks_size(chunks)))
-		ft_branch(chunks, compo, size);
-	ft_free(chunks, 0);
+	{
+		if (ft_branch(chunks, compo, size))
+		{
+			ft_free_compo(compo);
+			return (-1);
+		}
+		ft_free(chunks, size);
+	}
 	return (0);
 }
 
@@ -51,13 +55,6 @@ void my_mlx_pixel_put(t_img *data, int x, int y, int color)
 int	ft_close()
 {
 	exit(0);
-	return (0);
-}
-
-int	ft_key_press(int keycode)
-{
-	if (keycode == ESCAPE)
-		exit(0);
 	return (0);
 }
 
@@ -81,20 +78,66 @@ int	ft_chk_input(int argc, char **argv, t_compo **compo)
 	else if ((fd = open(argv[1], O_RDONLY)) <= 0)
 		return (-1);
 	while (get_next_line(fd, &line) > 0)
-		ft_parse(line, *compo);
+		if (ft_parse(line, *compo))
+			return (-1);
 	return (0);
 }
 
 int	ft_rerender(int key, t_mlx *mlx)
 {
-	if (key == 124)
+	if (key == CAM_UP)
 		;
-	else if (key == 123)
+	else if (key == CAM_DOWN)
 		;
-	else if (key == 53)
+	else if (key == ESCAPE)
 		exit(0);
 	(void *)mlx;
 	return (0);
+}
+
+void	ft_render_sub(t_compo *compo, t_mlx *mlx, t_img *img, int **save)
+{
+	double	u;
+	double	v;
+	int		j;
+}
+
+void	ft_render(t_compo *compo, t_mlx *mlx, t_img *img, int **save)
+{
+	int			i;
+	int			j;
+	double		u;
+	double		v;
+	t_vector	dir;
+	t_ray	*ray;
+
+	i = 0;
+	while (i < compo->resolution->y)
+	{
+		j = 0;
+		while (j < compo->resolution->x)
+		{
+			u = (1 - 2 * ((double)i + 0.5) / (compo->resolution->y - 1))
+				* tan(compo->camera->fov / 2);
+			v = (2 * ((double)j + 0.5) / (compo->resolution->x - 1) - 1)
+				* compo->resolution->ratio * tan(compo->camera->fov / 2);
+			dir = ft_vec_add(*compo->camera->vec, ft_vec_add(
+						ft_vec_add(ft_vec_mult_const(*compo->camera->u, u),
+							ft_vec_mult_const(*compo->camera->v, v)), *compo->camera->dir));
+			ray = ft_ray_init(compo->camera->vec, dir);
+			int col = ft_mix_color(compo, ray);
+			if (compo->save)
+				save[i][j] = col;
+			else
+				my_mlx_pixel_put(img, j, i, col);
+			j++;
+		}
+		i++;
+	}
+	if (compo->save)
+		ft_save_bmp("save.bmp", save, img->width, img->height);
+	else
+		mlx_put_image_to_window(mlx->mlx, mlx->win, img->img, 0, 0);
 }
 
 int main(int argc, char **argv)
@@ -103,75 +146,23 @@ int main(int argc, char **argv)
 	t_mlx	mlx;
 	t_img	img;
 	int		**save;
-	t_ray	*ray;
 
-	ft_chk_input(argc, argv, &compo);
-
-	// change resolution's width or height if img width or height greater than resolution's one 
-	img.width = 1920;
-	img.height = 1080;
+	if (ft_chk_input(argc, argv, &compo))
+		return (ft_error("program arguments are not valid"));
+	img.width = 1080;
+	img.height = 640;
 	if (img.width > compo->resolution->x)
 		compo->resolution->x = img.width;
 	if (img.height > compo->resolution->y)
 		compo->resolution->y = img.height;
-
 	mlx.mlx = mlx_init();
-	mlx.win = mlx_new_window(mlx.mlx, compo->resolution->x, compo->resolution->y, "miniRT");
-	mlx_hook(mlx.win, KEYPRESS, KEYPRESSMASK, ft_key_press, &mlx);
-	mlx_hook(mlx.win, DESTROYNOTIFY, STRUCTURENOTIFYMASK, ft_close, &mlx);
-	mlx_key_hook(mlx.win, ft_rerender, &mlx);
-	// image init
+	mlx.win = mlx_new_window(mlx.mlx, img.width, img.height, "miniRT");
 	img.img = mlx_new_image(mlx.mlx, img.width, img.height);
 	img.addr = (char *)mlx_get_data_addr(img.img, &img.bpp, &img.line_len, &img.endian);
-
-	// init bmp file
+	mlx_hook(mlx.win, DESTROYNOTIFY, STRUCTURENOTIFYMASK, ft_close, &mlx);
+	mlx_key_hook(mlx.win, ft_rerender, &mlx);
 	save = compo->save ? ft_init_buffer(img.width, img.height) : 0;
-	//rendering
-	for(int i = 0 ; i <compo->resolution->y; i++)
-		for(int j = 0 ; j < compo->resolution->x; j++)
-		{
-			double u = (1 - 2 * ((double)i + 0.5) / (compo->resolution->y - 1)) * tan(compo->camera->fov / 2);
-			double v = (2 * ((double)j + 0.5) / (compo->resolution->x - 1) - 1) * compo->resolution->ratio * tan(compo->camera->fov / 2);
-			t_vector dir;
-			dir = ft_vec_add(*compo->camera->vec, ft_vec_add(ft_vec_add(ft_vec_mult_const(*compo->camera->u, u), ft_vec_mult_const(*compo->camera->v, v)), *compo->camera->dir));
-			ray = ft_ray_init(compo->camera->vec, dir);
-			t_color *temp_color = ft_ray_color(ray, compo->objects);
-			/*
-			 * ambient
-			*/
-			t_color ambient = ft_color_mult_const(compo->ambient->color, compo->ambient->ratio);
-			temp_color = ft_color_mult(temp_color, &ambient); 
-			/*
-			 * diffuse + specular
-			*/
-			t_color shader = ft_shader(compo->light, compo->objects, *ray);
-			/*
-			if (ray->ray_hit && ray->hit_obj->id == PLANE)
-			{
-				printf("red = %d green = %d blue = %d\n", temp_color->red, temp_color->green, temp_color->blue);
-				printf("shader r = %d, g = %d, b = %d\n", shader.red, shader.blue, shader.green);
-			}
-			printf("shader r = %d g = %d b = %d\n",shader.red, shader.green, shader.blue);
-			*/
-			temp_color = ft_color_cpy(temp_color, ft_color_add(*temp_color, shader));
-
-			//printf("r = %d, g = %d, b = %d\n", temp_color->red, temp_color->blue, temp_color->green);
-			//printf("amb r = %d g = %d b = %d\n",ambient.red, ambient.blue, ambient.green);
-			int col = (temp_color->red<<16) + (temp_color->green<<8) + (temp_color->blue);
-			//int col = (temp_color->red & REDMASK) + (temp_color->green & GREENMASK) + (temp_color->blue & BLUEMASK);
-			free(temp_color);
-			if (compo->save)
-				save[i][j] = col;
-			else
-				my_mlx_pixel_put(&img, j, i, col);
-		}
-	if (compo->save)
-		ft_save_bmp("save.bmp", save, img.width, img.height);
-	else
-	{
-		mlx_put_image_to_window(mlx.mlx, mlx.win, img.img, 0, 0);
-		//mlx_destroy_window(&mlx.mlx, &mlx.win);
-		mlx_loop(mlx.mlx);
-	}
+	ft_render(compo, &mlx, &img, save);
+	mlx_loop(mlx.mlx);
 	return (0);
 }
