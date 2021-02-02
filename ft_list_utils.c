@@ -17,7 +17,7 @@ void	ft_add_last(t_object **list, t_object *obj)
 
 void	ft_add_light_last(t_lht **list, t_lht *obj)
 {
-	t_lht	 *curr;
+	t_lht	*curr;
 
 	if (!*list)
 		*list = obj;

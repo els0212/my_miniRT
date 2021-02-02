@@ -16,8 +16,6 @@
 # include "ft_list_utils.h"
 # include "ft_parse_rt_1.h"
 # include "ft_parse_rt_2.h"
-//# include "ft_parse_utils_1.h"
-# include "ft_parse_utils_2.h"
 # include "ft_ray_utils.h"
 # include "ft_rotations.h"
 # include "ft_split.h"

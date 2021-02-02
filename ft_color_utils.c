@@ -3,6 +3,7 @@
 t_color			ft_color_init(int r, int g, int b)
 {
 	t_color	color;
+
 	color.red = r;
 	color.green = g;
 	color.blue = b;
@@ -28,13 +29,14 @@ t_color			*ft_color_mult(t_color *c1, t_color *c2)
 t_color			ft_color_mult_const(t_color *c1, double ratio)
 {
 	t_color	ret;
+
 	ret.red = fmin(c1->red * ratio, 255);
 	ret.green = fmin(c1->green * ratio, 255);
 	ret.blue = fmin(c1->blue * ratio, 255);
 	return (ret);
 }
 
-t_color					ft_color_add(t_color c1, t_color c2)
+t_color			ft_color_add(t_color c1, t_color c2)
 {
 	t_color	ret;
 

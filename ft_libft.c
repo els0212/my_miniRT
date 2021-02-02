@@ -1,6 +1,6 @@
 #include "ft_libft.h"
 
-int		ft_strncmp(const char *s1, const char *s2, int len)
+int			ft_strncmp(const char *s1, const char *s2, int len)
 {
 	int		st;
 
@@ -16,7 +16,7 @@ int		ft_strncmp(const char *s1, const char *s2, int len)
 	return ((unsigned char)s1[st] - (unsigned char)s2[st]);
 }
 
-char	*ft_strrchr(const char *s, int c)
+char		*ft_strrchr(const char *s, int c)
 {
 	int		st;
 	char	*ret;
@@ -25,7 +25,7 @@ char	*ft_strrchr(const char *s, int c)
 	ret = 0;
 	while (*(s + st))
 	{
-		if (*(s + st) == (char) c)
+		if (*(s + st) == (char)c)
 			ret = (char *)(s + st);
 		st++;
 	}
@@ -34,7 +34,7 @@ char	*ft_strrchr(const char *s, int c)
 	return (ret);
 }
 
-size_t ft_strlen(const char *s)
+size_t		ft_strlen(const char *s)
 {
 	int		st;
 
@@ -46,7 +46,7 @@ size_t ft_strlen(const char *s)
 	return (st);
 }
 
-char	*ft_substr(const char *s, unsigned int start, size_t len)
+char		*ft_substr(const char *s, unsigned int start, size_t len)
 {
 	char	*ret;
 	size_t	ed;
@@ -67,7 +67,7 @@ char	*ft_substr(const char *s, unsigned int start, size_t len)
 	return (ret);
 }
 
-int		ft_isspace(char c)
+int			ft_isspace(char c)
 {
 	if (c == 0x20 || (c >= 0x09 && c <= 0x0D))
 		return (1);

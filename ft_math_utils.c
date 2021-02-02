@@ -10,11 +10,12 @@ t_vector	ft_cross_product(t_vector a, t_vector b)
 	return (ret);
 }
 
-double	ft_dot_product(t_vector a, t_vector b)
+double		ft_dot_product(t_vector a, t_vector b)
 {
 	return (a.x * b.x + a.y * b.y + a.z * b.z);
 }
 
-double	ft_get_dist(t_vector a, t_vector b)
+double		ft_get_dist(t_vector a, t_vector b)
 {
-	return (sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2) + pow(b.z - a.z, 2)));}
+	return (sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2) + pow(b.z - a.z, 2)));
+}
