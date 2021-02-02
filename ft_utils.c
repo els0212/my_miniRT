@@ -65,18 +65,17 @@ double	ft_atod(const char *nptr)
 	if (nptr[pt_st] == '.')
 		pt_st++;
 	ret = ft_atoi(nptr) * sign;
-	//printf("bef ret = %f, pt_st = %d, nptr[pt_st] = %c\n", ret, pt_st, nptr[pt_st]);
-	while (nptr[pt_st] && nptr[pt_st] >= '0' && nptr[pt_st] <= '9')
+	while (nptr[pt_st] && nptr[pt_st] >= '0'
+			&& nptr[pt_st] <= '9')
 	{
 		ret += ((nptr[pt_st] - '0') * mul);
 		mul *= 0.1;
 		pt_st++;
 	}
-	//printf("final ret = %f\n", ret * sign);
 	return (ret * sign);
 }
 
-void		ft_swap(double *a, double *b)
+void	ft_swap(double *a, double *b)
 {
 	double	temp;
 

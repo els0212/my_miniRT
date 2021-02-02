@@ -1,4 +1,4 @@
-# ifndef FT_ROTATIONS_H
+#ifndef FT_ROTATIONS_H
 # define FT_ROTATIONS_H
 # include "ft_struct.h"
 

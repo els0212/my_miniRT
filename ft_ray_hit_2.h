@@ -3,6 +3,7 @@
 # include "ft_ray_hit_1.h"
 
 t_vector			*ft_get_normal(t_vector hit_point, t_object obj);
+double				ft_get_discriminant(t_object *cylinder, t_ray *ray);
 int					ft_ray_hit_cylinder(t_object *cylinder, t_ray *ray);
 int					ft_chk_intersect(t_object *obj, t_ray *ray);
 t_color				*ft_ray_color(t_ray *ray, t_object *obj);

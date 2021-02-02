@@ -1,6 +1,6 @@
 #include "ft_save.h"
 
-int	**ft_init_buffer(int width, int height)
+int		**ft_init_buffer(int width, int height)
 {
 	int	**ret;
 	int	idx;
@@ -31,6 +31,21 @@ void	ft_free_buffer(int **del, int height)
 	free(del);
 }
 
+void	ft_set_bmp_header(unsigned char *header)
+{
+	int	idx;
+
+	idx = 0;
+	while (idx < HEADERSIZE)
+		header[idx++] = 0;
+	header[0] = 'B';
+	header[1] = 'M';
+	header[10] = HEADERSIZE;
+	header[14] = 40;
+	header[26] = 1;
+	header[28] = 32;
+}
+
 /*
 ** bitmap file header
 ** header[2] : bfSize
@@ -42,23 +57,14 @@ void	ft_free_buffer(int **del, int height)
 ** header[26] = always 1
 ** header[28] = bits per pixel ; 32 bits (4 bytes)
 */
-int	ft_save_bmp(char *filename, int **target, int width, int height)
+
+int		ft_save_bmp(char *filename, int **target, int width, int height)
 {
 	unsigned char	header[54];
 	int				row_padding;
-	int				idx;
 	int				fd;
 
-	idx = 0;
-	while (idx < HEADERSIZE)
-		header[idx++] = 0;
-	header[0] = 'B';
-	header[1] = 'M';
-	header[10] = HEADERSIZE;
-	header[14] = 40;
-	header[26] = 1;
-	header[28] = 32;
-
+	ft_set_bmp_header(header);
 	*(int *)(header + 18) = width;
 	*(int *)(header + 22) = height;
 	row_padding = (4 - width % 4) % 4;

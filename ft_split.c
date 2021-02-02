@@ -25,7 +25,7 @@ int		ft_cnt_lines(const char *s, int (*ft_is)(char c))
 		st++;
 	while (s[st])
 	{
-		st = ft_next_idx(s,ft_is, st);
+		st = ft_next_idx(s, ft_is, st);
 		cnt++;
 		while (s[st] && ft_is(s[st]))
 			st++;

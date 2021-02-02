@@ -107,8 +107,9 @@ typedef struct			s_component
 	int					save;
 }						t_compo;
 
-t_compo					*ft_compo_init();
+t_compo					*ft_compo_init(void);
 t_object				*ft_object_init(int id);
 t_vector				ft_vector_init(double x, double y, double z);
 t_vector				ft_normalize(t_vector vec);
+void					ft_vec_cpy(t_vector *vec1, t_vector vec2);
 #endif
