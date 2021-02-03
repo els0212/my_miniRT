@@ -52,6 +52,21 @@ void	ft_add_camera_last(t_cam **list, t_cam *obj)
 	obj->order = cnt;
 }
 
+int		ft_get_cam_size(t_cam *list)
+{
+	int		cnt;
+	t_cam	*curr;
+
+	cnt = 0;
+	curr = list;
+	while (curr)
+	{
+		cnt++;
+		curr = curr->next;
+	}
+	return (cnt);
+}
+
 t_cam	*ft_get_cam(t_cam *list, int i)
 {
 	int	cnt;
