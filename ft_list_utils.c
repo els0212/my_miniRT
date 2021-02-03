@@ -35,7 +35,7 @@ void	ft_add_camera_last(t_cam **list, t_cam *obj)
 	t_cam	*curr;
 	int		cnt;
 
-	cnt = 1;
+	cnt = 0;
 	if (!*list)
 		*list = obj;
 	else
@@ -50,4 +50,22 @@ void	ft_add_camera_last(t_cam **list, t_cam *obj)
 		curr->next = obj;
 	}
 	obj->order = cnt;
+}
+
+t_cam	*ft_get_cam(t_cam *list, int i)
+{
+	int	cnt;
+	t_cam	*curr;
+
+	cnt = 0;
+	if (!list || i < 0)
+		return (0);
+	curr = list;
+	while (curr)
+	{
+		if (curr->order == i)
+			return (curr);
+		curr = curr->next;
+	}
+	return (0);
 }

@@ -29,6 +29,7 @@ typedef struct	s_pixel
 typedef struct	s_scene
 {
 	t_compo		*compo;
+	int			cam_no;
 	t_mlx		mlx;
 	t_img		img;
 	int			**save;
