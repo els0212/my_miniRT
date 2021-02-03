@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/03 16:38:59 by hyi               #+#    #+#             */
-/*   Updated: 2021/02/03 16:39:00 by hyi              ###   ########.fr       */
+/*   Updated: 2021/02/03 18:21:44 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,8 @@ t_color		*ft_chunks_to_color(char *str)
 	color->red = atoi(chunks[0]);
 	color->green = atoi(chunks[1]);
 	color->blue = atoi(chunks[2]);
-	if (color->red < 0 || color->green < 0 || color->blue < 0)
+	if (color->red < 0 || color->green < 0 || color->blue < 0 ||
+			color->red > 255 || color->green > 255 || color->blue > 255)
 	{
 		free(color);
 		ft_free(chunks, ft_get_chunks_size(chunks));

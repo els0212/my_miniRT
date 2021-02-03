@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/03 16:43:06 by hyi               #+#    #+#             */
-/*   Updated: 2021/02/03 17:51:00 by hyi              ###   ########.fr       */
+/*   Updated: 2021/02/03 18:18:21 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ int		ft_branch(char **chunks, t_compo *compo, int size)
 {
 	int		ret;
 
-	ret = -1;
 	if (!ft_strncmp(chunks[0], "R", (int)ft_strlen(chunks[0])))
 		ret = ft_ins_resolution(chunks, compo, size);
 	else if (!ft_strncmp(chunks[0], "A", (int)ft_strlen(chunks[0])))
@@ -35,6 +34,8 @@ int		ft_branch(char **chunks, t_compo *compo, int size)
 		ret = ft_ins_cylinder(chunks, compo, size);
 	else if (!ft_strncmp(chunks[0], "tr", (int)ft_strlen(chunks[0])))
 		ret = ft_ins_triangle(chunks, compo, size);
+	else
+		return (ft_error("Invalid identifier in map"));
 	return (ret);
 }
 
@@ -44,12 +45,16 @@ int		ft_parse(char *line, t_compo *compo)
 	int		size;
 
 	if ((chunks = ft_split(line, &ft_isspace)) == 0)
+	{
+		free(line);
 		return (-1);
+	}
 	if ((size = ft_get_chunks_size(chunks)))
 	{
 		if (ft_branch(chunks, compo, size))
 		{
 			ft_free(chunks, size);
+			free(line);
 			return (-1);
 		}
 	}
@@ -80,6 +85,7 @@ int		ft_chk_input(int argc, char **argv, t_compo **compo)
 	while (get_next_line(fd, &line) > 0)
 		if (ft_parse(line, *compo))
 			return (-1);
+	close(fd);
 	return (0);
 }
 
@@ -90,8 +96,6 @@ int		main(int argc, char **argv)
 	if (ft_chk_input(argc, argv, &scene.compo))
 	{
 		ft_free_compo(scene.compo);
-		while (1)
-			;
 		return (-1);
 	}
 	scene.cam_no = 0;
