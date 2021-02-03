@@ -6,7 +6,7 @@
 /*   By: hyi <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/03 16:43:06 by hyi               #+#    #+#             */
-/*   Updated: 2021/02/03 16:43:07 by hyi              ###   ########.fr       */
+/*   Updated: 2021/02/03 17:51:00 by hyi              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,12 @@ int		ft_parse(char *line, t_compo *compo)
 	{
 		if (ft_branch(chunks, compo, size))
 		{
-			ft_free_compo(compo);
+			ft_free(chunks, size);
 			return (-1);
 		}
-		ft_free(chunks, size);
 	}
+	ft_free(chunks, size);
+	free(line);
 	return (0);
 }
 
@@ -64,18 +65,18 @@ int		ft_chk_input(int argc, char **argv, t_compo **compo)
 
 	*compo = ft_compo_init();
 	if (argc < 2 || argc > 3)
-		return (-1);
+		return (ft_error("not valid number of arguments"));
 	else if (argc == 3)
 	{
 		if (ft_strncmp(argv[2], "--save", 6))
-			return (-1);
+			return (ft_error("not valid save argument"));
 		else
 			(*compo)->save = 1;
 	}
 	if (ft_strncmp(ft_strrchr(argv[1], '.'), ".rt", 3))
-		return (-1);
+		return (ft_error("not valid map"));
 	else if ((fd = open(argv[1], O_RDONLY)) <= 0)
-		return (-1);
+		return (ft_error("file open failed"));
 	while (get_next_line(fd, &line) > 0)
 		if (ft_parse(line, *compo))
 			return (-1);
@@ -87,7 +88,12 @@ int		main(int argc, char **argv)
 	t_scene	scene;
 
 	if (ft_chk_input(argc, argv, &scene.compo))
+	{
+		ft_free_compo(scene.compo);
+		while (1)
+			;
 		return (-1);
+	}
 	scene.cam_no = 0;
 	ft_mlx_init(&scene, scene.compo->resolution, &scene.img, &scene.mlx);
 	if (ft_render(&scene))

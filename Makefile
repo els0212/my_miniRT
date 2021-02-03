@@ -2,7 +2,7 @@ SRC=$(addprefix src/,ft_libft.c get_next_line.c get_next_line_utils.c ft_split.c
 OBJ=${SRC:.c=.o}
 INCLUDE=include
 CC=gcc
-CFLAGS=-Wall -Wextra -Werror
+CFLAGS=-Wall -Wextra #-Werror
 NAME=miniRT
 
 all : $(NAME)
